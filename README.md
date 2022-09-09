@@ -1,6 +1,7 @@
 # Optica
 Program made in python with the purpose of detecting face dimensions and predicting how the glasses would stay on it 
 
+## Changes
 ```diff
 09/09/2022
 
