@@ -129,6 +129,8 @@ class GUI:
         self.window = None
         
 
+        
+
 
         # WINDOW SETTINGS #
 
@@ -283,8 +285,7 @@ class GUI:
                                                         compound=tkinter.RIGHT)
         self.open_results_bt.place(relx=0.5, rely=0.53, anchor=tkinter.CENTER)
         self.tooltip(self.open_results_bt, SelectedLanguage["Open Results Folder Tooltip"])
-        
-
+    
 
     # SETTINGS WINDOW 
     def closed_set_window(self):
@@ -429,9 +430,6 @@ class GUI:
         import mediapipe as mp
         self.mp_face_mesh = mp.solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
-
-
-
         # SETTINGS WINDOW #
     def exit(self):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1)
@@ -531,8 +529,6 @@ class GUI:
                                                             compound=tkinter.RIGHT)
         self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=tkinter.CENTER)
         self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
-        Load_Mediapipe = threading.Thread(target=self.import_mediapipe(), daemon=True)
-        Load_Mediapipe.start()
 
     def open_faces_folder():
         os.open(SelectedLanguage["Faces Folder"])
@@ -739,6 +735,8 @@ class GUI:
             else:
             # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
                 try:
+                    Load_Mediapipe = threading.Thread(target=self.import_mediapipe(), daemon=True)
+                    Load_Mediapipe.start()
                     self.image = image
                     img = cv2.imread(image)
                     # ir buscar o aruco marker
@@ -1002,47 +1000,12 @@ class GUI:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
             return
 
-
-def main(root):
-    #Using piece of code from old splash screen
-    WIDTH = 427
-    HEIGHT = 250
-    current_screen = get_monitor_from_coord(root.winfo_x(), root.winfo_y())
-    screen_width = current_screen.width
-    screen_height = current_screen.height
-    x_cord = int((screen_width / 2) - (WIDTH / 2))
-    y_cord = int((screen_height / 2) - (HEIGHT / 2))
-    root.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
-    #root.configure(bg='#ED1B76')
-    root.overrideredirect(1) #for hiding titlebar
-
-    Title= customtkinter.CTkLabel(root, text='Face Dimensions Detector v2.0', fg='white') #decorate it 
-    Title.configure(font=("Game Of Squids", 20, "bold"))   #You need to install this font in your PC or try another one
-    Title.place(x=10,y=90)
-
-    Loading=customtkinter.CTkLabel(root, text='Loading...', fg='white') #decorate it 
-    Loading.configure(font=("Calibri", 11, "bold"))
-    Loading.place(x=-30,y=215)
-    img1 = ImageTk.PhotoImage(Image.open("{}/c1.png".format(SelectedLanguage["Necessary Files Folder"])))
-    img2 = ImageTk.PhotoImage(Image.open("{}/c2.png".format(SelectedLanguage["Necessary Files Folder"])))
-
-    for i in range(5): #5loops
-        l1=customtkinter.CTkLabel(root, image=img1).place(x=180, y=145)
-        l2=customtkinter.CTkLabel(root, image=img2, border=0, relief=tkinter.SUNKEN).place(x=200, y=145)
-        l3=customtkinter.CTkLabel(root, image=img2, border=0, relief=tkinter.SUNKEN).place(x=220, y=145)
-        l4=customtkinter.CTkLabel(root, image=img2, border=0, relief=tkinter.SUNKEN).place(x=240, y=145)
-        root.update_idletasks()
-        time.sleep(0.5)
-
-
-main(root)
-#def run():
-#    GUI(root_tk)
-#    root_tk.mainloop()
+def run():
+    GUI(root_tk)
+    root_tk.mainloop()
  
 if __name__ == '__main__':
-    main(root)
-    root.mainloop()
+    run()
     
     
     
