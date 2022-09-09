@@ -111,7 +111,7 @@ class GUI:
         WIDTH = 1280
         HEIGHT = 720
         self.toast = ToastNotifier()
-        root_tk.title("Face Dimensions Detector v2.0")
+        root_tk.title("Face Dimensions Detector (Beta 2.0)")
         root_tk.wm_iconbitmap("{}/icon.ico".format(SelectedLanguage["Necessary Files Folder"]))
         root_tk.attributes('-topmost',True)
         root_tk.minsize(WIDTH, HEIGHT)
