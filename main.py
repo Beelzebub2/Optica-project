@@ -1,4 +1,3 @@
-from logging import root
 import os
 import ctypes
 import cv2
@@ -289,14 +288,14 @@ class GUI:
     def settings(self): 
         if self.window == None:
             self.window = customtkinter.CTkToplevel(root_tk)
-            Width = 400
+            Width = 420
             Height = 240
             self.window.title(SelectedLanguage["Settings Button"])
             self.window.wm_iconbitmap(f"{SelectedLanguage['Necessary Files Folder']}/icon.ico")
             self.window.attributes('-topmost',True)
             self.window.attributes('-topmost',False)
-            self.window.minsize(400, 200)
-            self.window.maxsize(400, 200)
+            self.window.minsize(420, 200)
+            self.window.maxsize(420, 200)
             self.window.protocol("WM_DELETE_WINDOW", self.closed_set_window)
             current_screen = get_monitor_from_coord(self.window.winfo_x(), self.window.winfo_y())
             screen_width = current_screen.width
@@ -304,6 +303,10 @@ class GUI:
             x_cord = int((screen_width / 2) - (Width / 2))
             y_cord = int((screen_height / 2) - (Height / 2))
             self.window.geometry("{}x{}+{}+{}".format(Width, Height, x_cord, y_cord))
+
+            self.warningLabel = customtkinter.CTkLabel(self.window,
+                                                            text=SelectedLanguage["Warning Label"])
+            self.warningLabel.place(relx = 0.03,rely = 0.85)
 
             self.switch = customtkinter.CTkSwitch(master=self.window, 
                                                     text=SelectedLanguage["Theme Switch"], 

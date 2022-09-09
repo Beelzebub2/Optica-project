@@ -23,6 +23,7 @@ PT_pt = {
     "Report Bug Button": "Reportar um erro",
 
     "Start Button": "Começar",
+    
 
     ##/\ Buttons /\##
 
@@ -75,6 +76,8 @@ PT_pt = {
     "Length Label": "Comprimento da armação:",
 
     "Height Label": "Altura da armação:",
+
+    "Warning Label": "É necessario reiniciar o programa para as alterações serem aplicadas",
 
     ##/\ Labels /\##
     
@@ -247,6 +250,8 @@ English = {
     "Length Label": "Glasses length:",
 
     "Height Label": "Glasses height:",
+
+    "Warning Label": "Restart required to apply changes",
 
     ##/\ Labels /\##
     
