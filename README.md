@@ -5,6 +5,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 ```diff
 09/09/2022
 
+!   Working on simpler autoupdate
 +   Fixed mistake (script would not close after program end)
 +   Fixed Loading time finally
 +   Optimized some imports
