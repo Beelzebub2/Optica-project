@@ -3,7 +3,7 @@ import ctypes
 import cv2
 import webbrowser
 import tkinter
-from tkinter import Tk, filedialog
+from tkinter import filedialog
 from tktooltip import ToolTip
 import customtkinter
 from PIL import ImageTk, Image
