@@ -17,7 +17,6 @@ import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
 import threading
-import time
 
 Config_File = "config.ini"
 Config = ConfigParser()
@@ -60,7 +59,6 @@ if not os.path.exists(SelectedLanguage["Faces Folder"]):
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 root_tk = customtkinter.CTk()  # create CTk window like you do with the Tk window
-root = customtkinter.CTk()
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
 
 
@@ -127,11 +125,6 @@ class GUI:
         y_cord = int((screen_height / 2) - (HEIGHT / 2))
         root_tk.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
         self.window = None
-        
-
-        
-
-
         # WINDOW SETTINGS #
 
         # VISUALS
