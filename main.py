@@ -504,21 +504,19 @@ class GUI(customtkinter.CTk):
             self.Face_image = ImageTk.PhotoImage(self.Face_image)
             self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
             self.panel_Face.place(relx=0.33, rely=0.45, anchor=tkinter.CENTER)
-        else:
-            print("no image selected")
         #button
-        self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
-                                                            width=200, 
-                                                            height=50, 
-                                                            border_width=0, 
-                                                            corner_radius=8, 
-                                                            hover=True, 
-                                                            text=SelectedLanguage["Select Glasses Button"], 
-                                                            command=self.browse_Oculos, 
-                                                            image=self.glasses_img,
-                                                            compound=tkinter.RIGHT)
-        self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=tkinter.CENTER)
-        self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
+            self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
+                                                                width=200, 
+                                                                height=50, 
+                                                                border_width=0, 
+                                                                corner_radius=8, 
+                                                                hover=True, 
+                                                                text=SelectedLanguage["Select Glasses Button"], 
+                                                                command=self.browse_Oculos, 
+                                                                image=self.glasses_img,
+                                                                compound=tkinter.RIGHT)
+            self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=tkinter.CENTER)
+            self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
 
     def open_faces_folder():
         os.open(L.Universal["Faces Folder"])
@@ -543,18 +541,18 @@ class GUI(customtkinter.CTk):
             self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
             self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=tkinter.CENTER)
         #button
-        self.button_Start = customtkinter.CTkButton(self.Frame2, 
-                                                        width=200, 
-                                                        height=50, 
-                                                        border_width=0, 
-                                                        corner_radius=8, 
-                                                        hover=True, 
-                                                        text=SelectedLanguage["Start Button"], 
-                                                        command=lambda:self.get_object_size(self.Face_path), 
-                                                        image=self.start_img,
-                                                        compound=tkinter.RIGHT)
-        self.button_Start.place(relx=0.5, rely=0.46, anchor=tkinter.CENTER)
-        self.tooltip(self.button_Start, SelectedLanguage["Start Button Tooltip"])
+            self.button_Start = customtkinter.CTkButton(self.Frame2, 
+                                                            width=200, 
+                                                            height=50, 
+                                                            border_width=0, 
+                                                            corner_radius=8, 
+                                                            hover=True, 
+                                                            text=SelectedLanguage["Start Button"], 
+                                                            command=lambda:self.get_object_size(self.Face_path), 
+                                                            image=self.start_img,
+                                                            compound=tkinter.RIGHT)
+            self.button_Start.place(relx=0.5, rely=0.46, anchor=tkinter.CENTER)
+            self.tooltip(self.button_Start, SelectedLanguage["Start Button Tooltip"])
 
     def tutorial(self):
         try:
