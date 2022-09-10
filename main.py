@@ -465,8 +465,7 @@ class GUI(customtkinter.CTk):
 
     def add_faces(self):
         try:
-            Faces_folder = "{}\\{}".format(PATH, L.Universal["Faces Folder"])
-            os.startfile(f"{Faces_folder}")
+            os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
             self.toast.show_toast(
                 "Optica",
                 f'{SelectedLanguage["Add Faces Toast notification"]}',
@@ -480,8 +479,7 @@ class GUI(customtkinter.CTk):
 
     def open_results(self):
         try:
-            Results_folder = "{}\\{}".format(PATH, L.Universal["Ready Images Folder"])
-            os.startfile(f'"{Results_folder}"')
+            os.startfile("{}\\{}".format(PATH, L.Universal["Ready Images Folder"]))
         except Exception as eroro:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
             self.send_errors_discord(eroro)
@@ -526,9 +524,9 @@ class GUI(customtkinter.CTk):
         os.open(L.Universal["Faces Folder"])
         
     def browse_Oculos(self):
-        if os.path.exists(SelectedLanguage["Glasses Folder"]):
+        if os.path.exists(L.Universal["Glasses Folder"]):
             self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"],
-                                                                initialdir = SelectedLanguage["Glasses Folder"], 
+                                                                initialdir = L.Universal["Glasses Folder"], 
                                                                 filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                 image_extensions)])
             self.Oculos_path = self.Oculos_path
@@ -538,11 +536,12 @@ class GUI(customtkinter.CTk):
                                                                 image_extensions)])
             self.Oculos_path = self.Oculos_path
         #image
-        self.Oculos_image = Image.open(self.Oculos_path)
-        self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
-        self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
-        self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
-        self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=tkinter.CENTER)
+        if ntpath.isfile(self.Oculos_path):
+            self.Oculos_image = Image.open(self.Oculos_path)
+            self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
+            self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
+            self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
+            self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=tkinter.CENTER)
         #button
         self.button_Start = customtkinter.CTkButton(self.Frame2, 
                                                         width=200, 
