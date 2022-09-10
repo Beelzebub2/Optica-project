@@ -57,7 +57,6 @@ if not os.path.exists(SelectedLanguage["Faces Folder"]):
 
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
-root_tk = customtkinter.CTk()  # create CTk window like you do with the Tk window
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
 
 
@@ -105,24 +104,25 @@ parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 detector = HomogeneousBgDetector()
 
-class GUI:
-    def __init__(self, root_tk):
+class GUI(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
         # WINDOW SETTINGS
         WIDTH = 1280
         HEIGHT = 720
         self.toast = ToastNotifier()
-        root_tk.title("Face Dimensions Detector (Beta 2.0)")
-        root_tk.wm_iconbitmap("{}/icon.ico".format(SelectedLanguage["Necessary Files Folder"]))
-        root_tk.attributes('-topmost',True)
-        root_tk.minsize(WIDTH, HEIGHT)
-        root_tk.maxsize(1920, 1080)
-        root_tk.bind('<Escape>',lambda e: self.exit())
-        current_screen = get_monitor_from_coord(root_tk.winfo_x(), root_tk.winfo_y())
+        self.title("Face Dimensions Detector (Beta 2.0)")
+        self.wm_iconbitmap("{}/icon.ico".format(SelectedLanguage["Necessary Files Folder"]))
+        self.attributes('-topmost',True)
+        self.minsize(WIDTH, HEIGHT)
+        self.maxsize(1920, 1080)
+        self.bind('<Escape>',lambda e: self.exit())
+        current_screen = get_monitor_from_coord(self.winfo_x(), self.winfo_y())
         screen_width = current_screen.width
         screen_height = current_screen.height
         x_cord = int((screen_width / 2) - (WIDTH / 2))
         y_cord = int((screen_height / 2) - (HEIGHT / 2))
-        root_tk.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
+        self.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
         self.window = None
         # WINDOW SETTINGS #
 
@@ -142,10 +142,10 @@ class GUI:
         # VISUALS #
 
         # FRAMES
-        Frame1 = customtkinter.CTkFrame(root_tk)
+        Frame1 = customtkinter.CTkFrame(self)
         Frame1.pack
 
-        self.Frame2 = customtkinter.CTkFrame(root_tk, 
+        self.Frame2 = customtkinter.CTkFrame(self, 
                                                 width=250, 
                                                 height=725)
         self.Frame2.pack()
@@ -155,7 +155,7 @@ class GUI:
                             relwidth=0.2, 
                             relheight=1.1)
 
-        self.Frame3 = customtkinter.CTkFrame(root_tk, 
+        self.Frame3 = customtkinter.CTkFrame(self, 
                                             width=250, 
                                             height=1)
         self.Frame3.pack(expand= True)
@@ -174,7 +174,7 @@ class GUI:
                             rely=0, 
                             relwidth=1, 
                             relheight=0.261)
-        root_tk.attributes('-topmost',False)
+        self.attributes('-topmost',False)
         # FRAMES #
 
         # ICON
@@ -219,7 +219,7 @@ class GUI:
                                                             command=self.add_faces, 
                                                             image=self.add_face_img,
                                                             compound=tkinter.RIGHT, 
-                                                            border_color=root_tk.fg_color)
+                                                            border_color=self.fg_color)
         self.button_add_Face.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
         self.tooltip(self.button_add_Face, SelectedLanguage["Add Faces Button Tooltip"])
         # ADD FACE BUTTON #
@@ -287,7 +287,7 @@ class GUI:
 
     def settings(self): 
         if self.window == None:
-            self.window = customtkinter.CTkToplevel(root_tk)
+            self.window = customtkinter.CTkToplevel(self)
             Width = 420
             Height = 240
             self.window.title(SelectedLanguage["Settings Button"])
@@ -390,8 +390,8 @@ class GUI:
                     f.close
             #case "Português-br":
             #    SelectedLanguage = L.PT_br
-            #    root_tk.destroy()
-            #    root_tk.__init__()
+            #    self.destroy()
+            #    self.__init__()
             case "English":
                 Config.set("DEFAULTS", "Language", "English")
                 with open(Config_File, "w") as f:
@@ -433,7 +433,7 @@ class GUI:
             case 0:
                 pass
             case 1:
-                root_tk.destroy()
+                self.destroy()
 
     def theme_change(self):
         match self.switch.get():
@@ -493,7 +493,7 @@ class GUI:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
             self.send_errors_discord(eroro)
             
-    def about(root_tk):
+    def about(self):
         ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
 
     def browse_Face(self):
@@ -584,7 +584,7 @@ class GUI:
             cv2.putText(img, SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm", (10, self.imy - 155), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
             cv2.putText(img, SelectedLanguage["Right eye"], (self.bmx, self.bmy), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
             cv2.putText(img, SelectedLanguage["Left eye"], (self.bmlx, self.bmly), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
-            self.medidas_label = customtkinter.CTkLabel(root_tk, text=SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm\n" + SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.minleft, 2)} mm\n" + SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.minright, 2)} mm\n" + SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm\n" + SelectedLanguage["Right Height"] + f"{round(self.right_iris_Oculos, 2)} mm\n" + SelectedLanguage["Left Height"] + f"{round(self.left_iris_Oculos, 2)} mm")
+            self.medidas_label = customtkinter.CTkLabel(self, text=SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm\n" + SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.minleft, 2)} mm\n" + SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.minright, 2)} mm\n" + SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm\n" + SelectedLanguage["Right Height"] + f"{round(self.right_iris_Oculos, 2)} mm\n" + SelectedLanguage["Left Height"] + f"{round(self.left_iris_Oculos, 2)} mm")
             self.medidas_label.configure(font=("Courier", 18, "bold"), anchor="w", justify=tkinter.LEFT)
             self.medidas_label.place(relx= 0.2, rely=0.67)
         except Exception as eroro:
@@ -997,8 +997,8 @@ class GUI:
             return
 
 def run():
-    GUI(root_tk)
-    root_tk.mainloop()
+    app = GUI()
+    app.mainloop()
  
 if __name__ == '__main__':
     run()

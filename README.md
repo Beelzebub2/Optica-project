@@ -3,6 +3,11 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 ## Changes
 ```diff
+
+10/09/2022
+
++   Changed code orientation
+
 09/09/2022
 
 !   Working on simpler autoupdate
