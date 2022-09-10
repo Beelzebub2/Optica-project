@@ -1,3 +1,19 @@
+
+Universal = {
+    ## Folders ##
+
+    "Necessary Files Folder": "Necessary files",
+
+    "Ready Images Folder": "Ready-images",
+
+    "Glasses Folder": "Glasses",
+
+    "Faces Folder": "Faces",
+
+    ##/\ Folders /\##
+
+}
+
 PT_pt = {
 
     ## Option menu ##
@@ -71,18 +87,6 @@ PT_pt = {
 
     ##/\ Tooltips /\##
 
-
-    ## Folders ##
-
-    "Necessary Files Folder": "Necessary files",
-
-    "Ready Images Folder": "Ready-images",
-
-    "Glasses Folder": "Glasses",
-
-    "Faces Folder": "Faces",
-
-    ##/\ Folders /\##
 
 
     ## Labels ##
@@ -256,19 +260,6 @@ English = {
     "Start Button Tooltip": "Starts the analysis",
 
     ##/\ Tooltips /\##
-
-
-    ## Folders ##
-
-    "Necessary Files Folder": "Necessary files",
-
-    "Ready Images Folder": "Ready-images",
-
-    "Glasses Folder": "Glasses",
-
-    "Faces Folder": "Faces",
-
-    ##/\ Folders /\##
 
 
     ## Labels ##

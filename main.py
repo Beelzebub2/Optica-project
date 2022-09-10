@@ -16,9 +16,9 @@ import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
 import threading
-
+import ntpath
 PATH = os.path.dirname(os.path.realpath(__file__))
-Config_File = "{}\\{}\\config.ini".format(PATH, L.English["Necessary Files Folder"])
+Config_File = "{}\\{}\\config.ini".format(PATH, L.Universal["Necessary Files Folder"])
 Config = ConfigParser()
 Config.read(Config_File)
 
@@ -50,11 +50,11 @@ match Theme:
         Option_th_df = "Red"
 
 
-if not os.path.exists(SelectedLanguage["Ready Images Folder"]):
-    os.makedirs(SelectedLanguage["Ready Images Folder"])
+if not os.path.exists(L.Universal["Ready Images Folder"]):
+    os.makedirs(L.Universal["Ready Images Folder"])
 
-if not os.path.exists(SelectedLanguage["Faces Folder"]):
-    os.makedirs(SelectedLanguage["Faces Folder"])
+if not os.path.exists(L.Universal["Faces Folder"]):
+    os.makedirs(L.Universal["Faces Folder"])
 
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
@@ -113,7 +113,7 @@ class GUI(customtkinter.CTk):
         HEIGHT = 720
         self.toast = ToastNotifier()
         self.title("Face Dimensions Detector (Beta 2.0)")
-        self.wm_iconbitmap("{}/icon.ico".format(SelectedLanguage["Necessary Files Folder"]))
+        self.wm_iconbitmap("{}\\icon.ico".format(L.Universal["Necessary Files Folder"]))
         self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
         self.maxsize(1920, 1080)
@@ -128,17 +128,17 @@ class GUI(customtkinter.CTk):
         # WINDOW SETTINGS #
 
         # VISUALS
-        self.settings_img = ImageTk.PhotoImage(Image.open("{}/visuals1.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.add_face_img = ImageTk.PhotoImage(Image.open("{}/visuals2.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.bug_report_img = ImageTk.PhotoImage(Image.open("{}/visuals3.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.tutorial_img = ImageTk.PhotoImage(Image.open("{}/visuals4.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.save_img = ImageTk.PhotoImage(Image.open("{}/visuals5.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.face_img = ImageTk.PhotoImage(Image.open("{}/visuals6.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.glasses_img = ImageTk.PhotoImage(Image.open("{}/visuals7.png".format(SelectedLanguage["Necessary Files Folder"])).resize((30, 15)))
-        self.start_img = ImageTk.PhotoImage(Image.open("{}/visuals8.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.folder_img = ImageTk.PhotoImage(Image.open("{}/visuals9.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
-        self.icon_img = Image.open("{}/visuals10.png".format(SelectedLanguage["Necessary Files Folder"])).resize((220, 100))
-        self.about_img = ImageTk.PhotoImage(Image.open("{}/visuals11.png".format(SelectedLanguage["Necessary Files Folder"])).resize((20, 20)))
+        self.settings_img = ImageTk.PhotoImage(Image.open("{}/visuals1.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.add_face_img = ImageTk.PhotoImage(Image.open("{}/visuals2.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.bug_report_img = ImageTk.PhotoImage(Image.open("{}/visuals3.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.tutorial_img = ImageTk.PhotoImage(Image.open("{}/visuals4.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.save_img = ImageTk.PhotoImage(Image.open("{}/visuals5.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.face_img = ImageTk.PhotoImage(Image.open("{}/visuals6.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.glasses_img = ImageTk.PhotoImage(Image.open("{}/visuals7.png".format(L.Universal["Necessary Files Folder"])).resize((30, 15)))
+        self.start_img = ImageTk.PhotoImage(Image.open("{}/visuals8.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.folder_img = ImageTk.PhotoImage(Image.open("{}/visuals9.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
+        self.icon_img = Image.open("{}/visuals10.png".format(L.Universal["Necessary Files Folder"])).resize((220, 100))
+        self.about_img = ImageTk.PhotoImage(Image.open("{}/visuals11.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
         
         # VISUALS #
 
@@ -292,7 +292,7 @@ class GUI(customtkinter.CTk):
             Width = 420
             Height = 240
             self.window.title(SelectedLanguage["Settings Button"])
-            self.window.wm_iconbitmap(f"{SelectedLanguage['Necessary Files Folder']}/icon.ico")
+            self.window.wm_iconbitmap(f"{L.Universal['Necessary Files Folder']}\\icon.ico")
             self.window.attributes('-topmost',True)
             self.window.attributes('-topmost',False)
             self.window.minsize(420, 200)
@@ -467,7 +467,7 @@ class GUI(customtkinter.CTk):
         try:
             script_path = os.path.abspath(__file__)
             script_dir = os.path.split(script_path)[0]
-            rel_path = SelectedLanguage["Faces Folder"]
+            rel_path = L.Universal["Faces Folder"]
             self.cur_dir = os.getcwd()
             abs_file_path = os.path.join(script_dir, rel_path)
             os.startfile(f'"{abs_file_path}"')
@@ -486,7 +486,7 @@ class GUI(customtkinter.CTk):
         try:
             script_path = os.path.abspath(__file__)
             script_dir = os.path.split(script_path)[0]
-            rel_path = SelectedLanguage["Ready Images Folder"]
+            rel_path = L.Universal["Ready Images Folder"]
             self.cur_dir = os.getcwd()
             abs_file_path = os.path.join(script_dir, rel_path)
             os.startfile(f'"{abs_file_path}"')
@@ -498,9 +498,9 @@ class GUI(customtkinter.CTk):
         ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
 
     def browse_Face(self):
-        if os.path.exists(SelectedLanguage["Faces Folder"]):
+        if os.path.exists(L.Universal["Faces Folder"]):
             self.Face_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Face Window Title"], 
-                                                                                    initialdir = SelectedLanguage["Faces Folder"], 
+                                                                                    initialdir = L.Universal["Faces Folder"], 
                                                                                     filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                                     image_extensions)])
         else:
@@ -508,11 +508,14 @@ class GUI(customtkinter.CTk):
                                                                                     filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                                     image_extensions)]) 
         #image
-        self.Face_image = Image.open(self.Face_path)
-        self.Face_image = self.Face_image.resize((250, 250), Image.Resampling.LANCZOS)
-        self.Face_image = ImageTk.PhotoImage(self.Face_image)
-        self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
-        self.panel_Face.place(relx=0.33, rely=0.45, anchor=tkinter.CENTER)
+        if ntpath.isfile(self.Face_path):
+            self.Face_image = Image.open(self.Face_path)
+            self.Face_image = self.Face_image.resize((250, 250), Image.Resampling.LANCZOS)
+            self.Face_image = ImageTk.PhotoImage(self.Face_image)
+            self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
+            self.panel_Face.place(relx=0.33, rely=0.45, anchor=tkinter.CENTER)
+        else:
+            print("no image selected")
         #button
         self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
                                                             width=200, 
@@ -528,7 +531,7 @@ class GUI(customtkinter.CTk):
         self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
 
     def open_faces_folder():
-        os.open(SelectedLanguage["Faces Folder"])
+        os.open(L.Universal["Faces Folder"])
         
     def browse_Oculos(self):
         if os.path.exists(SelectedLanguage["Glasses Folder"]):
@@ -564,7 +567,7 @@ class GUI(customtkinter.CTk):
 
     def tutorial(self):
         try:
-            os.startfile("{}\\tutorial.mp4".format(SelectedLanguage["Necessary Files Folder"]))
+            os.startfile("{}\\tutorial.mp4".format(L.Universal["Necessary Files Folder"]))
         except:
             err = str(err)
             self.send_errors_discord(err)
@@ -599,7 +602,7 @@ class GUI(customtkinter.CTk):
 
     def put_glasses(self, ImageInput=None):
         if ImageInput == None:
-            img = Image.open("{}/{}--{}.png".format(SelectedLanguage["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp))
+            img = Image.open("{}/{}--{}.png".format(L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp))
         else:
             img = ImageInput
         width_pic = int(img.size[0]) # gets the original picture width
@@ -675,7 +678,7 @@ class GUI(customtkinter.CTk):
         Oculos_img = Image.new('RGBA', (width_pic,height_pic), (0, 0, 0, 0)) # creates a blank image same size as the original
         Oculos_img.paste(img, (0,0)) # pastes the original on the blank 
         Oculos_img.paste(mask_Oculos, (x, y), mask=mask_Oculos) # pastes the Oculos over the original over the blank
-        Oculos_img.save("{}/{}-{}.png".format(SelectedLanguage["Ready Images Folder"], SelectedLanguage["Image With Glasses"], self.t_stamp))
+        Oculos_img.save("{}/{}-{}.png".format(L.Universal["Ready Images Folder"], SelectedLanguage["Image With Glasses"], self.t_stamp))
         self.toast.show_toast(
                 "Optica",
                 SelectedLanguage["Done Toast Notification"],
@@ -984,7 +987,7 @@ class GUI(customtkinter.CTk):
                         self.draw_on_img(self.img)
                     self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
                     self.t_stamp = self.t_stamp
-                    cv2.imwrite("{}/{}--{}.png".format(SelectedLanguage["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
+                    cv2.imwrite("{}/{}--{}.png".format(L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
                     self.put_glasses()
                     imagee = Image.open("temp.png")
                     self.put_glasses(ImageInput=imagee)
