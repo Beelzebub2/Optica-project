@@ -17,7 +17,8 @@ from configparser import ConfigParser
 import screeninfo
 import threading
 
-Config_File = "config.ini"
+PATH = os.path.dirname(os.path.realpath(__file__))
+Config_File = "{}\\{}\\config.ini".format(PATH, L.English["Necessary Files Folder"])
 Config = ConfigParser()
 Config.read(Config_File)
 
