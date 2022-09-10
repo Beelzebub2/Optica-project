@@ -465,12 +465,8 @@ class GUI(customtkinter.CTk):
 
     def add_faces(self):
         try:
-            script_path = os.path.abspath(__file__)
-            script_dir = os.path.split(script_path)[0]
-            rel_path = L.Universal["Faces Folder"]
-            self.cur_dir = os.getcwd()
-            abs_file_path = os.path.join(script_dir, rel_path)
-            os.startfile(f'"{abs_file_path}"')
+            Faces_folder = "{}\\{}".format(PATH, L.Universal["Faces Folder"])
+            os.startfile(f"{Faces_folder}")
             self.toast.show_toast(
                 "Optica",
                 f'{SelectedLanguage["Add Faces Toast notification"]}',
@@ -484,12 +480,8 @@ class GUI(customtkinter.CTk):
 
     def open_results(self):
         try:
-            script_path = os.path.abspath(__file__)
-            script_dir = os.path.split(script_path)[0]
-            rel_path = L.Universal["Ready Images Folder"]
-            self.cur_dir = os.getcwd()
-            abs_file_path = os.path.join(script_dir, rel_path)
-            os.startfile(f'"{abs_file_path}"')
+            Results_folder = "{}\\{}".format(PATH, L.Universal["Ready Images Folder"])
+            os.startfile(f'"{Results_folder}"')
         except Exception as eroro:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
             self.send_errors_discord(eroro)

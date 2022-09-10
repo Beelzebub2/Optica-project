@@ -6,6 +6,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 10/09/2022
 
++   Fixed Long ass function to open a simple folder 
 +   Fixed ("AttributeError: 'str' object has no attribute 'seek'")
 +   Changed code orientation
 
