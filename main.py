@@ -424,8 +424,8 @@ class GUI(customtkinter.CTk):
                     f.close
 
     def import_mediapipe(self):
-        import mediapipe as mp
-        self.mp_face_mesh = mp.solutions.face_mesh
+        from mediapipe import solutions
+        self.mp_face_mesh = solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
         # SETTINGS WINDOW #
     def exit(self):

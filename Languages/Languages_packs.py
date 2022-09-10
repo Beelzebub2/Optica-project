@@ -139,7 +139,7 @@ PT_pt = {
 
     "Aruco Marker Not detected": "Aruco Marker não foi detetado",
 
-    "Started Without Measurements Error": "É necessario inserir valores nas caixas de medidas.",
+    "Started Without Measurements Error": "É necessário inserir valores nas caixas de medidas\ne salvá-las.",
 
     ##/\ Window text /\##
     
@@ -312,7 +312,7 @@ English = {
 
     "Aruco Marker Not detected": "Aruco Marker wasn't not detected",
 
-    "Started Without Measurements Error": "It is necessary to insert values in the measurements.",
+    "Started Without Measurements Error": "It is necessary to insert values in the measurements\nand save them",
 
     ##/\ Window text /\##
     
