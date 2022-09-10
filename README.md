@@ -4,14 +4,14 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
-10/09/2022
+Beta 2.0 10/09/2022
 
 +   Fixed buttons showing up even when no image was selected
 +   Fixed Long ass function to open a simple folder 
 +   Fixed ("AttributeError: 'str' object has no attribute 'seek'")
 +   Changed code orientation
 
-09/09/2022
+Beta 2.0 09/09/2022
 
 !   Working on simpler autoupdate
 +   Fixed mistake (script would not close after program end)
@@ -21,7 +21,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 +   Fixed red theme issues
 +   Added custom Red theme
 
-08/09/2022
+Beta 2.0 08/09/2022
 
 !   Working on Optionmenu starting function before it's clicked
 +   Settings window now goes to top if someone tries to duplicate it
@@ -33,7 +33,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 +   Fixed "temp.png" not getting deleted  
 +   Window always appears on center of screen (works with multiple screens)
 
-05/09/2022
+Beta 2.0 05/09/2022
 
 +   Settings button was added
 +   Reorganized and optimized code
