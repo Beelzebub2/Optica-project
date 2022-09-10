@@ -1,5 +1,19 @@
 PT_pt = {
 
+    ## Option menu ##
+
+    "Blue": "Azul",
+
+    "Dark-Blue": "Azul-Escuro",
+
+    "Red": "Vermelho",
+
+    "Green": "Verde",
+
+    ##/\ Option menu /\##
+
+
+
     ## Buttons ##
 
     "Settings Button": "Definições",
@@ -43,7 +57,7 @@ PT_pt = {
 
     "Open Results Folder Tooltip": "Abre a pasta dos resultados obtidos depois da analise",
 
-    "Theme Switch Tooltip": "Mudar o tema do programa",
+    "Theme Switch Tooltip": "Mudar o estilo do programa",
 
     "Report Bug Button Tooltip": "Reportar um bug aos desenvolvedores",
 
@@ -175,6 +189,18 @@ PT_pt = {
 
 English = {
 
+    ## Option menu ##
+
+    "Blue": "Blue",
+
+    "Dark-Blue": "Dark-Blue",
+
+    "Red": "Red",
+
+    "Green": "Green",
+
+    ##/\ Option menu /\##
+
     ## Buttons ##
 
     "Settings Button": "Settings",
@@ -217,7 +243,7 @@ English = {
 
     "Open Results Folder Tooltip": "Opens the folder with the results obtained after the analysis",
 
-    "Theme Switch Tooltip": "Change the program theme",
+    "Theme Switch Tooltip": "Change the program style",
 
     "Report Bug Button Tooltip": "Report a bug to developers",
 
