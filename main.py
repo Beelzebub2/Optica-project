@@ -388,7 +388,7 @@ class GUI(customtkinter.CTk):
                 Config.set("DEFAULTS", "Language", "Pt-pt")
                 with open(Config_File, "w") as f:
                     Config.write(f)
-                    f.close
+                    f.close()
             #case "Português-br":
             #    SelectedLanguage = L.PT_br
             #    self.destroy()
@@ -397,7 +397,7 @@ class GUI(customtkinter.CTk):
                 Config.set("DEFAULTS", "Language", "English")
                 with open(Config_File, "w") as f:
                     Config.write(f)
-                    f.close
+                    f.close()
 
     def change_theme(self, choice):
         choice = self.OptionmenuTheme.get()
@@ -406,22 +406,22 @@ class GUI(customtkinter.CTk):
                 Config.set("DEFAULTS", "Theme", "Green")
                 with open(Config_File, "w") as f:
                     Config.write(f)
-                    f.close
+                    f.close()
             case "Blue":
                 Config.set("DEFAULTS", "Theme", "Blue")
                 with open(Config_File, "w") as f:
                     Config.write(f)
-                    f.close
+                    f.close()
             case "Dark-Blue":
                 Config.set("DEFAULTS", "Theme", "Dark-Blue")
                 with open(Config_File, "w") as f:
                     Config.write(f)
-                    f.close
+                    f.close()
             case "Red":
                 Config.set("DEFAULTS", "Theme", "Red")
                 with open(Config_File, "w") as f:
                     Config.write(f)
-                    f.close
+                    f.close()
 
     def import_mediapipe(self):
         from mediapipe import solutions
