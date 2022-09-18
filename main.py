@@ -50,6 +50,7 @@ match Theme:
     case "Red":
         Program_Theme = "Necessary files\\Red-Theme.json"
         Option_th_df = "Red"
+
 Style = Config["DEFAULTS"]["style"]
 match Style:
     case "Dark":
@@ -58,12 +59,6 @@ match Style:
     case "Light":
         customtkinter.set_appearance_mode("light")
 
-if not os.path.exists(L.Universal["Ready Images Folder"]):
-    os.makedirs(L.Universal["Ready Images Folder"])
-
-if not os.path.exists(L.Universal["Faces Folder"]):
-    os.makedirs(L.Universal["Faces Folder"])
-
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
@@ -71,9 +66,8 @@ customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), 
 
 image_extensions = r"*.jpg *.jpeg *.png"
 # variáveis importantes
-# importar o facemesh da google
 
-# pontos do mediapipe mesh da google na cara para os olhos e a iris(roubei do indiano entendo minimamente oq faz)
+# pontos do mediapipe mesh da google na cara para os olhos e a iris
 LEFT_EYE =[362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398]
 RIGHT_EYE=[33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161 , 246] 
 LEFT_IRIS = [474,475, 476, 477]
@@ -101,6 +95,7 @@ class HomogeneousBgDetector():
                 objects_contours.append(cnt)
         return objects_contours
 
+# gets center of main monitor so it can later initialize the program on screen center instead of random location
 def get_monitor_from_coord(x, y):
     monitors = screeninfo.get_monitors()
 
@@ -439,7 +434,9 @@ class GUI(customtkinter.CTk):
         from mediapipe import solutions
         self.mp_face_mesh = solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
+
         # SETTINGS WINDOW #
+
     def exit(self):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1)
         match answer:
