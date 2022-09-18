@@ -17,7 +17,9 @@ from configparser import ConfigParser
 import screeninfo
 import threading
 import ntpath
-PATH = os.path.dirname(os.path.realpath(__file__))
+import platform
+
+PATH = ntpath.dirname(ntpath.realpath(__file__))
 Config_File = "{}\\{}\\config.ini".format(PATH, L.Universal["Necessary Files Folder"])
 Config = ConfigParser()
 Config.read(Config_File)
@@ -48,7 +50,13 @@ match Theme:
     case "Red":
         Program_Theme = "Necessary files\\Red-Theme.json"
         Option_th_df = "Red"
+Style = Config["DEFAULTS"]["style"]
+match Style:
+    case "Dark":
+        customtkinter.set_appearance_mode("dark")
 
+    case "Light":
+        customtkinter.set_appearance_mode("light")
 
 if not os.path.exists(L.Universal["Ready Images Folder"]):
     os.makedirs(L.Universal["Ready Images Folder"])
@@ -125,6 +133,7 @@ class GUI(customtkinter.CTk):
         y_cord = int((screen_height / 2) - (HEIGHT / 2))
         self.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
         self.window = None
+        
         # WINDOW SETTINGS #
 
         # VISUALS
@@ -312,8 +321,11 @@ class GUI(customtkinter.CTk):
             self.switch = customtkinter.CTkSwitch(master=self.window, 
                                                     text=SelectedLanguage["Theme Switch"], 
                                                     command=self.theme_change,)
-            self.switch.toggle(1)
             self.switch.place(relx=0.12, rely=0.65)
+            if Config["DEFAULTS"]["style"] == "Dark":
+                self.switch.select()
+            else:
+                self.switch.deselect()
             self.tooltip(self.switch, SelectedLanguage["Theme Switch Tooltip"])
             self.report = customtkinter.CTkButton(self.window, 
                                                         width=150, 
@@ -440,8 +452,16 @@ class GUI(customtkinter.CTk):
         match self.switch.get():
             case 0:
                 customtkinter.set_appearance_mode("light")
+                Config.set("DEFAULTS", "Style", "Light")
+                with open(Config_File, "w") as f:
+                    Config.write(f)
+                    f.close()
             case 1:
                 customtkinter.set_appearance_mode("dark")
+                Config.set("DEFAULTS", "Style", "Dark")
+                with open(Config_File, "w") as f:
+                    Config.write(f)
+                    f.close()
 
     def report_command(self):
         try:
@@ -678,7 +698,7 @@ class GUI(customtkinter.CTk):
 
     def send_errors_discord(self, erro):
         try:
-            erro = str(f"User: {user}\nPc: {user_pc}\n\n" + erro)
+            erro = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + erro)
             embed = DiscordEmbed(title='Erro', description=erro, color='03b2f8')
             embed.set_timestamp()
             webhook = DiscordWebhook(url='https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe')

@@ -4,6 +4,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.0 18/09/2022
+
++   Fixed Dark and Light style not getting saved after restart
+
 Beta 2.0 10/09/2022
 
 +   Fixed buttons showing up even when no image was selected

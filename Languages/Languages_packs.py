@@ -60,11 +60,12 @@ PT_pt = {
 
     ## Tooltip ##
 
-    "Add Faces Button Tooltip": "Para adicionar caras clique no botão e depois arraste as fotos para dentro da pasta",
+    "Add Faces Button Tooltip": "Para adicionar rostos clique no botão e depois arraste as fotos para dentro da pasta",
 
-    "Select Face Button tooltip": "Após clicar no botão selecione o Rosto que quer analisar",
+    "Select Face Button tooltip": "Após clicar no botão selecione o rosto que quer analisar",
 
     "Settings Button Tooltip": "Definições do programa",
+
     "Length Tooltip": "O valor deve ser introduzido como no exemplo: 6.2",
 
     "Height Tooltip": "O valor deve ser introduzido como no exemplo: 6.2",
@@ -81,7 +82,7 @@ PT_pt = {
 
     "Tutorial Button Tooltip": "Demonstração em vídeo da utilização do programa",
 
-    "Select Glasses Button Tooltip": "Após clicar no botão selecione a Armação que deseja utilizar",
+    "Select Glasses Button Tooltip": "Após clicar no botão selecione a armação que deseja utilizar",
 
     "Start Button Tooltip": "Inicia a análise",
 
@@ -95,7 +96,7 @@ PT_pt = {
 
     "Height Label": "Altura da armação:",
 
-    "Warning Label": "É necessario reiniciar o programa para as alterações serem aplicadas",
+    "Warning Label": "É necessário reiniciar o programa para as alterações serem aplicadas",
 
     ##/\ Labels /\##
     
@@ -123,7 +124,7 @@ PT_pt = {
 
     "Report Bug Error Window": "Não foi possível abrir o link.",
 
-    "About Window Info": "Software desenvolvido por:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nv2.0",
+    "About Window Info": "Software desenvolvido por:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
 
     "Tutorial Open Error Window": "Não foi possível abrir o tutorial\nO ficheiro pode estar corrompido",
 
@@ -296,7 +297,7 @@ English = {
 
     "Report Bug Error Window": "It was not possible to open the link.",
 
-    "About Window Info": "Software developed by:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nv2.0",
+    "About Window Info": "Software developed by:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
 
     "Tutorial Open Error Window": "It was not possible to open the tutorial\nThe file may be corrupted",
 
@@ -337,9 +338,9 @@ English = {
 
     "Pupillary Distance": "Pupillary Distance: ",
 
-    "Left Nasopupillary distance": "DNP left: ",
+    "Left Nasopupillary distance": "NPD left: ",
 
-    "Right Nasopupillary distance": "DNP right: ",
+    "Right Nasopupillary distance": "NPD right: ",
 
     "Face Length": "Face Length: ",
 
@@ -347,9 +348,9 @@ English = {
 
     "Right eye": "Right Eye",
 
-    "Left Height": "ALT left: ",
+    "Left Height": "OC left: ",
 
-    "Right Height": "ALT right: ",
+    "Right Height": "OC right: ",
 
     ##/\ Optica info /\##
 
