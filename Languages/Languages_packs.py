@@ -269,7 +269,7 @@ English = {
 
     "Height Label": "Glasses height:",
 
-    "Warning Label": "Restart required to apply changes",
+    "Warning Label": "Program restart required to apply changes",
 
     ##/\ Labels /\##
     
