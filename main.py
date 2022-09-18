@@ -2,24 +2,22 @@ import os
 import ctypes
 import cv2
 import webbrowser
-import tkinter
-from tkinter import filedialog
+from tkinter import filedialog, RIGHT, CENTER, LEFT
 from tktooltip import ToolTip
 import customtkinter
 from PIL import ImageTk, Image
 from discord_webhook import DiscordWebhook, DiscordEmbed
 import numpy as np
 from datetime import datetime
-import math
+from math import sqrt
 from win10toast import ToastNotifier
 import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
 import threading
-import ntpath
 import platform
 
-PATH = ntpath.dirname(ntpath.realpath(__file__))
+PATH = os.path.dirname(os.path.realpath(__file__))
 Config_File = "{}\\{}\\config.ini".format(PATH, L.Universal["Necessary Files Folder"])
 Config = ConfigParser()
 Config.read(Config_File)
@@ -58,7 +56,6 @@ match Style:
 
     case "Light":
         customtkinter.set_appearance_mode("light")
-
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
@@ -185,16 +182,16 @@ class GUI(customtkinter.CTk):
         # ICON
         self.icon_img = ImageTk.PhotoImage(self.icon_img)
         self.panel_icon = customtkinter.CTkLabel(self.Frame4, image=self.icon_img)
-        self.panel_icon.place(relx=0.5, rely=0.52, anchor=tkinter.CENTER)
+        self.panel_icon.place(relx=0.5, rely=0.52, anchor=CENTER)
         # ICON #
         
         # SETTINGS BUTTON
         self.settings_bt = customtkinter.CTkButton(self.Frame3, 
                                                     text=SelectedLanguage["Settings Button"],
                                                     image=self.settings_img,
-                                                    compound=tkinter.RIGHT,
+                                                    compound=RIGHT,
                                                     command=self.settings)
-        self.settings_bt.place(relx=0.5, rely=0.47, anchor=tkinter.CENTER)
+        self.settings_bt.place(relx=0.5, rely=0.47, anchor=CENTER)
         self.tooltip(self.settings_bt, SelectedLanguage["Settings Button Tooltip"])
         # SETTINGS BUTTON #
 
@@ -208,8 +205,8 @@ class GUI(customtkinter.CTk):
                                                             text=SelectedLanguage["Select Face Button"], 
                                                             command=self.browse_Face, 
                                                             image=self.face_img,
-                                                            compound=tkinter.RIGHT)
-        self.button_get_Face.place(relx=0.5, rely=0.32, anchor=tkinter.CENTER)
+                                                            compound=RIGHT)
+        self.button_get_Face.place(relx=0.5, rely=0.32, anchor=CENTER)
         self.tooltip(self.button_get_Face, SelectedLanguage["Select Face Button tooltip"])
         # SELECT FACE BUTTON #
 
@@ -223,36 +220,36 @@ class GUI(customtkinter.CTk):
                                                             text=SelectedLanguage["Add Faces Button"], 
                                                             command=self.add_faces, 
                                                             image=self.add_face_img,
-                                                            compound=tkinter.RIGHT, 
+                                                            compound=RIGHT, 
                                                             border_color=self.fg_color)
-        self.button_add_Face.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+        self.button_add_Face.place(relx=0.5, rely=0.6, anchor=CENTER)
         self.tooltip(self.button_add_Face, SelectedLanguage["Add Faces Button Tooltip"])
         # ADD FACE BUTTON #
 
         # INPUT FRAME LENGTH 
         self.entry_comprimento = customtkinter.CTkEntry(self.Frame2, 
                                                         placeholder_text="mm")
-        self.entry_comprimento.place(relx=0.5, rely=0.72, anchor=tkinter.CENTER)
+        self.entry_comprimento.place(relx=0.5, rely=0.72, anchor=CENTER)
         self.tooltip(self.entry_comprimento, SelectedLanguage["Length Tooltip"])
         # INPUT FRAME LENGTH #
 
         # INPUT FRAME HEIGHT
         self.entry_altura = customtkinter.CTkEntry(self.Frame2, 
                                                     placeholder_text="mm")
-        self.entry_altura.place(relx=0.5, rely=0.82, anchor=tkinter.CENTER)
+        self.entry_altura.place(relx=0.5, rely=0.82, anchor=CENTER)
         self.tooltip(self.entry_altura, SelectedLanguage["Height Tooltip"])
         # INPUT FRAME HEIGHT #
 
         # INPUT FRAME LENGTH LABEL
         self.label_comprimento = customtkinter.CTkLabel(self.Frame2, 
                                                         text=SelectedLanguage["Length Label"])
-        self.label_comprimento.place(relx=0.5, rely=0.67, anchor=tkinter.CENTER)
+        self.label_comprimento.place(relx=0.5, rely=0.67, anchor=CENTER)
         # INPUT FRAME LENGTH LABEL #
         
         # INPUT FRAME HEIGHT LABEL
         self.label_altura = customtkinter.CTkLabel(self.Frame2, 
                                                     text=SelectedLanguage["Height Label"])
-        self.label_altura.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)
+        self.label_altura.place(relx=0.5, rely=0.77, anchor=CENTER)
         # INPUT FRAME HEIGHT LABEL #
 
         # SAVE MEASUREMENTS BUTTON
@@ -265,8 +262,8 @@ class GUI(customtkinter.CTk):
                                                                 text=SelectedLanguage["Save Measurements Button"], 
                                                                 command=lambda:self.salvar(), 
                                                                 image=self.save_img,
-                                                                compound=tkinter.RIGHT)
-        self.button_medidas_oculos.place(relx=0.5, rely=0.9, anchor=tkinter.CENTER)
+                                                                compound=RIGHT)
+        self.button_medidas_oculos.place(relx=0.5, rely=0.9, anchor=CENTER)
         self.tooltip(self.button_medidas_oculos, SelectedLanguage["Save Measurements Button Tooltip"])
         # SAVE MEASUREMENTS BUTTON #
 
@@ -279,8 +276,8 @@ class GUI(customtkinter.CTk):
                                                         text=SelectedLanguage["Open Results Folder Button"], 
                                                         command=self.open_results, 
                                                         image=self.folder_img,
-                                                        compound=tkinter.RIGHT)
-        self.open_results_bt.place(relx=0.5, rely=0.53, anchor=tkinter.CENTER)
+                                                        compound=RIGHT)
+        self.open_results_bt.place(relx=0.5, rely=0.53, anchor=CENTER)
         self.tooltip(self.open_results_bt, SelectedLanguage["Open Results Folder Tooltip"])
     
 
@@ -331,7 +328,7 @@ class GUI(customtkinter.CTk):
                                                         text=SelectedLanguage["Report Bug Button"], 
                                                         command=self.report_command, 
                                                         image=self.bug_report_img,
-                                                        compound=tkinter.RIGHT)
+                                                        compound=RIGHT)
             self.report.place(relx=0.05, rely=0.3, anchor="w")
             self.tooltip(self.report, SelectedLanguage["Report Bug Button Tooltip"])
 
@@ -344,7 +341,7 @@ class GUI(customtkinter.CTk):
                                                         text=SelectedLanguage["About Button"], 
                                                         command=self.about, 
                                                         image=self.about_img,
-                                                        compound=tkinter.RIGHT)
+                                                        compound=RIGHT)
             self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
             self.tooltip(self.about_bt, SelectedLanguage["About Button Tooltip"])
 
@@ -357,7 +354,7 @@ class GUI(customtkinter.CTk):
                                                                     text=SelectedLanguage["Tutorial Button"], 
                                                                     command=self.tutorial, 
                                                                     image=self.tutorial_img,
-                                                                    compound=tkinter.RIGHT)
+                                                                    compound=RIGHT)
             self.button_get_tutorial.place(anchor="w", rely = 0.15, relx=0.05)
             self.tooltip(self.button_get_tutorial, SelectedLanguage["Tutorial Button Tooltip"])
 
@@ -515,12 +512,12 @@ class GUI(customtkinter.CTk):
                                                                                     filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                                     image_extensions)]) 
         #image
-        if ntpath.isfile(self.Face_path):
+        if os.path.isfile(self.Face_path):
             self.Face_image = Image.open(self.Face_path)
             self.Face_image = self.Face_image.resize((250, 250), Image.Resampling.LANCZOS)
             self.Face_image = ImageTk.PhotoImage(self.Face_image)
             self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
-            self.panel_Face.place(relx=0.33, rely=0.45, anchor=tkinter.CENTER)
+            self.panel_Face.place(relx=0.33, rely=0.45, anchor=CENTER)
         #button
             self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
                                                                 width=200, 
@@ -531,8 +528,8 @@ class GUI(customtkinter.CTk):
                                                                 text=SelectedLanguage["Select Glasses Button"], 
                                                                 command=self.browse_Oculos, 
                                                                 image=self.glasses_img,
-                                                                compound=tkinter.RIGHT)
-            self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=tkinter.CENTER)
+                                                                compound=RIGHT)
+            self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
             self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
 
     def open_faces_folder():
@@ -551,12 +548,12 @@ class GUI(customtkinter.CTk):
                                                                 image_extensions)])
             self.Oculos_path = self.Oculos_path
         #image
-        if ntpath.isfile(self.Oculos_path):
+        if os.path.isfile(self.Oculos_path):
             self.Oculos_image = Image.open(self.Oculos_path)
             self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
             self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
             self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
-            self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=tkinter.CENTER)
+            self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=CENTER)
         #button
             self.button_Start = customtkinter.CTkButton(self.Frame2, 
                                                             width=200, 
@@ -567,8 +564,8 @@ class GUI(customtkinter.CTk):
                                                             text=SelectedLanguage["Start Button"], 
                                                             command=lambda:self.get_object_size(self.Face_path), 
                                                             image=self.start_img,
-                                                            compound=tkinter.RIGHT)
-            self.button_Start.place(relx=0.5, rely=0.46, anchor=tkinter.CENTER)
+                                                            compound=RIGHT)
+            self.button_Start.place(relx=0.5, rely=0.46, anchor=CENTER)
             self.tooltip(self.button_Start, SelectedLanguage["Start Button Tooltip"])
 
     def tutorial(self):
@@ -595,7 +592,7 @@ class GUI(customtkinter.CTk):
             cv2.putText(img, SelectedLanguage["Right eye"], (self.bmx, self.bmy), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
             cv2.putText(img, SelectedLanguage["Left eye"], (self.bmlx, self.bmly), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
             self.medidas_label = customtkinter.CTkLabel(self, text=SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm\n" + SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.minleft, 2)} mm\n" + SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.minright, 2)} mm\n" + SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm\n" + SelectedLanguage["Right Height"] + f"{round(self.right_iris_Oculos, 2)} mm\n" + SelectedLanguage["Left Height"] + f"{round(self.left_iris_Oculos, 2)} mm")
-            self.medidas_label.configure(font=("Courier", 18, "bold"), anchor="w", justify=tkinter.LEFT)
+            self.medidas_label.configure(font=("Courier", 18, "bold"), anchor="w", justify=LEFT)
             self.medidas_label.place(relx= 0.2, rely=0.67)
         except Exception as eroro:
             self.send_errors_discord(eroro,)
@@ -674,8 +671,8 @@ class GUI(customtkinter.CTk):
             self.get_point(528,249,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        r_iris_glasses = (math.sqrt((self.r_cx - right_iris_x)**2 + (self.r_cy - right_iris_y)**2)) / self.pixel_mm_ratio
-        l_iris_glasses = (math.sqrt((self.l_cx - left_iris_x)**2 + (self.l_cy - left_iris_y)**2)) / self.pixel_mm_ratio
+        r_iris_glasses = (sqrt((self.r_cx - right_iris_x)**2 + (self.r_cy - right_iris_y)**2)) / self.pixel_mm_ratio
+        l_iris_glasses = (sqrt((self.l_cx - left_iris_x)**2 + (self.l_cy - left_iris_y)**2)) / self.pixel_mm_ratio
         cv2.line(self.img, (right_iris_x, right_iris_y), (int(self.r_cx), int(self.r_cy)), (0,0,0), 1, cv2.LINE_AA)
         cv2.line(self.img, (left_iris_x, left_iris_y), (int(self.l_cx), int(self.l_cy)), (0,0,0), 1, cv2.LINE_AA)
         cv2.putText(self.img, SelectedLanguage["Right Height"] + f"{round(r_iris_glasses, 2)} mm", (10, self.imy - 205), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
@@ -701,7 +698,7 @@ class GUI(customtkinter.CTk):
             webhook = DiscordWebhook(url='https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe')
             webhook.add_embed(embed)
             response = webhook.execute()
-        except Exception as er:
+        except Exception:
             pass
        
 
@@ -867,12 +864,12 @@ class GUI(customtkinter.CTk):
                         # x do circulo direito/ y do ... raio do ...
                         (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(self.mesh_points[RIGHT_IRIS])
                         #distancias
-                        self.iris_to_iris_line_distance = (math.sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
-                        self.left_iris_to_nose = (math.sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
-                        self.right_iris_to_nose = (math.sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
-                        self.left_to_right_face = (math.sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
-                        self.right_iris_Oculos = round((math.sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
-                        self.left_iris_Oculos = round((math.sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
+                        self.iris_to_iris_line_distance = (sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
+                        self.left_iris_to_nose = (sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+                        self.right_iris_to_nose = (sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+                        self.left_to_right_face = (sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
+                        self.right_iris_Oculos = round((sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
+                        self.left_iris_Oculos = round((sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
                         self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
                         self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
                         right_iris_nose = []
@@ -926,53 +923,53 @@ class GUI(customtkinter.CTk):
                                                 self.mid10_y,
                                                 self.mid11_y]
                         right_iris_nose.append(self.right_iris_to_nose)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_nose_x)**2 + (self.r_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_mid_top_x)**2 + (self.r_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.bottom_nose_x)**2 + (self.r_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_more_points_x)**2 + (self.r_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.midier_nose_x)**2 + (self.r_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_medium_mid_x)**2 + (self.r_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_midier_top_x)**2 + (self.r_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_midier_bottom_x)**2 + (self.r_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_medium_nose_x)**2 + (self.r_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_medium_bottom_x)**2 + (self.r_cy - self.mid_medium_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid_x)**2 + (self.r_cy - self.mid_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid2_x)**2 + (self.r_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid3_x)**2 + (self.r_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid4_x)**2 + (self.r_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid5_x)**2 + (self.r_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid6_x)**2 + (self.r_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid7_x)**2 + (self.r_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid8_x)**2 + (self.r_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid9_x)**2 + (self.r_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid10_x)**2 + (self.r_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((math.sqrt((self.r_cx - self.mid11_x)**2 + (self.r_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_nose_x)**2 + (self.r_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_top_x)**2 + (self.r_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.bottom_nose_x)**2 + (self.r_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_more_points_x)**2 + (self.r_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.midier_nose_x)**2 + (self.r_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_mid_x)**2 + (self.r_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_midier_top_x)**2 + (self.r_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_midier_bottom_x)**2 + (self.r_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_nose_x)**2 + (self.r_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_bottom_x)**2 + (self.r_cy - self.mid_medium_bottom_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid_x)**2 + (self.r_cy - self.mid_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid2_x)**2 + (self.r_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid3_x)**2 + (self.r_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid4_x)**2 + (self.r_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid5_x)**2 + (self.r_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid6_x)**2 + (self.r_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid7_x)**2 + (self.r_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid8_x)**2 + (self.r_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid9_x)**2 + (self.r_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid10_x)**2 + (self.r_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
+                        right_iris_nose.append((sqrt((self.r_cx - self.mid11_x)**2 + (self.r_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
                         left_iris_nose.append(self.left_iris_to_nose)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_nose_x)**2 + (self.l_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_mid_top_x)**2 + (self.l_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.bottom_nose_x)**2 + (self.l_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_more_points_x)**2 + (self.l_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.midier_nose_x)**2 + (self.l_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_medium_mid_x)**2 + (self.l_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_midier_top_x)**2 + (self.l_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_midier_bottom_x)**2 + (self.l_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_medium_nose_x)**2 + (self.l_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_medium_bottom_x)**2 + (self.l_cy - self.mid_medium_bottom_x)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid_x)**2 + (self.l_cy - self.mid_x)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid2_x)**2 + (self.l_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid3_x)**2 + (self.l_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid4_x)**2 + (self.l_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid5_x)**2 + (self.l_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid6_x)**2 + (self.l_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid7_x)**2 + (self.l_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid8_x)**2 + (self.l_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid9_x)**2 + (self.l_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid10_x)**2 + (self.l_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((math.sqrt((self.l_cx - self.mid11_x)**2 + (self.l_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_nose_x)**2 + (self.l_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_top_x)**2 + (self.l_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.bottom_nose_x)**2 + (self.l_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_more_points_x)**2 + (self.l_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.midier_nose_x)**2 + (self.l_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_mid_x)**2 + (self.l_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_midier_top_x)**2 + (self.l_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_midier_bottom_x)**2 + (self.l_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_nose_x)**2 + (self.l_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_bottom_x)**2 + (self.l_cy - self.mid_medium_bottom_x)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid_x)**2 + (self.l_cy - self.mid_x)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid2_x)**2 + (self.l_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid3_x)**2 + (self.l_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid4_x)**2 + (self.l_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid5_x)**2 + (self.l_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid6_x)**2 + (self.l_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid7_x)**2 + (self.l_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid8_x)**2 + (self.l_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid9_x)**2 + (self.l_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid10_x)**2 + (self.l_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
+                        left_iris_nose.append((sqrt((self.l_cx - self.mid11_x)**2 + (self.l_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
                         self.minright = right_iris_nose[0]
                         self.minleft = left_iris_nose[0]
                         for i in right_iris_nose:
@@ -1005,9 +1002,9 @@ class GUI(customtkinter.CTk):
         except AttributeError:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
             return
-
+app = GUI()
 def run():
-    app = GUI()
+    
     app.mainloop()
  
 if __name__ == '__main__':
