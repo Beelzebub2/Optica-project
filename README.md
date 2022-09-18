@@ -6,6 +6,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 Beta 2.0 18/09/2022
 
+!   Working on Creating an Sql database to collect useful data
 +   Fixed Dark and Light style not getting saved after restart
 
 Beta 2.0 10/09/2022
