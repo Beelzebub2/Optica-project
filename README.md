@@ -6,6 +6,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 Beta 2.0 03/11/2022
 
++   New tutorial video (by joão)
 +   Fixed not letting use glasses more than once
 
 Beta 2.0 18/09/2022
