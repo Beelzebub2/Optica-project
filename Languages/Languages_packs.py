@@ -319,7 +319,7 @@ English = {
     
 
     ## Notifications ##
-
+    
     "Add Faces Toast notification": 'The image should include:\nA visible face\nOne aruco marker 5x5cm\nNeither of them can be "cut".',
 
     "Done Toast Notification": "Completed analysis",

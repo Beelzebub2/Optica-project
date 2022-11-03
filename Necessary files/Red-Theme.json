@@ -17,7 +17,7 @@
       "text_disabled": ["gray60", "gray50"],
       "text_button_disabled": ["gray40", "gray74"],
       "progressbar": ["#6B6B6B", "gray0"],
-      "progressbar_progress": ["#d56060", "#395E9C"],
+      "progressbar_progress": ["#d56060", "#fff"],
       "progressbar_border": ["gray", "gray"],
       "slider": ["#6B6B6B", "gray6"],
       "slider_progress": ["gray70", "gray30"],

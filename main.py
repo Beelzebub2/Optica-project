@@ -14,9 +14,10 @@ from win10toast import ToastNotifier
 import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
-import threading
 import platform
 
+#DEBUG
+#start_time = datetime.now()
 PATH = os.path.dirname(os.path.realpath(__file__))
 Config_File = "{}\\{}\\config.ini".format(PATH, L.Universal["Necessary Files Folder"])
 Config = ConfigParser()
@@ -105,6 +106,7 @@ parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 detector = HomogeneousBgDetector()
 
+
 class GUI(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -126,6 +128,7 @@ class GUI(customtkinter.CTk):
         self.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
         self.window = None
         
+        
         # WINDOW SETTINGS #
 
         # VISUALS
@@ -142,7 +145,7 @@ class GUI(customtkinter.CTk):
         self.about_img = ImageTk.PhotoImage(Image.open("{}/visuals11.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
         
         # VISUALS #
-
+        
         # FRAMES
         Frame1 = customtkinter.CTkFrame(self)
         Frame1.pack
@@ -427,11 +430,6 @@ class GUI(customtkinter.CTk):
                     Config.write(f)
                     f.close()
 
-    def import_mediapipe(self):
-        from mediapipe import solutions
-        self.mp_face_mesh = solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
-
         # SETTINGS WINDOW #
 
     def exit(self):
@@ -525,7 +523,7 @@ class GUI(customtkinter.CTk):
                                                                 border_width=0, 
                                                                 corner_radius=8, 
                                                                 hover=True, 
-                                                                text=SelectedLanguage["Select Glasses Button"], 
+                                                                text=SelectedLanguage["Select Glasses Button"],
                                                                 command=self.browse_Oculos, 
                                                                 image=self.glasses_img,
                                                                 compound=RIGHT)
@@ -541,15 +539,21 @@ class GUI(customtkinter.CTk):
                                                                 initialdir = L.Universal["Glasses Folder"], 
                                                                 filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                 image_extensions)])
-            self.Oculos_path = self.Oculos_path
+            if os.path.isfile(self.Oculos_path):
+                self.Oculos_path_saved = self.Oculos_path_saved
+            else:
+                self.Oculos_path_saved = self.Oculos_path
         else:
             self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"], 
                                                                 filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                 image_extensions)])
-            self.Oculos_path = self.Oculos_path
+            if os.path.isfile(self.Oculos_path):
+                self.Oculos_path_saved = self.Oculos_path_saved
+            else:
+                self.Oculos_path_saved = self.Oculos_path
         #image
-        if os.path.isfile(self.Oculos_path):
-            self.Oculos_image = Image.open(self.Oculos_path)
+        if os.path.isfile(self.Oculos_path_saved):
+            self.Oculos_image = Image.open(self.Oculos_path_saved)
             self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
             self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
             self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
@@ -605,12 +609,12 @@ class GUI(customtkinter.CTk):
 
     def put_glasses(self, ImageInput=None):
         if ImageInput == None:
-            img = Image.open("{}/{}--{}.png".format(L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp))
+            img = Image.open("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp))
         else:
             img = ImageInput
         width_pic = int(img.size[0]) # gets the original picture width
         height_pic = int(img.size[1]) # "" "" height
-        mask_Oculos = Image.open(self.Oculos_path) # opens the Oculos image
+        mask_Oculos = Image.open(self.Oculos_path_saved) # opens the Oculos image
         width_oculos_original = int(mask_Oculos.size[0])
         height_oculos_original = int(mask_Oculos.size[1])
         #print(height_oculos_original)
@@ -621,7 +625,7 @@ class GUI(customtkinter.CTk):
         #print(height_oculos_resized)
 
         mask_Oculos.save("temp.png")
-        if self.Oculos_path.endswith("Oculos2.png"):
+        if self.Oculos_path_saved.endswith("Oculos2.png"):
             self.get_point(430,69,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -631,7 +635,7 @@ class GUI(customtkinter.CTk):
             self.get_point(612,279,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos1.png"):
+        elif self.Oculos_path_saved.endswith("Oculos1.png"):
             self.get_point(453,26,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -641,7 +645,7 @@ class GUI(customtkinter.CTk):
             self.get_point(700,230,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos3.png"):
+        elif self.Oculos_path_saved.endswith("Oculos3.png"):
             self.get_point(667,121,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -651,7 +655,7 @@ class GUI(customtkinter.CTk):
             self.get_point(974,400,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos7.png"):
+        elif self.Oculos_path_saved.endswith("Oculos7.png"):
             self.get_point(465,117,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -661,7 +665,7 @@ class GUI(customtkinter.CTk):
             self.get_point(671,319,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos9.png"):
+        elif self.Oculos_path_saved.endswith("Oculos9.png"):
             self.get_point(353,83,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -737,9 +741,10 @@ class GUI(customtkinter.CTk):
                 return
             else:
             # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
+                import mediapipe
+                self.mp_face_mesh = mediapipe.solutions.face_mesh
+                self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
                 try:
-                    Load_Mediapipe = threading.Thread(target=self.import_mediapipe(), daemon=True)
-                    Load_Mediapipe.start()
                     self.image = image
                     img = cv2.imread(image)
                     # ir buscar o aruco marker
@@ -767,8 +772,8 @@ class GUI(customtkinter.CTk):
                     height, width, _ = self.img.shape
                     result = self.face_mesh.process(rgb_img)
                     for facial_landmarks in result.multi_face_landmarks:
-                        midle_nose = facial_landmarks.landmark[168]
-                        midle_nose_bottom = facial_landmarks.landmark[8]
+                        middle_nose = facial_landmarks.landmark[168]
+                        middle_nose_bottom = facial_landmarks.landmark[8]
                         more_points_bottom_nose = facial_landmarks.landmark[197]
                         bottom_nose = facial_landmarks.landmark[6]
                         left_face = facial_landmarks.landmark[127] 
@@ -786,10 +791,10 @@ class GUI(customtkinter.CTk):
                         self.bottom_y = int(more_points_bottom_nose.y * height)
                         self.bottom_nose_x = int(bottom_nose.x * width)
                         self.bottom_nose_y = int(bottom_nose.y * height)
-                        self.midle_nose_bottom_x = int(midle_nose_bottom.x * width) #midle nose bottom "x"
-                        self.midle_nose_bottom_y = int(midle_nose_bottom.y * height) #midle nose bottom "y"
-                        self.nose_x = int(midle_nose.x * width) #nose "x"
-                        self.nose_y = int(midle_nose.y * height) #nose "y"
+                        self.middle_nose_bottom_x = int(middle_nose_bottom.x * width) #middle nose bottom "x"
+                        self.middle_nose_bottom_y = int(middle_nose_bottom.y * height) #middle nose bottom "y"
+                        self.nose_x = int(middle_nose.x * width) #nose "x"
+                        self.nose_y = int(middle_nose.y * height) #nose "y"
                         self.left_face_x = int(left_face.x * width) #left face "x"
                         self.left_face_y = int(left_face.y * height) #Left face "y"
                         self.right_face_x = int(right_face.x * width) #right face "x"
@@ -812,8 +817,8 @@ class GUI(customtkinter.CTk):
                         self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
                         self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
                         self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
-                        self.midpoint_nose_x = int((self.midle_nose_bottom_x + self.nose_x) / 2)
-                        self.midpoint_nose_y = int((self.midle_nose_bottom_y + self.nose_y) / 2)
+                        self.midpoint_nose_x = int((self.middle_nose_bottom_x + self.nose_x) / 2)
+                        self.midpoint_nose_y = int((self.middle_nose_bottom_y + self.nose_y) / 2)
                         self.mid_nose_x = int((self.bottom_nose_x + self.nose_x) / 2)
                         self.mid_nose_y = int((self.bottom_nose_y + self.nose_y) / 2)
                         self.mid_mid_bottom_x = int((self.bottom_nose_x + self.mid_nose_x) / 2)
@@ -990,7 +995,7 @@ class GUI(customtkinter.CTk):
                         self.draw_on_img(self.img)
                     self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
                     self.t_stamp = self.t_stamp
-                    cv2.imwrite("{}/{}--{}.png".format(L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
+                    cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
                     self.put_glasses()
                     imagee = Image.open("temp.png")
                     self.put_glasses(ImageInput=imagee)
@@ -1002,9 +1007,12 @@ class GUI(customtkinter.CTk):
         except AttributeError:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
             return
+
 app = GUI()
+#DEBUG
+#end_time = datetime.now()
+#print('Duration: {}'.format(end_time - start_time))
 def run():
-    
     app.mainloop()
  
 if __name__ == '__main__':
