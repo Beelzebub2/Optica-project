@@ -523,7 +523,7 @@ class GUI(customtkinter.CTk):
                                                                 border_width=0, 
                                                                 corner_radius=8, 
                                                                 hover=True, 
-                                                                text=SelectedLanguage["Select Glasses Button"],
+                                                                text=SelectedLanguage["Select Glasses Button"], 
                                                                 command=self.browse_Oculos, 
                                                                 image=self.glasses_img,
                                                                 compound=RIGHT)
@@ -539,7 +539,7 @@ class GUI(customtkinter.CTk):
                                                                 initialdir = L.Universal["Glasses Folder"], 
                                                                 filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                 image_extensions)])
-            if os.path.isfile(self.Oculos_path):
+            if not os.path.isfile(self.Oculos_path):
                 self.Oculos_path_saved = self.Oculos_path_saved
             else:
                 self.Oculos_path_saved = self.Oculos_path
@@ -547,13 +547,13 @@ class GUI(customtkinter.CTk):
             self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"], 
                                                                 filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                 image_extensions)])
-            if os.path.isfile(self.Oculos_path):
+            if not os.path.isfile(self.Oculos_path):
                 self.Oculos_path_saved = self.Oculos_path_saved
             else:
                 self.Oculos_path_saved = self.Oculos_path
         #image
-        if os.path.isfile(self.Oculos_path_saved):
-            self.Oculos_image = Image.open(self.Oculos_path_saved)
+        if os.path.isfile(self.Oculos_path):
+            self.Oculos_image = Image.open(self.Oculos_path)
             self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
             self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
             self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
@@ -584,14 +584,14 @@ class GUI(customtkinter.CTk):
         try:
             cv2.circle(img, self.center_left, int(self.l_radius), (255,0,255), 2, cv2.LINE_AA)
             cv2.circle(img, self.center_right, int(self.r_radius), (255,0,255), 2, cv2.LINE_AA)
-            cv2.line(img, (self.pointx, self.pointy), self.center_left, (0, 255, 0), 1)
-            cv2.line(img, (self.pointxl, self.pointyl), self.center_right, (0, 255, 0), 1)
+            cv2.line(img, (self.nose_point_for_dnp_X, self.nose_point_for_dnp_Y), self.center_left, (0, 255, 0), 1)
+            cv2.line(img, (self.nose_point_for_dnp_X, self.nose_point_for_dnp_Y), self.center_right, (0, 255, 0), 1)
             cv2.line(img, (self.left_face_x, self.left_face_y), (self.right_face_x, self.right_face_y), (255, 0, 0), 1)
             cv2.line(img, self.center_right, self.center_left, (0, 0, 255), 1)
             cv2.rectangle(img, (10, self.imy - 265), (self.imx, self.imy), (0, 0, 0), 350, cv2.FILLED)
             cv2.putText(img, SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm", (10, self.imy - 5), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
-            cv2.putText(img, SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.minleft, 2)} mm", (10, self.imy - 55), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
-            cv2.putText(img, SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.minright, 2)} mm", (10, self.imy - 105), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            cv2.putText(img, SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.dnp_left, 2)} mm", (10, self.imy - 55), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            cv2.putText(img, SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.dnp_right, 2)} mm", (10, self.imy - 105), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
             cv2.putText(img, SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm", (10, self.imy - 155), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
             cv2.putText(img, SelectedLanguage["Right eye"], (self.bmx, self.bmy), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
             cv2.putText(img, SelectedLanguage["Left eye"], (self.bmlx, self.bmly), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
@@ -601,31 +601,31 @@ class GUI(customtkinter.CTk):
         except Exception as eroro:
             self.send_errors_discord(eroro,)
 
-    def get_point(self, x, y, width_original, height_original, width_res, height_res):
-        x_transforming_ratio = x / width_original
-        y_transforming_ratio = y / height_original
-        self.x = int(width_res * x_transforming_ratio)
-        self.y = int(height_res * y_transforming_ratio)
+    def get_point(self, x, y, width_original, height_original, width_res, height_res): # used to get a point (x,y) from a rescaled image
+        x_transforming_ratio = x / width_original # its a ratio to get from the old x point (non rescaled image) to the new x point on the rescaled img
+        y_transforming_ratio = y / height_original # that but for the Y point
+        self.x = int(width_res * x_transforming_ratio) # variable of the resized x
+        self.y = int(height_res * y_transforming_ratio) # that but for the y point
 
-    def put_glasses(self, ImageInput=None):
-        if ImageInput == None:
+    def put_glasses(self, ImageInput=None): #function to put glasses on the face
+        if ImageInput == None: # not sure what is this
             img = Image.open("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp))
         else:
             img = ImageInput
         width_pic = int(img.size[0]) # gets the original picture width
-        height_pic = int(img.size[1]) # "" "" height
-        mask_Oculos = Image.open(self.Oculos_path_saved) # opens the Oculos image
-        width_oculos_original = int(mask_Oculos.size[0])
-        height_oculos_original = int(mask_Oculos.size[1])
+        height_pic = int(img.size[1]) # gets the original picture height
+        mask_Oculos = Image.open(self.Oculos_path) # opens the Oculos image
+        width_oculos_original = int(mask_Oculos.size[0]) # gets the glasses image's width
+        height_oculos_original = int(mask_Oculos.size[1]) # same but for the height
         #print(height_oculos_original)
         self.width_Oculos = int(self.comprimento * self.pixel_mm_ratio) # sets the width of the Oculos image to be the same as the distance between 2 points of the face
-        mask_Oculos = mask_Oculos.resize((self.width_Oculos, int(self.altura * self.pixel_mm_ratio))) #kinda obvious
-        width_oculos_resized = int(mask_Oculos.size[0])
-        height_oculos_resized = int(mask_Oculos.size[1])
+        mask_Oculos = mask_Oculos.resize((self.width_Oculos, int(self.altura * self.pixel_mm_ratio))) # resizes the glasses to the correct width.
+        width_oculos_resized = int(mask_Oculos.size[0]) # gets the resized size of the width
+        height_oculos_resized = int(mask_Oculos.size[1]) # same but height
         #print(height_oculos_resized)
 
-        mask_Oculos.save("temp.png")
-        if self.Oculos_path_saved.endswith("Oculos2.png"):
+        mask_Oculos.save("temp.png") # temp img to be used later, former "slave"
+        if self.Oculos_path.endswith("Oculos2.png"): # all these ifs verify which glasses where chosen and define the coordinates to be put on the face
             self.get_point(430,69,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -635,7 +635,7 @@ class GUI(customtkinter.CTk):
             self.get_point(612,279,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path_saved.endswith("Oculos1.png"):
+        elif self.Oculos_path.endswith("Oculos1.png"):
             self.get_point(453,26,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -645,7 +645,7 @@ class GUI(customtkinter.CTk):
             self.get_point(700,230,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path_saved.endswith("Oculos3.png"):
+        elif self.Oculos_path.endswith("Oculos3.png"):
             self.get_point(667,121,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -655,7 +655,7 @@ class GUI(customtkinter.CTk):
             self.get_point(974,400,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path_saved.endswith("Oculos7.png"):
+        elif self.Oculos_path.endswith("Oculos7.png"):
             self.get_point(465,117,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -665,7 +665,7 @@ class GUI(customtkinter.CTk):
             self.get_point(671,319,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path_saved.endswith("Oculos9.png"):
+        elif self.Oculos_path.endswith("Oculos9.png"):
             self.get_point(353,83,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
             y = self.nose_y - self.y
@@ -675,8 +675,9 @@ class GUI(customtkinter.CTk):
             self.get_point(528,249,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        r_iris_glasses = (sqrt((self.r_cx - right_iris_x)**2 + (self.r_cy - right_iris_y)**2)) / self.pixel_mm_ratio
-        l_iris_glasses = (sqrt((self.l_cx - left_iris_x)**2 + (self.l_cy - left_iris_y)**2)) / self.pixel_mm_ratio
+        
+        r_iris_glasses = (sqrt((self.r_cx - right_iris_x)**2 + (self.r_cy - right_iris_y)**2)) / self.pixel_mm_ratio # measurement of the r ALT
+        l_iris_glasses = (sqrt((self.l_cx - left_iris_x)**2 + (self.l_cy - left_iris_y)**2)) / self.pixel_mm_ratio # l ALT
         cv2.line(self.img, (right_iris_x, right_iris_y), (int(self.r_cx), int(self.r_cy)), (0,0,0), 1, cv2.LINE_AA)
         cv2.line(self.img, (left_iris_x, left_iris_y), (int(self.l_cx), int(self.l_cy)), (0,0,0), 1, cv2.LINE_AA)
         cv2.putText(self.img, SelectedLanguage["Right Height"] + f"{round(r_iris_glasses, 2)} mm", (10, self.imy - 205), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
@@ -903,6 +904,7 @@ class GUI(customtkinter.CTk):
                                                 self.mid9_x,
                                                 self.mid10_x,
                                                 self.mid11_x]
+
                         iris_nose_points_y = [self.nose_y,
                                                 self.mid_nose_y,
                                                 self.mid_mid_bottom_y,
@@ -927,6 +929,7 @@ class GUI(customtkinter.CTk):
                                                 self.mid9_y,
                                                 self.mid10_y,
                                                 self.mid11_y]
+
                         right_iris_nose.append(self.right_iris_to_nose)
                         right_iris_nose.append((sqrt((self.r_cx - self.mid_nose_x)**2 + (self.r_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
                         right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
@@ -977,21 +980,35 @@ class GUI(customtkinter.CTk):
                         left_iris_nose.append((sqrt((self.l_cx - self.mid11_x)**2 + (self.l_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
                         self.minright = right_iris_nose[0]
                         self.minleft = left_iris_nose[0]
+                        
+                        # to get the smallest distance bet. the pupils and a horizontal point on the nose
                         for i in right_iris_nose:
                             if i < self.minright:
                                 self.minright = i
                         for n in left_iris_nose:
                             if n < self.minleft:
                                 self.minleft = n
+                        # end of the smallest thing's verify #
+
                         if self.minright in right_iris_nose:
                             index = right_iris_nose.index(self.minright)
-                            self.pointx = iris_nose_points_x[index]
-                            self.pointy = iris_nose_points_y[index]
+                            self.pointX_R = iris_nose_points_x[index]
+                            self.pointY_R = iris_nose_points_y[index]
                         if self.minleft in left_iris_nose:
                             index_left = left_iris_nose.index(self.minleft)
-                            self.pointxl = iris_nose_points_x[index_left]
-                            self.pointyl = iris_nose_points_y[index_left]
-                        #print(right_iris_nose, self.minright)
+                            self.pointX_L = iris_nose_points_x[index_left]
+                            self.pointY_L = iris_nose_points_y[index_left]
+
+                        # midpoint calculation, to get a horizontal line between both pupils
+                        self.nose_point_for_dnp_X = int((self.pointX_R + self.pointX_L) / 2) 
+                        self.nose_point_for_dnp_Y = int((self.pointY_R + self.pointY_L) / 2) 
+                        # midpoint calculation #~
+                        
+                        # dnp calculation
+                        self.dnp_left = sqrt((self.l_cx - self.nose_point_for_dnp_X)**2 + (self.l_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
+                        self.dnp_right = sqrt((self.r_cx - self.nose_point_for_dnp_X)**2 + (self.r_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
+                        # dnp calculation #
+
                         self.draw_on_img(self.img)
                     self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
                     self.t_stamp = self.t_stamp
