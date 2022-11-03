@@ -4,6 +4,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.0 03/11/2022
+
++   Fixed not letting use glasses more than once
+
 Beta 2.0 18/09/2022
 
 !   Working on Creating an Sql database to collect useful data
