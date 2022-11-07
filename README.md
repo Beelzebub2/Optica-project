@@ -4,6 +4,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.0 07/11/2022
+
++   Added Missing tooltips
+
 Beta 2.0 03/11/2022
 
 +   New tutorial video (by joão)

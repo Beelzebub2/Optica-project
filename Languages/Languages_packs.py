@@ -86,6 +86,10 @@ PT_pt = {
 
     "Start Button Tooltip": "Inicia a análise",
 
+    "Language Tooltip": "Mudar a linguagem do programa",
+
+    "Color Theme Tooltip": "Mudar a cor do programa",
+
     ##/\ Tooltips /\##
 
 
@@ -259,6 +263,10 @@ English = {
     "Select Glasses Button Tooltip": "After clicking the button select the Glasses you want to use",
 
     "Start Button Tooltip": "Starts the analysis",
+
+    "Language Tooltip": "Change Program language",
+
+    "Color Theme Tooltip": "Change program color",
 
     ##/\ Tooltips /\##
 

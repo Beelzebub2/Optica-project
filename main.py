@@ -368,6 +368,7 @@ class GUI(customtkinter.CTk):
                                                         hover=True)
             self.Optionmenu.place(relx=0.95, rely=0.16, anchor="e")
             self.Optionmenu.set(Option_lg_df)
+            self.tooltip(self.Optionmenu, SelectedLanguage["Language Tooltip"])
 
             self.OptionmenuTheme = customtkinter.CTkOptionMenu(self.window,
                                                         values=["Green", "Blue", "Dark-Blue", "Red"],
@@ -375,6 +376,7 @@ class GUI(customtkinter.CTk):
                                                         hover=True)
             self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
             self.OptionmenuTheme.set(Option_th_df)
+            self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
 
 
             
@@ -753,7 +755,7 @@ class GUI(customtkinter.CTk):
                     int_corners = np.int0(corners)
                     # desenhamos linhas verdes a volta do aruco marker sabendo que ele tem um perímetro de 20cm
                     cv2.polylines(img, int_corners, True, (0, 255, 0), 5)
-                    # perimetro do aruco
+                    # perímetro do aruco
                     # funciona com apenas 1 aruco marker
                     self.aruco_perimeter = cv2.arcLength(corners[0], True)
                     # Pixel to mm ratio
@@ -767,7 +769,7 @@ class GUI(customtkinter.CTk):
                     self.img = cv2.imread(image)
                     self.imy, self.imx, _ = self.img.shape
                     # opens the image with pil to put them Oculos on
-                    # é necessario converter a imagem de Blue green red para Red green blue
+                    # é necessário converter a imagem de Blue green red para Red green blue
                     rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
                     # tamanho da imagem
                     height, width, _ = self.img.shape
@@ -786,8 +788,8 @@ class GUI(customtkinter.CTk):
                         bottom_bottom = facial_landmarks.landmark[111]
                         bottom_b_left = facial_landmarks.landmark[330]
                         bottom_g_left = facial_landmarks.landmark[419]
-                        # cordenadas não podem ser floats
-                        # pontos necessarios
+                        # coordenadas não podem ser floats
+                        # pontos necessários
                         self.bottom_x = int(more_points_bottom_nose.x * width)
                         self.bottom_y = int(more_points_bottom_nose.y * height)
                         self.bottom_nose_x = int(bottom_nose.x * width)

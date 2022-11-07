@@ -1,6 +1,25 @@
 {
     "cSpell.words": [
+        "astype",
+        "bblx",
+        "bbly",
+        "bmlx",
+        "bmly",
         "customtkinter",
+        "dtype",
+        "eroo",
+        "eroro",
+        "erroo",
+        "errrro",
+        "imagee",
+        "imread",
+        "imwrite",
+        "mensg",
+        "midier",
+        "minleft",
+        "minright",
+        "polylines",
+        "startfile",
         "tktooltip"
     ],
     "python.analysis.extraPaths": [
