@@ -44,14 +44,14 @@ Beta 2.0 09/09/2022
 +   Fixed program error (would not close after program end)
 +   Fixed Loading time (from 15-18s to 1-5s)
 +   Optimized some module imports
-+   Fixed 3 minor bugs
++   Fixed 3 minor bugs related to image processing
 +   Added custom Red theme
 
 Alpha 1.0 08/09/2022
 
 !   Working on Optionmenu starting function before it's clicked
 +   Settings window now goes to top if user tries to duplicate it
-+   Optimized config file
++   Optimized config handler
 +   Added ability to change themes
 +   Added Language changing
 +   Added warning when trying to duplicate settings window
