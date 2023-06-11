@@ -16,6 +16,8 @@ Universal = {
 
 PT_pt = {
 
+    "Title": "Medidas Digitais",
+
     ## Option menu ##
 
     "Blue": "Azul",
@@ -128,7 +130,7 @@ PT_pt = {
 
     "Report Bug Error Window": "Não foi possível abrir o link.",
 
-    "About Window Info": "Software desenvolvido por:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+    "About Window Info": "Software desenvolvido por:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\nBeta 2.0",
 
     "Tutorial Open Error Window": "Não foi possível abrir o tutorial\nO ficheiro pode estar corrompido",
 
@@ -197,6 +199,8 @@ PT_pt = {
 }
 
 English = {
+
+    "Title": "Medidas Digitais",
 
     ## Option menu ##
 

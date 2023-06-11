@@ -15,6 +15,9 @@ import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
 import platform
+#
+# @All rights Reserved to Ricardo Martins and João Marcos
+#
 
 #DEBUG
 #start_time = datetime.now()
@@ -31,24 +34,27 @@ match Language:
     case "English":
         SelectedLanguage = L.English
         Option_lg_df = ("English")
+    case "":
+        SelectedLanguage = L.PT_pt
+        Option_lg_df = ("Português-pt")
 
 Theme = Config["DEFAULTS"]["Theme"]
 match Theme:
     case "Green":
         Program_Theme = "green"
-        Option_th_df = "Green"
+        Option_th_df = SelectedLanguage["Green"]
     
     case "Blue":
         Program_Theme = "blue"
-        Option_th_df = "Blue"
+        Option_th_df = SelectedLanguage["Blue"]
     
     case "Dark-Blue":
         Program_Theme = "dark-blue"
-        Option_th_df = "Dark-blue"
+        Option_th_df = SelectedLanguage["Dark-Blue"]
     
     case "Red":
         Program_Theme = "Necessary files\\Red-Theme.json"
-        Option_th_df = "Red"
+        Option_th_df = SelectedLanguage["Red"]
 
 Style = Config["DEFAULTS"]["style"]
 match Style:
@@ -114,7 +120,7 @@ class GUI(customtkinter.CTk):
         WIDTH = 1280
         HEIGHT = 720
         self.toast = ToastNotifier()
-        self.title("Face Dimensions Detector (Beta 2.0)")
+        self.title("{} (Beta 2.0)".format(SelectedLanguage["Title"]))
         self.wm_iconbitmap("{}\\icon.ico".format(L.Universal["Necessary Files Folder"]))
         self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
@@ -371,7 +377,7 @@ class GUI(customtkinter.CTk):
             self.tooltip(self.Optionmenu, SelectedLanguage["Language Tooltip"])
 
             self.OptionmenuTheme = customtkinter.CTkOptionMenu(self.window,
-                                                        values=["Green", "Blue", "Dark-Blue", "Red"],
+                                                        values=[SelectedLanguage["Green"], SelectedLanguage["Blue"], SelectedLanguage["Dark-Blue"], SelectedLanguage["Red"]],
                                                         command=self.change_theme,
                                                         hover=True)
             self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
@@ -410,27 +416,17 @@ class GUI(customtkinter.CTk):
 
     def change_theme(self, choice):
         choice = self.OptionmenuTheme.get()
-        match choice:
-            case "Green":
-                Config.set("DEFAULTS", "Theme", "Green")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
-            case "Blue":
-                Config.set("DEFAULTS", "Theme", "Blue")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
-            case "Dark-Blue":
-                Config.set("DEFAULTS", "Theme", "Dark-Blue")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
-            case "Red":
-                Config.set("DEFAULTS", "Theme", "Red")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
+        theme_mapping = {
+            SelectedLanguage["Green"]: "Green",
+            SelectedLanguage["Blue"]: "Blue",
+            SelectedLanguage["Dark-Blue"]: "Dark-Blue",
+            SelectedLanguage["Red"]: "Red"
+        }
+        
+        Config.set("DEFAULTS", "Theme", theme_mapping[choice])
+        with open(Config_File, "w") as f:
+            Config.write(f)
+
 
         # SETTINGS WINDOW #
 

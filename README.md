@@ -4,6 +4,14 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.0 11/06/2023
+
++   Minor fixes for the config handler
+
+Beta 2.0 10/11/2022
+
++   Changed program name
+
 Beta 2.0 07/11/2022
 
 +   Added Missing tooltips
