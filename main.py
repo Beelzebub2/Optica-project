@@ -1,5 +1,7 @@
 import os
 import ctypes
+import subprocess
+import sys
 import cv2
 import webbrowser
 from tkinter import filedialog, RIGHT, CENTER, LEFT
@@ -328,10 +330,6 @@ class GUI(customtkinter.CTk):
         y_cord = int((screen_height / 2) - (Height / 2))
         self.window.geometry("{}x{}+{}+{}".format(Width, Height, x_cord, y_cord))
 
-        self.warningLabel = customtkinter.CTkLabel(self.window,
-                                                        text=SelectedLanguage["Warning Label"])
-        self.warningLabel.place(relx = 0.03,rely = 0.85)
-
         self.switch = customtkinter.CTkSwitch(master=self.window, 
                                                 text=SelectedLanguage["Theme Switch"], 
                                                 command=self.theme_change,)
@@ -405,6 +403,7 @@ class GUI(customtkinter.CTk):
                 with open(Config_File, "w") as f:
                     Config.write(f)
                     f.close()
+                self.restart_program()
             #case "Português-br":
             #    SelectedLanguage = L.PT_br
             #    self.destroy()
@@ -414,6 +413,7 @@ class GUI(customtkinter.CTk):
                 with open(Config_File, "w") as f:
                     Config.write(f)
                     f.close()
+                self.restart_program()
 
     def change_theme(self, choice):
         choice = self.OptionmenuTheme.get()
@@ -428,6 +428,14 @@ class GUI(customtkinter.CTk):
         Config.set("DEFAULTS", "Theme", theme_mapping[choice])
         with open(Config_File, "w") as f:
             Config.write(f)
+        self.restart_program()
+    
+    def restart_program(self):
+        answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Restart"], SelectedLanguage["Restart title"], 1)
+        if answer == 1:
+            python = sys.executable
+            print(python)
+            os.execl(python, python, *sys.argv)
 
 
         # SETTINGS WINDOW #

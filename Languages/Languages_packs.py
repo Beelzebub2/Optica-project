@@ -104,8 +104,6 @@ PT_pt = {
 
     "Height Label": "Altura da armação:",
 
-    "Warning Label": "É necessário reiniciar o programa para as alterações serem aplicadas",
-
     ##/\ Labels /\##
     
 
@@ -122,6 +120,8 @@ PT_pt = {
     "About Window Title": "Sobre",
 
     "Browse Window Hint": "Imagens",
+
+    "Restart title": "Reiniciar",
     
     ##/\ Window Titles /\##
 
@@ -149,6 +149,8 @@ PT_pt = {
     "Aruco Marker Not detected": "Aruco Marker não foi detetado",
 
     "Started Without Measurements Error": "É necessário inserir valores nas caixas de medidas\ne salvá-las.",
+
+    "Restart": "É necessário reiniciar para aplicar alterações.\nDeseja reiniciar agora?" ,
 
     ##/\ Window text /\##
     
@@ -285,8 +287,6 @@ English = {
 
     "Height Label": "Glasses height:",
 
-    "Warning Label": "Program restart required to apply changes",
-
     ##/\ Labels /\##
     
 
@@ -303,6 +303,8 @@ English = {
     "About Window Title": "About",
 
     "Browse Window Hint": "Images",
+
+    "Restart title": "Restart",
     
     ##/\ Window Titles /\##
 
@@ -330,6 +332,8 @@ English = {
     "Aruco Marker Not detected": "Aruco Marker wasn't not detected",
 
     "Started Without Measurements Error": "It is necessary to insert values in the measurements\nand save them",
+
+    "Restart": "Restart required to apply changes.\nDo you wish to restart now?" ,
 
     ##/\ Window text /\##
     

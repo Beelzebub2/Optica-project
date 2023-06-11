@@ -9,6 +9,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.0 12/06/2023
+
++   Added autorestart to apply changes
+
 Beta 2.0 11/06/2023
 
 +   Minor fixes for the config handler
