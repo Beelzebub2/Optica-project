@@ -7,7 +7,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 Beta 2.0 11/06/2023
 
 +   Minor fixes for the config handler
-+   Added Orange Theme
++   Added custom Orange Theme
 +   Code optimization
 +   Fixed Optionmenu starting function before it's clicked
 +   Window always appears on center of screen now works with multiple screens
@@ -47,7 +47,7 @@ Beta 2.0 09/09/2022
 +   Fixed 3 minor bugs
 +   Added custom Red theme
 
-Beta 2.0 08/09/2022
+Alpha 1.0 08/09/2022
 
 !   Working on Optionmenu starting function before it's clicked
 +   Settings window now goes to top if user tries to duplicate it
@@ -59,7 +59,7 @@ Beta 2.0 08/09/2022
 +   Fixed "temp.png" not getting deleted  
 +   Window always appears on center of screen
 
-Beta 2.0 05/09/2022
+Alpha 1.0 05/09/2022
 
 +   Settings button was added
 +   Reorganized and optimized code
