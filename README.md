@@ -12,6 +12,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 Beta 2.0 12/06/2023
 
 +   Added autorestart to apply changes
++   Close settings window with "Esc" key
 
 Beta 2.0 11/06/2023
 

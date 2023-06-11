@@ -25,51 +25,40 @@ import platform
 #DEBUG
 #start_time = datetime.now()
 PATH = os.path.dirname(os.path.realpath(__file__))
-Config_File = "{}\\{}\\config.ini".format(PATH, L.Universal["Necessary Files Folder"])
+Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
 Config = ConfigParser()
 Config.read(Config_File)
 
+
 Language = Config["DEFAULTS"]["Language"]
-match Language:
-    case "Pt-pt":
-        SelectedLanguage = L.PT_pt
-        Option_lg_df = ("Português-pt")
-    case "English":
-        SelectedLanguage = L.English
-        Option_lg_df = ("English")
-    case "":
-        SelectedLanguage = L.PT_pt
-        Option_lg_df = ("Português-pt")
+language_mapping = {
+    "Pt-pt": (L.PT_pt, "Português-pt"),
+    "English": (L.English, "English"),
+    #"Pt-Br": (L.PT_br, "Português-br"),
+}
+SelectedLanguage, Option_lg_df = language_mapping.get(Language)
 
 Theme = Config["DEFAULTS"]["Theme"]
-match Theme:
-    case "Green":
-        Program_Theme = "green"
-        Option_th_df = SelectedLanguage["Green"]
-    
-    case "Blue":
-        Program_Theme = "blue"
-        Option_th_df = SelectedLanguage["Blue"]
-    
-    case "Dark-Blue":
-        Program_Theme = "dark-blue"
-        Option_th_df = SelectedLanguage["Dark-Blue"]
-    
-    case "Red":
-        Program_Theme = "Necessary files\\Red-Theme.json"
-        Option_th_df = SelectedLanguage["Red"]
-
-    case "Orange":
-        Program_Theme = "Necessary files\\Orange-Theme.json"
-        Option_th_df = SelectedLanguage["Orange"]
+theme_mapping = {
+    "Green": "green",
+    "Blue": "blue",
+    "Dark-Blue": "dark-blue",
+    "Red": "Necessary files\\Red-Theme.json",
+    "Orange": "Necessary files\\Orange-Theme.json"
+}
+Program_Theme = theme_mapping.get(Theme)
+Option_th_df = SelectedLanguage.get(Program_Theme)
 
 Style = Config["DEFAULTS"]["style"]
 match Style:
     case "Dark":
         customtkinter.set_appearance_mode("dark")
-
     case "Light":
         customtkinter.set_appearance_mode("light")
+    case "":
+        customtkinter.set_appearance_mode("dark")   
+
+
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
@@ -324,6 +313,7 @@ class GUI(customtkinter.CTk):
         self.window.minsize(420, 200)
         self.window.maxsize(420, 200)
         self.window.protocol("WM_DELETE_WINDOW", self.closed_set_window)
+        self.window.bind('<Escape>',lambda e: self.close_settings())
         current_screen = get_monitor_from_coord(self.window.winfo_x(), self.window.winfo_y())
         screen_width = current_screen.width
         screen_height = current_screen.height
@@ -445,6 +435,10 @@ class GUI(customtkinter.CTk):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1)
         if answer == 1:
             self.destroy()
+    
+    def close_settings(self):
+        self.window.destroy()
+        self.window = None
 
     def theme_change(self):
         selected_style = "Light" if self.switch.get() == 0 else "Dark"
