@@ -8,6 +8,7 @@ Beta 2.0 11/06/2023
 
 +   Minor fixes for the config handler
 +   Added Orange Theme
++   Code optimization
 
 Beta 2.0 10/11/2022
 

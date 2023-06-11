@@ -301,96 +301,7 @@ class GUI(customtkinter.CTk):
         
 
     def settings(self): 
-        if self.window == None:
-            self.window = customtkinter.CTkToplevel(self)
-            Width = 420
-            Height = 240
-            self.window.title(SelectedLanguage["Settings Button"])
-            self.window.wm_iconbitmap(f"{L.Universal['Necessary Files Folder']}\\icon.ico")
-            self.window.attributes('-topmost',True)
-            self.window.attributes('-topmost',False)
-            self.window.minsize(420, 200)
-            self.window.maxsize(420, 200)
-            self.window.protocol("WM_DELETE_WINDOW", self.closed_set_window)
-            current_screen = get_monitor_from_coord(self.window.winfo_x(), self.window.winfo_y())
-            screen_width = current_screen.width
-            screen_height = current_screen.height
-            x_cord = int((screen_width / 2) - (Width / 2))
-            y_cord = int((screen_height / 2) - (Height / 2))
-            self.window.geometry("{}x{}+{}+{}".format(Width, Height, x_cord, y_cord))
-
-            self.warningLabel = customtkinter.CTkLabel(self.window,
-                                                            text=SelectedLanguage["Warning Label"])
-            self.warningLabel.place(relx = 0.03,rely = 0.85)
-
-            self.switch = customtkinter.CTkSwitch(master=self.window, 
-                                                    text=SelectedLanguage["Theme Switch"], 
-                                                    command=self.theme_change,)
-            self.switch.place(relx=0.12, rely=0.65)
-            if Config["DEFAULTS"]["style"] == "Dark":
-                self.switch.select()
-            else:
-                self.switch.deselect()
-            self.tooltip(self.switch, SelectedLanguage["Theme Switch Tooltip"])
-            self.report = customtkinter.CTkButton(self.window, 
-                                                        width=150, 
-                                                        height=25, 
-                                                        border_width=0, 
-                                                        corner_radius=8, 
-                                                        hover=True, 
-                                                        text=SelectedLanguage["Report Bug Button"], 
-                                                        command=self.report_command, 
-                                                        image=self.bug_report_img,
-                                                        compound=RIGHT)
-            self.report.place(relx=0.05, rely=0.3, anchor="w")
-            self.tooltip(self.report, SelectedLanguage["Report Bug Button Tooltip"])
-
-            self.about_bt = customtkinter.CTkButton(self.window, 
-                                                        width=150, 
-                                                        height=25, 
-                                                        border_width=0, 
-                                                        corner_radius=8, 
-                                                        hover=True, 
-                                                        text=SelectedLanguage["About Button"], 
-                                                        command=self.about, 
-                                                        image=self.about_img,
-                                                        compound=RIGHT)
-            self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
-            self.tooltip(self.about_bt, SelectedLanguage["About Button Tooltip"])
-
-            self.button_get_tutorial = customtkinter.CTkButton(self.window, 
-                                                                    width=150, 
-                                                                    height=25, 
-                                                                    border_width=0, 
-                                                                    corner_radius=8, 
-                                                                    hover=True, 
-                                                                    text=SelectedLanguage["Tutorial Button"], 
-                                                                    command=self.tutorial, 
-                                                                    image=self.tutorial_img,
-                                                                    compound=RIGHT)
-            self.button_get_tutorial.place(anchor="w", rely = 0.15, relx=0.05)
-            self.tooltip(self.button_get_tutorial, SelectedLanguage["Tutorial Button Tooltip"])
-
-            
-            self.Optionmenu = customtkinter.CTkOptionMenu(self.window,
-                                                        values=["Português-pt", "English"],
-                                                        command=self.change_language,
-                                                        hover=True)
-            self.Optionmenu.place(relx=0.95, rely=0.16, anchor="e")
-            self.Optionmenu.set(Option_lg_df)
-            self.tooltip(self.Optionmenu, SelectedLanguage["Language Tooltip"])
-
-            self.OptionmenuTheme = customtkinter.CTkOptionMenu(self.window,
-                                                        values=[SelectedLanguage["Green"], SelectedLanguage["Blue"], SelectedLanguage["Dark-Blue"], SelectedLanguage["Red"], SelectedLanguage["Orange"]],
-                                                        command=self.change_theme,
-                                                        hover=True)
-            self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
-            self.OptionmenuTheme.set(Option_th_df)
-            self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
-
-
-            
-        else:
+        if self.window != None:
             self.window.lift()
             self.toast.show_toast(
                 "Optica",
@@ -399,6 +310,92 @@ class GUI(customtkinter.CTk):
                 icon_path = "icon.ico",
                 threaded = True,
             )
+            return
+        self.window = customtkinter.CTkToplevel(self)
+        Width = 420
+        Height = 240
+        self.window.title(SelectedLanguage["Settings Button"])
+        self.window.wm_iconbitmap(f"{L.Universal['Necessary Files Folder']}\\icon.ico")
+        self.window.attributes('-topmost',True)
+        self.window.attributes('-topmost',False)
+        self.window.minsize(420, 200)
+        self.window.maxsize(420, 200)
+        self.window.protocol("WM_DELETE_WINDOW", self.closed_set_window)
+        current_screen = get_monitor_from_coord(self.window.winfo_x(), self.window.winfo_y())
+        screen_width = current_screen.width
+        screen_height = current_screen.height
+        x_cord = int((screen_width / 2) - (Width / 2))
+        y_cord = int((screen_height / 2) - (Height / 2))
+        self.window.geometry("{}x{}+{}+{}".format(Width, Height, x_cord, y_cord))
+
+        self.warningLabel = customtkinter.CTkLabel(self.window,
+                                                        text=SelectedLanguage["Warning Label"])
+        self.warningLabel.place(relx = 0.03,rely = 0.85)
+
+        self.switch = customtkinter.CTkSwitch(master=self.window, 
+                                                text=SelectedLanguage["Theme Switch"], 
+                                                command=self.theme_change,)
+        self.switch.place(relx=0.12, rely=0.65)
+        if Config["DEFAULTS"]["style"] == "Dark":
+            self.switch.select()
+        else:
+            self.switch.deselect()
+        self.tooltip(self.switch, SelectedLanguage["Theme Switch Tooltip"])
+        self.report = customtkinter.CTkButton(self.window, 
+                                                    width=150, 
+                                                    height=25, 
+                                                    border_width=0, 
+                                                    corner_radius=8, 
+                                                    hover=True, 
+                                                    text=SelectedLanguage["Report Bug Button"], 
+                                                    command=self.report_command, 
+                                                    image=self.bug_report_img,
+                                                    compound=RIGHT)
+        self.report.place(relx=0.05, rely=0.3, anchor="w")
+        self.tooltip(self.report, SelectedLanguage["Report Bug Button Tooltip"])
+
+        self.about_bt = customtkinter.CTkButton(self.window, 
+                                                    width=150, 
+                                                    height=25, 
+                                                    border_width=0, 
+                                                    corner_radius=8, 
+                                                    hover=True, 
+                                                    text=SelectedLanguage["About Button"], 
+                                                    command=self.about, 
+                                                    image=self.about_img,
+                                                    compound=RIGHT)
+        self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
+        self.tooltip(self.about_bt, SelectedLanguage["About Button Tooltip"])
+
+        self.button_get_tutorial = customtkinter.CTkButton(self.window, 
+                                                                width=150, 
+                                                                height=25, 
+                                                                border_width=0, 
+                                                                corner_radius=8, 
+                                                                hover=True, 
+                                                                text=SelectedLanguage["Tutorial Button"], 
+                                                                command=self.tutorial, 
+                                                                image=self.tutorial_img,
+                                                                compound=RIGHT)
+        self.button_get_tutorial.place(anchor="w", rely = 0.15, relx=0.05)
+        self.tooltip(self.button_get_tutorial, SelectedLanguage["Tutorial Button Tooltip"])
+
+        
+        self.Optionmenu = customtkinter.CTkOptionMenu(self.window,
+                                                    values=["Português-pt", "English"],
+                                                    command=self.change_language,
+                                                    hover=True)
+        self.Optionmenu.place(relx=0.95, rely=0.16, anchor="e")
+        self.Optionmenu.set(Option_lg_df)
+        self.tooltip(self.Optionmenu, SelectedLanguage["Language Tooltip"])
+
+        self.OptionmenuTheme = customtkinter.CTkOptionMenu(self.window,
+                                                    values=[SelectedLanguage["Green"], SelectedLanguage["Blue"], SelectedLanguage["Dark-Blue"], SelectedLanguage["Red"], SelectedLanguage["Orange"]],
+                                                    command=self.change_theme,
+                                                    hover=True)
+        self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
+        self.OptionmenuTheme.set(Option_th_df)
+        self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
     
     def change_language(self, choice):
         choice = self.Optionmenu.get()
@@ -437,26 +434,16 @@ class GUI(customtkinter.CTk):
 
     def exit(self):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1)
-        match answer:
-            case 0:
-                pass
-            case 1:
-                self.destroy()
+        if answer == 1:
+            self.destroy()
 
     def theme_change(self):
-        match self.switch.get():
-            case 0:
-                customtkinter.set_appearance_mode("light")
-                Config.set("DEFAULTS", "Style", "Light")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
-            case 1:
-                customtkinter.set_appearance_mode("dark")
-                Config.set("DEFAULTS", "Style", "Dark")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
+        selected_style = "Light" if self.switch.get() == 0 else "Dark"
+        customtkinter.set_appearance_mode(selected_style)
+        Config.set("DEFAULTS", "Style", selected_style)
+        with open(Config_File, "w") as f:
+            Config.write(f)
+
 
     def report_command(self):
         try:
@@ -611,10 +598,8 @@ class GUI(customtkinter.CTk):
         self.y = int(height_res * y_transforming_ratio) # that but for the y point
 
     def put_glasses(self, ImageInput=None): #function to put glasses on the face
-        if ImageInput == None: # not sure what is this
-            img = Image.open("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp))
-        else:
-            img = ImageInput
+        img_path = "{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp)
+        img = Image.open(img_path) if ImageInput is None else ImageInput
         width_pic = int(img.size[0]) # gets the original picture width
         height_pic = int(img.size[1]) # gets the original picture height
         mask_Oculos = Image.open(self.Oculos_path) # opens the Oculos image
@@ -627,7 +612,7 @@ class GUI(customtkinter.CTk):
         height_oculos_resized = int(mask_Oculos.size[1]) # same but height
         #print(height_oculos_resized)
 
-        mask_Oculos.save("temp.png") # temp img to be used later, former "slave"
+        mask_Oculos.save("temp.png") # temp img to be used later, former "slave" <-- joão marcos
         if self.Oculos_path.endswith("Oculos2.png"): # all these ifs verify which glasses where chosen and define the coordinates to be put on the face
             self.get_point(430,69,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
@@ -725,13 +710,12 @@ class GUI(customtkinter.CTk):
                 )
                 return
 
-            else:
-                self.toast.show_toast(
-                "Optica",
-                "{}\n{}{}\n{}{}".format(SelectedLanguage["Save Measurements Success Tooltip"], SelectedLanguage["Length"], self.comprimento, SelectedLanguage["Height"], self.altura),
-                duration = 5,
-                icon_path = "icon.ico",
-                threaded = True,
+            self.toast.show_toast(
+            "Optica",
+            "{}\n{}{}\n{}{}".format(SelectedLanguage["Save Measurements Success Tooltip"], SelectedLanguage["Length"], self.comprimento, SelectedLanguage["Height"], self.altura),
+            duration = 5,
+            icon_path = "icon.ico",
+            threaded = True,
             )
         except Exception as eroo:
             eroo = str(eroo)
@@ -743,287 +727,286 @@ class GUI(customtkinter.CTk):
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
                 ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Get Object Size Error"], SelectedLanguage["Error Window Title"])
                 return
-            else:
             # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
-                import mediapipe
-                self.mp_face_mesh = mediapipe.solutions.face_mesh
-                self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
-                try:
-                    self.image = image
-                    img = cv2.imread(image)
-                    # ir buscar o aruco marker
-                    corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
-                    int_corners = np.int0(corners)
-                    # desenhamos linhas verdes a volta do aruco marker sabendo que ele tem um perímetro de 20cm
-                    cv2.polylines(img, int_corners, True, (0, 255, 0), 5)
-                    # perímetro do aruco
-                    # funciona com apenas 1 aruco marker
-                    self.aruco_perimeter = cv2.arcLength(corners[0], True)
-                    # Pixel to mm ratio
-                    self.pixel_mm_ratio = self.aruco_perimeter / 200
-                except Exception as ero:
-                    ero = str(ero)
-                    self.send_errors_discord(ero)
-                    ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Aruco Marker Not detected"], SelectedLanguage["Error Window Title"])
+            import mediapipe
+            self.mp_face_mesh = mediapipe.solutions.face_mesh
+            self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
+            try:
+                self.image = image
+                img = cv2.imread(image)
+                # ir buscar o aruco marker
+                corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
+                int_corners = np.int0(corners)
+                # desenhamos linhas verdes a volta do aruco marker sabendo que ele tem um perímetro de 20cm
+                cv2.polylines(img, int_corners, True, (0, 255, 0), 5)
+                # perímetro do aruco
+                # funciona com apenas 1 aruco marker
+                self.aruco_perimeter = cv2.arcLength(corners[0], True)
+                # Pixel to mm ratio
+                self.pixel_mm_ratio = self.aruco_perimeter / 200
+            except Exception as ero:
+                ero = str(ero)
+                self.send_errors_discord(ero)
+                ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Aruco Marker Not detected"], SelectedLanguage["Error Window Title"])
 
-                try:
-                    self.img = cv2.imread(image)
-                    self.imy, self.imx, _ = self.img.shape
-                    # opens the image with pil to put them Oculos on
-                    # é necessário converter a imagem de Blue green red para Red green blue
-                    rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
-                    # tamanho da imagem
-                    height, width, _ = self.img.shape
-                    result = self.face_mesh.process(rgb_img)
-                    for facial_landmarks in result.multi_face_landmarks:
-                        middle_nose = facial_landmarks.landmark[168]
-                        middle_nose_bottom = facial_landmarks.landmark[8]
-                        more_points_bottom_nose = facial_landmarks.landmark[197]
-                        bottom_nose = facial_landmarks.landmark[6]
-                        left_face = facial_landmarks.landmark[127] 
-                        right_face = facial_landmarks.landmark[356] 
-                        right_face2 = facial_landmarks.landmark[251]
-                        left_face2 = facial_landmarks.landmark[21]
-                        bottom_Oculos = facial_landmarks.landmark[101]
-                        top_Oculos = facial_landmarks.landmark[66]
-                        bottom_bottom = facial_landmarks.landmark[111]
-                        bottom_b_left = facial_landmarks.landmark[330]
-                        bottom_g_left = facial_landmarks.landmark[419]
-                        # coordenadas não podem ser floats
-                        # pontos necessários
-                        self.bottom_x = int(more_points_bottom_nose.x * width)
-                        self.bottom_y = int(more_points_bottom_nose.y * height)
-                        self.bottom_nose_x = int(bottom_nose.x * width)
-                        self.bottom_nose_y = int(bottom_nose.y * height)
-                        self.middle_nose_bottom_x = int(middle_nose_bottom.x * width) #middle nose bottom "x"
-                        self.middle_nose_bottom_y = int(middle_nose_bottom.y * height) #middle nose bottom "y"
-                        self.nose_x = int(middle_nose.x * width) #nose "x"
-                        self.nose_y = int(middle_nose.y * height) #nose "y"
-                        self.left_face_x = int(left_face.x * width) #left face "x"
-                        self.left_face_y = int(left_face.y * height) #Left face "y"
-                        self.right_face_x = int(right_face.x * width) #right face "x"
-                        self.right_face_y = int(right_face.y * height) #right face "y"
-                        self.left_face_x1 = int(left_face2.x * width)
-                        self.left_face_y1 = int(left_face2.y * height)
-                        self.right_face_x1 = int(right_face2.x * width)
-                        self.right_face_y1 = int(right_face2.y * height)
-                        self.bottom_glasses_x = int(bottom_Oculos.x * width)
-                        self.bottom_glasses_y = int(bottom_Oculos.y * height)
-                        self.bottom_bottom_x = int(bottom_bottom.x * width)
-                        self.bottom_bottom_y = int(bottom_bottom.y * height)
-                        self.bottom_glasses_left_x = int(bottom_g_left.x * width)
-                        self.bottom_glasses_left_y = int(bottom_g_left.y * height)
-                        self.bblx = int(bottom_b_left.x * width)
-                        self.bbly = int(bottom_b_left.y * height)
-                        self.tgx = int(top_Oculos.x * width)
-                        self.tgy = int(top_Oculos.y * height)
-                        self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
-                        self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
-                        self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
-                        self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
-                        self.midpoint_nose_x = int((self.middle_nose_bottom_x + self.nose_x) / 2)
-                        self.midpoint_nose_y = int((self.middle_nose_bottom_y + self.nose_y) / 2)
-                        self.mid_nose_x = int((self.bottom_nose_x + self.nose_x) / 2)
-                        self.mid_nose_y = int((self.bottom_nose_y + self.nose_y) / 2)
-                        self.mid_mid_bottom_x = int((self.bottom_nose_x + self.mid_nose_x) / 2)
-                        self.mid_mid_bottom_y = int((self.bottom_nose_y + self.mid_nose_y) / 2)
-                        self.mid_mid_top_x = int((self.nose_x + self.mid_nose_x) / 2)
-                        self.mid_mid_top_y = int((self.nose_y + self.mid_nose_y) / 2)
-                        self.midier_nose_x = int((self.mid_mid_top_x + self.mid_nose_x) / 2)
-                        self.midier_nose_y = int((self.mid_mid_top_y + self.mid_nose_y) / 2)
-                        self.mid_more_points_x = int((self.bottom_nose_x + self.bottom_x) / 2)
-                        self.mid_more_points_y = int((self.bottom_nose_y + self.bottom_y) / 2)
-                        self.mid_mid_mid_bottom_x = int((self.bottom_nose_x + self.mid_mid_bottom_x) / 2)
-                        self.mid_mid_mid_bottom_y = int((self.bottom_nose_y + self.mid_mid_bottom_y) / 2)
-                        self.mid_medium_mid_x = int((self.mid_nose_x + self.mid_mid_bottom_x) / 2)
-                        self.mid_medium_mid_y = int((self.mid_nose_y + self.mid_mid_bottom_y) / 2)
-                        self.mid_midier_top_x = int((self.midier_nose_x + self.mid_mid_top_x) / 2)
-                        self.mid_midier_top_y = int((self.midier_nose_y + self.mid_mid_top_y) / 2)
-                        self.mid_midier_bottom_x = int((self.midier_nose_x + self.mid_nose_x) / 2)
-                        self.mid_midier_bottom_y = int((self.midier_nose_y + self.mid_nose_y) / 2)
-                        self.mid_medium_nose_x = int((self.mid_medium_mid_x + self.mid_nose_x) / 2)
-                        self.mid_medium_nose_y = int((self.mid_medium_mid_y + self.mid_nose_y) / 2)
-                        self.mid_medium_bottom_x = int((self.mid_medium_mid_x + self.mid_mid_bottom_x) / 2)
-                        self.mid_medium_bottom_y = int((self.mid_medium_mid_y + self.mid_mid_bottom_y) / 2)
-                        self.mid_x = int((self.mid_mid_mid_bottom_x + self.mid_mid_bottom_x) / 2)
-                        self.mid_y = int((self.mid_mid_mid_bottom_y + self.mid_mid_bottom_y) / 2)
-                        self.mid2_x = int((self.mid_mid_mid_bottom_x + self.bottom_nose_x) / 2)
-                        self.mid2_y = int((self.mid_mid_mid_bottom_y + self.bottom_nose_y) / 2)
-                        self.mid3_x = int((self.mid_more_points_x + self.bottom_nose_x) / 2)
-                        self.mid3_y = int((self.mid_more_points_y + self.bottom_nose_y) / 2)
-                        self.mid4_x = int((self.mid3_x + self.bottom_nose_x) / 2)
-                        self.mid4_y = int((self.mid3_y + self.bottom_nose_y) / 2)
-                        self.mid5_x = int((self.mid4_x + self.bottom_nose_x) / 2)
-                        self.mid5_y = int((self.mid4_y + self.bottom_nose_y) / 2)
-                        self.mid6_x = int((self.mid4_x + self.mid3_x) / 2)
-                        self.mid6_y = int((self.mid4_y + self.mid3_y) / 2)
-                        self.mid7_x = int((self.mid_more_points_x + self.mid3_x) / 2)
-                        self.mid7_y = int((self.mid_more_points_y + self.mid3_y) / 2)
-                        self.mid8_x = int((self.mid7_x + self.mid3_x) / 2)
-                        self.mid8_y = int((self.mid7_y + self.mid3_y) / 2)
-                        self.mid9_x = int((self.mid7_x + self.mid_more_points_x) / 2)
-                        self.mid9_y = int((self.mid7_y + self.mid_more_points_y) / 2)
-                        self.mid10_x = int((self.bottom_x + self.mid_more_points_x) / 2)
-                        self.mid10_y = int((self.bottom_y + self.mid_more_points_y) / 2)
-                        self.mid11_x = int((self.nose_x + self.mid_mid_top_x) / 2)
-                        self.mid11_y = int((self.nose_y + self.mid_mid_top_y) / 2)
-                        self.mesh_points = np.array([np.multiply([p.x, p.y], [width, height]).astype(int) for p in result.multi_face_landmarks[0].landmark])
-                        # x do circulo esquerdo/ y do ... raio do ...
-                        (self.l_cx, self.l_cy), self.l_radius = cv2.minEnclosingCircle(self.mesh_points[LEFT_IRIS])
-                        # x do circulo direito/ y do ... raio do ...
-                        (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(self.mesh_points[RIGHT_IRIS])
-                        #distancias
-                        self.iris_to_iris_line_distance = (sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
-                        self.left_iris_to_nose = (sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
-                        self.right_iris_to_nose = (sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
-                        self.left_to_right_face = (sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
-                        self.right_iris_Oculos = round((sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
-                        self.left_iris_Oculos = round((sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
-                        self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
-                        self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
-                        right_iris_nose = []
-                        left_iris_nose = []
-                        iris_nose_points_x = [self.nose_x,
-                                                self.mid_nose_x,
-                                                self.mid_mid_bottom_x,
-                                                self.mid_mid_top_x,
-                                                self.bottom_nose_x,
-                                                self.mid_more_points_x,
-                                                self.midier_nose_x,
-                                                self.mid_mid_mid_bottom_x,
-                                                self.mid_medium_mid_x,
-                                                self.mid_midier_top_x,
-                                                self.mid_midier_bottom_x,
-                                                self.mid_medium_nose_x,
-                                                self.mid_medium_bottom_x,
-                                                self.mid_x,
-                                                self.mid2_x,
-                                                self.mid3_x,
-                                                self.mid4_x,
-                                                self.mid5_x,
-                                                self.mid6_x,
-                                                self.mid7_x,
-                                                self.mid8_x,
-                                                self.mid9_x,
-                                                self.mid10_x,
-                                                self.mid11_x]
+            try:
+                self.img = cv2.imread(image)
+                self.imy, self.imx, _ = self.img.shape
+                # opens the image with pil to put them Oculos on
+                # é necessário converter a imagem de Blue green red para Red green blue
+                rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+                # tamanho da imagem
+                height, width, _ = self.img.shape
+                result = self.face_mesh.process(rgb_img)
+                for facial_landmarks in result.multi_face_landmarks:
+                    middle_nose = facial_landmarks.landmark[168]
+                    middle_nose_bottom = facial_landmarks.landmark[8]
+                    more_points_bottom_nose = facial_landmarks.landmark[197]
+                    bottom_nose = facial_landmarks.landmark[6]
+                    left_face = facial_landmarks.landmark[127] 
+                    right_face = facial_landmarks.landmark[356] 
+                    right_face2 = facial_landmarks.landmark[251]
+                    left_face2 = facial_landmarks.landmark[21]
+                    bottom_Oculos = facial_landmarks.landmark[101]
+                    top_Oculos = facial_landmarks.landmark[66]
+                    bottom_bottom = facial_landmarks.landmark[111]
+                    bottom_b_left = facial_landmarks.landmark[330]
+                    bottom_g_left = facial_landmarks.landmark[419]
+                    # coordenadas não podem ser floats
+                    # pontos necessários
+                    self.bottom_x = int(more_points_bottom_nose.x * width)
+                    self.bottom_y = int(more_points_bottom_nose.y * height)
+                    self.bottom_nose_x = int(bottom_nose.x * width)
+                    self.bottom_nose_y = int(bottom_nose.y * height)
+                    self.middle_nose_bottom_x = int(middle_nose_bottom.x * width) #middle nose bottom "x"
+                    self.middle_nose_bottom_y = int(middle_nose_bottom.y * height) #middle nose bottom "y"
+                    self.nose_x = int(middle_nose.x * width) #nose "x"
+                    self.nose_y = int(middle_nose.y * height) #nose "y"
+                    self.left_face_x = int(left_face.x * width) #left face "x"
+                    self.left_face_y = int(left_face.y * height) #Left face "y"
+                    self.right_face_x = int(right_face.x * width) #right face "x"
+                    self.right_face_y = int(right_face.y * height) #right face "y"
+                    self.left_face_x1 = int(left_face2.x * width)
+                    self.left_face_y1 = int(left_face2.y * height)
+                    self.right_face_x1 = int(right_face2.x * width)
+                    self.right_face_y1 = int(right_face2.y * height)
+                    self.bottom_glasses_x = int(bottom_Oculos.x * width)
+                    self.bottom_glasses_y = int(bottom_Oculos.y * height)
+                    self.bottom_bottom_x = int(bottom_bottom.x * width)
+                    self.bottom_bottom_y = int(bottom_bottom.y * height)
+                    self.bottom_glasses_left_x = int(bottom_g_left.x * width)
+                    self.bottom_glasses_left_y = int(bottom_g_left.y * height)
+                    self.bblx = int(bottom_b_left.x * width)
+                    self.bbly = int(bottom_b_left.y * height)
+                    self.tgx = int(top_Oculos.x * width)
+                    self.tgy = int(top_Oculos.y * height)
+                    self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
+                    self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
+                    self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
+                    self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
+                    self.midpoint_nose_x = int((self.middle_nose_bottom_x + self.nose_x) / 2)
+                    self.midpoint_nose_y = int((self.middle_nose_bottom_y + self.nose_y) / 2)
+                    self.mid_nose_x = int((self.bottom_nose_x + self.nose_x) / 2)
+                    self.mid_nose_y = int((self.bottom_nose_y + self.nose_y) / 2)
+                    self.mid_mid_bottom_x = int((self.bottom_nose_x + self.mid_nose_x) / 2)
+                    self.mid_mid_bottom_y = int((self.bottom_nose_y + self.mid_nose_y) / 2)
+                    self.mid_mid_top_x = int((self.nose_x + self.mid_nose_x) / 2)
+                    self.mid_mid_top_y = int((self.nose_y + self.mid_nose_y) / 2)
+                    self.midier_nose_x = int((self.mid_mid_top_x + self.mid_nose_x) / 2)
+                    self.midier_nose_y = int((self.mid_mid_top_y + self.mid_nose_y) / 2)
+                    self.mid_more_points_x = int((self.bottom_nose_x + self.bottom_x) / 2)
+                    self.mid_more_points_y = int((self.bottom_nose_y + self.bottom_y) / 2)
+                    self.mid_mid_mid_bottom_x = int((self.bottom_nose_x + self.mid_mid_bottom_x) / 2)
+                    self.mid_mid_mid_bottom_y = int((self.bottom_nose_y + self.mid_mid_bottom_y) / 2)
+                    self.mid_medium_mid_x = int((self.mid_nose_x + self.mid_mid_bottom_x) / 2)
+                    self.mid_medium_mid_y = int((self.mid_nose_y + self.mid_mid_bottom_y) / 2)
+                    self.mid_midier_top_x = int((self.midier_nose_x + self.mid_mid_top_x) / 2)
+                    self.mid_midier_top_y = int((self.midier_nose_y + self.mid_mid_top_y) / 2)
+                    self.mid_midier_bottom_x = int((self.midier_nose_x + self.mid_nose_x) / 2)
+                    self.mid_midier_bottom_y = int((self.midier_nose_y + self.mid_nose_y) / 2)
+                    self.mid_medium_nose_x = int((self.mid_medium_mid_x + self.mid_nose_x) / 2)
+                    self.mid_medium_nose_y = int((self.mid_medium_mid_y + self.mid_nose_y) / 2)
+                    self.mid_medium_bottom_x = int((self.mid_medium_mid_x + self.mid_mid_bottom_x) / 2)
+                    self.mid_medium_bottom_y = int((self.mid_medium_mid_y + self.mid_mid_bottom_y) / 2)
+                    self.mid_x = int((self.mid_mid_mid_bottom_x + self.mid_mid_bottom_x) / 2)
+                    self.mid_y = int((self.mid_mid_mid_bottom_y + self.mid_mid_bottom_y) / 2)
+                    self.mid2_x = int((self.mid_mid_mid_bottom_x + self.bottom_nose_x) / 2)
+                    self.mid2_y = int((self.mid_mid_mid_bottom_y + self.bottom_nose_y) / 2)
+                    self.mid3_x = int((self.mid_more_points_x + self.bottom_nose_x) / 2)
+                    self.mid3_y = int((self.mid_more_points_y + self.bottom_nose_y) / 2)
+                    self.mid4_x = int((self.mid3_x + self.bottom_nose_x) / 2)
+                    self.mid4_y = int((self.mid3_y + self.bottom_nose_y) / 2)
+                    self.mid5_x = int((self.mid4_x + self.bottom_nose_x) / 2)
+                    self.mid5_y = int((self.mid4_y + self.bottom_nose_y) / 2)
+                    self.mid6_x = int((self.mid4_x + self.mid3_x) / 2)
+                    self.mid6_y = int((self.mid4_y + self.mid3_y) / 2)
+                    self.mid7_x = int((self.mid_more_points_x + self.mid3_x) / 2)
+                    self.mid7_y = int((self.mid_more_points_y + self.mid3_y) / 2)
+                    self.mid8_x = int((self.mid7_x + self.mid3_x) / 2)
+                    self.mid8_y = int((self.mid7_y + self.mid3_y) / 2)
+                    self.mid9_x = int((self.mid7_x + self.mid_more_points_x) / 2)
+                    self.mid9_y = int((self.mid7_y + self.mid_more_points_y) / 2)
+                    self.mid10_x = int((self.bottom_x + self.mid_more_points_x) / 2)
+                    self.mid10_y = int((self.bottom_y + self.mid_more_points_y) / 2)
+                    self.mid11_x = int((self.nose_x + self.mid_mid_top_x) / 2)
+                    self.mid11_y = int((self.nose_y + self.mid_mid_top_y) / 2)
+                    self.mesh_points = np.array([np.multiply([p.x, p.y], [width, height]).astype(int) for p in result.multi_face_landmarks[0].landmark])
+                    # x do circulo esquerdo/ y do ... raio do ...
+                    (self.l_cx, self.l_cy), self.l_radius = cv2.minEnclosingCircle(self.mesh_points[LEFT_IRIS])
+                    # x do circulo direito/ y do ... raio do ...
+                    (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(self.mesh_points[RIGHT_IRIS])
+                    #distancias
+                    self.iris_to_iris_line_distance = (sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
+                    self.left_iris_to_nose = (sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+                    self.right_iris_to_nose = (sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+                    self.left_to_right_face = (sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
+                    self.right_iris_Oculos = round((sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
+                    self.left_iris_Oculos = round((sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
+                    self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
+                    self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
+                    right_iris_nose = []
+                    left_iris_nose = []
+                    iris_nose_points_x = [self.nose_x,
+                                            self.mid_nose_x,
+                                            self.mid_mid_bottom_x,
+                                            self.mid_mid_top_x,
+                                            self.bottom_nose_x,
+                                            self.mid_more_points_x,
+                                            self.midier_nose_x,
+                                            self.mid_mid_mid_bottom_x,
+                                            self.mid_medium_mid_x,
+                                            self.mid_midier_top_x,
+                                            self.mid_midier_bottom_x,
+                                            self.mid_medium_nose_x,
+                                            self.mid_medium_bottom_x,
+                                            self.mid_x,
+                                            self.mid2_x,
+                                            self.mid3_x,
+                                            self.mid4_x,
+                                            self.mid5_x,
+                                            self.mid6_x,
+                                            self.mid7_x,
+                                            self.mid8_x,
+                                            self.mid9_x,
+                                            self.mid10_x,
+                                            self.mid11_x]
 
-                        iris_nose_points_y = [self.nose_y,
-                                                self.mid_nose_y,
-                                                self.mid_mid_bottom_y,
-                                                self.mid_mid_top_y,
-                                                self.bottom_nose_y,
-                                                self.mid_more_points_y,
-                                                self.midier_nose_y,
-                                                self.mid_mid_mid_bottom_y,
-                                                self.mid_medium_mid_y,
-                                                self.mid_midier_top_y,
-                                                self.mid_midier_bottom_y,
-                                                self.mid_medium_nose_y,
-                                                self.mid_medium_bottom_y,
-                                                self.mid_y,
-                                                self.mid2_y,
-                                                self.mid3_y,
-                                                self.mid4_y,
-                                                self.mid5_y,
-                                                self.mid6_y,
-                                                self.mid7_y,
-                                                self.mid8_y,
-                                                self.mid9_y,
-                                                self.mid10_y,
-                                                self.mid11_y]
+                    iris_nose_points_y = [self.nose_y,
+                                            self.mid_nose_y,
+                                            self.mid_mid_bottom_y,
+                                            self.mid_mid_top_y,
+                                            self.bottom_nose_y,
+                                            self.mid_more_points_y,
+                                            self.midier_nose_y,
+                                            self.mid_mid_mid_bottom_y,
+                                            self.mid_medium_mid_y,
+                                            self.mid_midier_top_y,
+                                            self.mid_midier_bottom_y,
+                                            self.mid_medium_nose_y,
+                                            self.mid_medium_bottom_y,
+                                            self.mid_y,
+                                            self.mid2_y,
+                                            self.mid3_y,
+                                            self.mid4_y,
+                                            self.mid5_y,
+                                            self.mid6_y,
+                                            self.mid7_y,
+                                            self.mid8_y,
+                                            self.mid9_y,
+                                            self.mid10_y,
+                                            self.mid11_y]
 
-                        right_iris_nose.append(self.right_iris_to_nose)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_nose_x)**2 + (self.r_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_top_x)**2 + (self.r_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.bottom_nose_x)**2 + (self.r_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_more_points_x)**2 + (self.r_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.midier_nose_x)**2 + (self.r_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_mid_x)**2 + (self.r_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_midier_top_x)**2 + (self.r_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_midier_bottom_x)**2 + (self.r_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_nose_x)**2 + (self.r_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_bottom_x)**2 + (self.r_cy - self.mid_medium_bottom_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid_x)**2 + (self.r_cy - self.mid_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid2_x)**2 + (self.r_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid3_x)**2 + (self.r_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid4_x)**2 + (self.r_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid5_x)**2 + (self.r_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid6_x)**2 + (self.r_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid7_x)**2 + (self.r_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid8_x)**2 + (self.r_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid9_x)**2 + (self.r_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid10_x)**2 + (self.r_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
-                        right_iris_nose.append((sqrt((self.r_cx - self.mid11_x)**2 + (self.r_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append(self.left_iris_to_nose)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_nose_x)**2 + (self.l_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_top_x)**2 + (self.l_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.bottom_nose_x)**2 + (self.l_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_more_points_x)**2 + (self.l_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.midier_nose_x)**2 + (self.l_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_mid_x)**2 + (self.l_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_midier_top_x)**2 + (self.l_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_midier_bottom_x)**2 + (self.l_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_nose_x)**2 + (self.l_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_bottom_x)**2 + (self.l_cy - self.mid_medium_bottom_x)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid_x)**2 + (self.l_cy - self.mid_x)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid2_x)**2 + (self.l_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid3_x)**2 + (self.l_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid4_x)**2 + (self.l_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid5_x)**2 + (self.l_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid6_x)**2 + (self.l_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid7_x)**2 + (self.l_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid8_x)**2 + (self.l_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid9_x)**2 + (self.l_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid10_x)**2 + (self.l_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
-                        left_iris_nose.append((sqrt((self.l_cx - self.mid11_x)**2 + (self.l_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
-                        self.minright = right_iris_nose[0]
-                        self.minleft = left_iris_nose[0]
-                        
-                        # to get the smallest distance bet. the pupils and a horizontal point on the nose
-                        for i in right_iris_nose:
-                            if i < self.minright:
-                                self.minright = i
-                        for n in left_iris_nose:
-                            if n < self.minleft:
-                                self.minleft = n
-                        # end of the smallest thing's verify #
+                    right_iris_nose.append(self.right_iris_to_nose)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_nose_x)**2 + (self.r_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_top_x)**2 + (self.r_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.bottom_nose_x)**2 + (self.r_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_more_points_x)**2 + (self.r_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.midier_nose_x)**2 + (self.r_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_mid_mid_bottom_x)**2 + (self.r_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_mid_x)**2 + (self.r_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_midier_top_x)**2 + (self.r_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_midier_bottom_x)**2 + (self.r_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_nose_x)**2 + (self.r_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_medium_bottom_x)**2 + (self.r_cy - self.mid_medium_bottom_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid_x)**2 + (self.r_cy - self.mid_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid2_x)**2 + (self.r_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid3_x)**2 + (self.r_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid4_x)**2 + (self.r_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid5_x)**2 + (self.r_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid6_x)**2 + (self.r_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid7_x)**2 + (self.r_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid8_x)**2 + (self.r_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid9_x)**2 + (self.r_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid10_x)**2 + (self.r_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
+                    right_iris_nose.append((sqrt((self.r_cx - self.mid11_x)**2 + (self.r_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append(self.left_iris_to_nose)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_nose_x)**2 + (self.l_cy - self.mid_nose_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_top_x)**2 + (self.l_cy - self.mid_mid_top_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.bottom_nose_x)**2 + (self.l_cy - self.bottom_nose_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_more_points_x)**2 + (self.l_cy - self.mid_more_points_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.midier_nose_x)**2 + (self.l_cy - self.midier_nose_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_mid_mid_bottom_x)**2 + (self.l_cy - self.mid_mid_mid_bottom_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_mid_x)**2 + (self.l_cy - self.mid_medium_mid_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_midier_top_x)**2 + (self.l_cy - self.mid_midier_top_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_midier_bottom_x)**2 + (self.l_cy - self.mid_midier_bottom_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_nose_x)**2 + (self.l_cy - self.mid_medium_nose_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_medium_bottom_x)**2 + (self.l_cy - self.mid_medium_bottom_x)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid_x)**2 + (self.l_cy - self.mid_x)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid2_x)**2 + (self.l_cy - self.mid2_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid3_x)**2 + (self.l_cy - self.mid3_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid4_x)**2 + (self.l_cy - self.mid4_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid5_x)**2 + (self.l_cy - self.mid5_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid6_x)**2 + (self.l_cy - self.mid6_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid7_x)**2 + (self.l_cy - self.mid7_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid8_x)**2 + (self.l_cy - self.mid8_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid9_x)**2 + (self.l_cy - self.mid9_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid10_x)**2 + (self.l_cy - self.mid10_y)**2)) / self.pixel_mm_ratio)
+                    left_iris_nose.append((sqrt((self.l_cx - self.mid11_x)**2 + (self.l_cy - self.mid11_y)**2)) / self.pixel_mm_ratio)
+                    self.minright = right_iris_nose[0]
+                    self.minleft = left_iris_nose[0]
+                    
+                    # to get the smallest distance bet. the pupils and a horizontal point on the nose
+                    for i in right_iris_nose:
+                        if i < self.minright:
+                            self.minright = i
+                    for n in left_iris_nose:
+                        if n < self.minleft:
+                            self.minleft = n
+                    # end of the smallest thing's verify #
 
-                        if self.minright in right_iris_nose:
-                            index = right_iris_nose.index(self.minright)
-                            self.pointX_R = iris_nose_points_x[index]
-                            self.pointY_R = iris_nose_points_y[index]
-                        if self.minleft in left_iris_nose:
-                            index_left = left_iris_nose.index(self.minleft)
-                            self.pointX_L = iris_nose_points_x[index_left]
-                            self.pointY_L = iris_nose_points_y[index_left]
+                    if self.minright in right_iris_nose:
+                        index = right_iris_nose.index(self.minright)
+                        self.pointX_R = iris_nose_points_x[index]
+                        self.pointY_R = iris_nose_points_y[index]
+                    if self.minleft in left_iris_nose:
+                        index_left = left_iris_nose.index(self.minleft)
+                        self.pointX_L = iris_nose_points_x[index_left]
+                        self.pointY_L = iris_nose_points_y[index_left]
 
-                        # midpoint calculation, to get a horizontal line between both pupils
-                        self.nose_point_for_dnp_X = int((self.pointX_R + self.pointX_L) / 2) 
-                        self.nose_point_for_dnp_Y = int((self.pointY_R + self.pointY_L) / 2) 
-                        # midpoint calculation #~
-                        
-                        # dnp calculation
-                        self.dnp_left = sqrt((self.l_cx - self.nose_point_for_dnp_X)**2 + (self.l_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
-                        self.dnp_right = sqrt((self.r_cx - self.nose_point_for_dnp_X)**2 + (self.r_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
-                        # dnp calculation #
+                    # midpoint calculation, to get a horizontal line between both pupils
+                    self.nose_point_for_dnp_X = int((self.pointX_R + self.pointX_L) / 2) 
+                    self.nose_point_for_dnp_Y = int((self.pointY_R + self.pointY_L) / 2) 
+                    # midpoint calculation #~
+                    
+                    # dnp calculation
+                    self.dnp_left = sqrt((self.l_cx - self.nose_point_for_dnp_X)**2 + (self.l_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
+                    self.dnp_right = sqrt((self.r_cx - self.nose_point_for_dnp_X)**2 + (self.r_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
+                    # dnp calculation #
 
-                        self.draw_on_img(self.img)
-                    self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
-                    self.t_stamp = self.t_stamp
-                    cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
-                    self.put_glasses()
-                    imagee = Image.open("temp.png")
-                    self.put_glasses(ImageInput=imagee)
-                    os.remove("temp.png")
-                except Exception as e:
-                    e = str(e)
-                    self.send_errors_discord(e)
-                    ctypes.windll.user32.MessageBoxW(0, f"Erro: {e}", SelectedLanguage["Error Window Title"])
+                    self.draw_on_img(self.img)
+                self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
+                self.t_stamp = self.t_stamp
+                cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
+                self.put_glasses()
+                imagee = Image.open("temp.png")
+                self.put_glasses(ImageInput=imagee)
+                os.remove("temp.png")
+            except Exception as e:
+                e = str(e)
+                self.send_errors_discord(e)
+                ctypes.windll.user32.MessageBoxW(0, f"Erro: {e}", SelectedLanguage["Error Window Title"])
         except AttributeError:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
             return

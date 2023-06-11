@@ -313,7 +313,7 @@ English = {
 
     "Report Bug Error Window": "It was not possible to open the link.",
 
-    "About Window Info": "Software developed by:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+    "About Window Info": "Software developed by:\nRicardo Martins\nContacto: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
 
     "Tutorial Open Error Window": "It was not possible to open the tutorial\nThe file may be corrupted",
 
