@@ -1,6 +1,5 @@
 import os
 import ctypes
-import subprocess
 import sys
 import cv2
 import webbrowser
@@ -17,6 +16,8 @@ import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
 import platform
+
+
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
