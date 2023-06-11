@@ -3,7 +3,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 ## Preview
 
-![Preview](https://i.imgur.com/EkEe7i6.png)
+![Preview](https://i.imgur.com/ptDIh3F.png)
 
 
 ## Changes
