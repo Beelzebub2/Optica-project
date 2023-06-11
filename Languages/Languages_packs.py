@@ -28,6 +28,8 @@ PT_pt = {
 
     "Green": "Verde",
 
+    "Orange": "Laranja",
+
     ##/\ Option menu /\##
 
 
@@ -211,6 +213,8 @@ English = {
     "Red": "Red",
 
     "Green": "Green",
+
+    "Orange": "Orange",
 
     ##/\ Option menu /\##
 

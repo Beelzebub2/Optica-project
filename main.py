@@ -56,6 +56,10 @@ match Theme:
         Program_Theme = "Necessary files\\Red-Theme.json"
         Option_th_df = SelectedLanguage["Red"]
 
+    case "Orange":
+        Program_Theme = "Necessary files\\Orange-Theme.json"
+        Option_th_df = SelectedLanguage["Orange"]
+
 Style = Config["DEFAULTS"]["style"]
 match Style:
     case "Dark":
@@ -377,7 +381,7 @@ class GUI(customtkinter.CTk):
             self.tooltip(self.Optionmenu, SelectedLanguage["Language Tooltip"])
 
             self.OptionmenuTheme = customtkinter.CTkOptionMenu(self.window,
-                                                        values=[SelectedLanguage["Green"], SelectedLanguage["Blue"], SelectedLanguage["Dark-Blue"], SelectedLanguage["Red"]],
+                                                        values=[SelectedLanguage["Green"], SelectedLanguage["Blue"], SelectedLanguage["Dark-Blue"], SelectedLanguage["Red"], SelectedLanguage["Orange"]],
                                                         command=self.change_theme,
                                                         hover=True)
             self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
@@ -420,7 +424,8 @@ class GUI(customtkinter.CTk):
             SelectedLanguage["Green"]: "Green",
             SelectedLanguage["Blue"]: "Blue",
             SelectedLanguage["Dark-Blue"]: "Dark-Blue",
-            SelectedLanguage["Red"]: "Red"
+            SelectedLanguage["Red"]: "Red",
+            SelectedLanguage["Orange"]: "Orange"
         }
         
         Config.set("DEFAULTS", "Theme", theme_mapping[choice])

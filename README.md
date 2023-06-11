@@ -7,6 +7,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 Beta 2.0 11/06/2023
 
 +   Minor fixes for the config handler
++   Added Orange Theme
 
 Beta 2.0 10/11/2022
 
