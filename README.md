@@ -63,4 +63,5 @@ Alpha 1.0 05/09/2022
 
 +   Settings button was added
 +   Reorganized and optimized code
++   Config handler created
 ```
