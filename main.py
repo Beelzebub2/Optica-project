@@ -32,6 +32,9 @@ Language = Config["DEFAULTS"]["Language"]
 language_mapping = {
     "Pt-pt": (L.PT_pt, "Português-pt"),
     "English": (L.English, "English"),
+    "German": (L.German, "Allemand"),
+    "FR": (L.French, "Français"),
+    "ES": (L.Spanish, "Espanõl")
     #"Pt-Br": (L.PT_br, "Português-br"),
 }
 SelectedLanguage, Option_lg_df = language_mapping.get(Language)
