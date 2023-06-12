@@ -29,7 +29,6 @@ Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.
 Config = ConfigParser()
 Config.read(Config_File)
 
-
 Language = Config["DEFAULTS"]["Language"]
 language_mapping = {
     "Pt-pt": (L.PT_pt, "Português-pt"),
@@ -43,8 +42,8 @@ theme_mapping = {
     "Green": "green",
     "Blue": "blue",
     "Dark-Blue": "dark-blue",
-    "Red": "Necessary files\\Red-Theme.json",
-    "Orange": "Necessary files\\Orange-Theme.json"
+    "Red": f'{L.Universal["Necessary Files Folder"]}\\Red-Theme.json',
+    "Orange": f'{L.Universal["Necessary Files Folder"]}\\Orange-Theme.json'
 }
 Program_Theme = theme_mapping.get(Theme)
 Option_th_df = SelectedLanguage.get(Program_Theme)
