@@ -33,6 +33,9 @@ Language = Config["DEFAULTS"]["Language"]
 language_mapping = {
     "Pt-pt": (L.PT_pt, "Português-pt"),
     "English": (L.English, "English"),
+    "ES": (L.Spanish, "Español"),
+    "FR": (L.French, "Français"),
+    "German": (L.German, "Allemand")
     #"Pt-Br": (L.PT_br, "Português-br"),
 }
 SelectedLanguage, Option_lg_df = language_mapping.get(Language)
@@ -110,6 +113,9 @@ detector = HomogeneousBgDetector()
 
 class GUI(customtkinter.CTk):
     def __init__(self):
+        # By using super().__init__(), the subclass can invoke the initializer of its superclass, 
+        # allowing it to perform any necessary initialization steps defined in the superclass. 
+        # This ensures that both the subclass-specific attributes and the superclass attributes are properly initialized.
         super().__init__()
         # WINDOW SETTINGS
         WIDTH = 1280
@@ -120,7 +126,7 @@ class GUI(customtkinter.CTk):
         self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
         self.maxsize(1920, 1080)
-        self.bind('<Escape>',lambda e: self.exit())
+        self.bind('<Escape>', lambda e: self.exit())
         current_screen = get_monitor_from_coord(self.winfo_x(), self.winfo_y())
         screen_width = current_screen.width
         screen_height = current_screen.height
@@ -370,7 +376,7 @@ class GUI(customtkinter.CTk):
 
         
         self.Optionmenu = customtkinter.CTkOptionMenu(self.window,
-                                                    values=["Português-pt", "English"],
+                                                    values=["Português-pt", "English", "Español", "Français", "Allemand"],
                                                     command=self.change_language,
                                                     hover=True)
         self.Optionmenu.place(relx=0.95, rely=0.16, anchor="e")
@@ -387,26 +393,24 @@ class GUI(customtkinter.CTk):
     
     def change_language(self, choice):
         choice = self.Optionmenu.get()
-        match choice:
-            case "Português-pt":
-                Config.set("DEFAULTS", "Language", "Pt-pt")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
-                self.restart_program()
-            #case "Português-br":
-            #    SelectedLanguage = L.PT_br
-            #    self.destroy()
-            #    self.__init__()
-            case "English":
-                Config.set("DEFAULTS", "Language", "English")
-                with open(Config_File, "w") as f:
-                    Config.write(f)
-                    f.close()
-                self.restart_program()
+        language_mapping = {
+            "Português-pt": "Pt-pt",
+            "English": "English",
+            "Español": "ES",
+            "Français": "FR",
+            "Allemand": "German"
+            # Add other language mappings here
+        }
+        language = language_mapping.get(choice)
+        Config.set("DEFAULTS", "Language", language)
+        with open(Config_File, "w") as f:
+            Config.write(f)
+        self.restart_program()
+
 
     def change_theme(self, choice):
         choice = self.OptionmenuTheme.get()
+        #Set color options to selected language
         theme_mapping = {
             SelectedLanguage["Green"]: "Green",
             SelectedLanguage["Blue"]: "Blue",

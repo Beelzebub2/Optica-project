@@ -1,4 +1,4 @@
-# Medidas Digitais Beta 2.0
+# To be changed 2.0
 Program made in python with the purpose of detecting face dimensions and predicting how the glasses would stay on it 
 
 ## Preview
@@ -13,6 +13,7 @@ Beta 2.0 12/06/2023
 
 +   Added autorestart to apply changes
 +   Close settings window with "Esc" key
++   Added French/Spanish/German translations
 
 Beta 2.0 11/06/2023
 
