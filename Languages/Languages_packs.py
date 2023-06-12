@@ -747,86 +747,144 @@ French = {
 
     ##/\ File Names /\## 
 }
-
 German = {
     "Title": "Zu ändern",
 
     "Blue": "Blau",
+
     "Dark-Blue": "Dunkelblau",
+
     "Red": "Rot",
+
     "Green": "Grün",
+
     "Orange": "Orange",
 
     "Settings Button": "Einstellungen",
+
     "Select Face Button": "Gesicht auswählen",
+
     "Add Faces Button": "Gesichter hinzufügen",
+
     "About Button": "Über",
+
     "Tutorial Button": "Anleitung",
+
     "Select Glasses Button": "Brillen auswählen",
+
     "Save Measurements Button": "Diese Maße verwenden",
+
     "Open Results Folder Button": "Ergebnisordner öffnen",
+
     "Theme Switch": "Dunkles Design",
+
     "Report Bug Button": "Fehler melden",
+
     "Start Button": "Start",
 
     "Add Faces Button Tooltip": "Klicken Sie auf die Schaltfläche, um Gesichter hinzuzufügen, und ziehen Sie dann die Fotos in den Ordner.",
+
     "Select Face Button tooltip": "Nach dem Klicken auf die Schaltfläche wählen Sie das zu analysierende Gesicht aus.",
+
     "Settings Button Tooltip": "Programmeinstellungen",
+
     "Length Tooltip": "Der Wert muss wie im Beispiel eingegeben werden: 6.2",
+
     "Height Tooltip": "Der Wert muss wie im Beispiel eingegeben werden: 6.2",
+
     "Save Measurements Button Tooltip": "Es ist immer erforderlich, die Maße einzugeben und zu speichern.",
+
     "Open Results Folder Tooltip": "Öffnet den Ordner mit den nach der Analyse erhaltenen Ergebnissen.",
+
     "Theme Switch Tooltip": "Ändern Sie das Design des Programms.",
+
     "Report Bug Button Tooltip": "Melden Sie einen Fehler an die Entwickler.",
+
     "About Button Tooltip": "Informationen über das Programm.",
+
     "Tutorial Button Tooltip": "Videoanleitung zur Verwendung des Programms.",
+
     "Select Glasses Button Tooltip": "Nach dem Klicken auf die Schaltfläche wählen Sie die zu verwendenden Brillen aus.",
+
     "Start Button Tooltip": "Startet die Analyse.",
+
     "Language Tooltip": "Programmsprache ändern.",
+
     "Color Theme Tooltip": "Programmfarbe ändern.",
 
     "Length Label": "Länge der Brille:",
+
     "Height Label": "Höhe der Brille:",
 
     "Exit Window Title": "Beenden",
+
     "Error Window Title": "Fehler",
+
     "Browse Face Window Title": "Gesicht auswählen",
+
     "Browse Glasses Window Title": "Brillen auswählen",
+
     "About Window Title": "Über",
+
     "Browse Window Hint": "Bilder",
+
     "Restart title": "Neustart",
 
     "Exit Window": "Sind Sie sicher, dass Sie beenden möchten?",
+
     "Report Bug Error Window": "Der Link konnte nicht geöffnet werden.",
+
     "About Window Info": "Entwickelt von:\nRicardo Martins\nKontakt: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nKontakt: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+
     "Tutorial Open Error Window": "Die Anleitung konnte nicht geöffnet werden.\nDie Datei ist möglicherweise beschädigt.",
+
     "Save  Measurements Error": "Falsche Maße, überprüfen Sie die Werte und versuchen Sie es erneut.",
+
     "Save Measurements Letters Error": "Maße dürfen keine Buchstaben enthalten.\nBeide Felder müssen ausgefüllt sein.",
+
     "Get Object Size Error": "Falsche Maße, überprüfen Sie die Werte und versuchen Sie es erneut.",
+
     "Open Faces Folder Error": "Der Ordner konnte nicht geöffnet werden.",
+
     "Open Results Folder Error": "Der Ordner konnte nicht geöffnet werden.\nStarten Sie das Programm neu, um ihn zu erstellen.",
+
     "Aruco Marker Not detected": "Aruco-Marker wurde nicht erkannt.",
+
     "Started Without Measurements Error": "Es ist erforderlich, Werte in die Maße einzugeben und sie zu speichern.",
+    
     "Restart": "Ein Neustart ist erforderlich, um die Änderungen anzuwenden.\nMöchten Sie jetzt neu starten?",
 
     "Add Faces Toast notification": 'Das Bild sollte enthalten:\nEin sichtbares Gesicht\nEinen Aruco-Marker von 5x5 cm\nKeines davon darf "geschnitten" sein.',
+
     "Done Toast Notification": "Analyse abgeschlossen.",
+
     "Save Measurements Error Notification": "Maße müssen zwischen liegen:\nLänge (100-250 mm)\nHöhe (20-100 mm)",
+
     "Save Measurements Success Tooltip": "Maße gespeichert.",
+
     "Length": "Länge: ",
+
     "Height": "Höhe: ",
 
     "Duplicate Window": "Ein Fenster der Einstellungen ist bereits geöffnet.",
 
     "Pupillary Distance": "Pupillendistanz: ",
+
     "Left Nasopupillary distance": "NPD links: ",
+
     "Right Nasopupillary distance": "NPD rechts: ",
+
     "Face Length": "Gesichtslänge: ",
+
     "Left eye": "Linkes Auge",
+
     "Right eye": "Rechtes Auge",
+
     "Left Height": "OC links: ",
+
     "Right Height": "OC rechts: ",
 
     "Image With Glasses": "Bild-mit-Brille",
+
     "Measurements Image": "Maße"
 }

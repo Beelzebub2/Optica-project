@@ -17,7 +17,6 @@ from configparser import ConfigParser
 import screeninfo
 import platform
 
-
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
@@ -33,23 +32,27 @@ Language = Config["DEFAULTS"]["Language"]
 language_mapping = {
     "Pt-pt": (L.PT_pt, "Português-pt"),
     "English": (L.English, "English"),
-    "ES": (L.Spanish, "Español"),
-    "FR": (L.French, "Français"),
-    "German": (L.German, "Allemand")
     #"Pt-Br": (L.PT_br, "Português-br"),
 }
 SelectedLanguage, Option_lg_df = language_mapping.get(Language)
 
 Theme = Config["DEFAULTS"]["Theme"]
-theme_mapping = {
-    "Green": "green",
-    "Blue": "blue",
-    "Dark-Blue": "dark-blue",
-    "Red": f'{L.Universal["Necessary Files Folder"]}\\Red-Theme.json',
-    "Orange": f'{L.Universal["Necessary Files Folder"]}\\Orange-Theme.json'
-}
-Program_Theme = theme_mapping.get(Theme)
-Option_th_df = SelectedLanguage.get(Program_Theme)
+match Theme:
+    case "Green":
+        Program_Theme = "green"
+        Option_th_df = SelectedLanguage["Green"]
+    case "Blue":
+        Program_Theme = "blue"
+        Option_th_df = SelectedLanguage["Blue"]
+    case "Dark-Blue":
+        Program_Theme = "dark-blue"
+        Option_th_df = SelectedLanguage["Dark-Blue"]
+    case "Red":
+        Program_Theme = "Necessary files\\Red-Theme.json"
+        Option_th_df = SelectedLanguage["Red"]
+    case "Orange":
+        Program_Theme = "Necessary files\\Orange-Theme.json"
+        Option_th_df = SelectedLanguage["Orange"]
 
 Style = Config["DEFAULTS"]["style"]
 match Style:
@@ -58,9 +61,7 @@ match Style:
     case "Light":
         customtkinter.set_appearance_mode("light")
     case "":
-        customtkinter.set_appearance_mode("dark")   
-
-
+        customtkinter.set_appearance_mode("dark") 
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
@@ -115,7 +116,7 @@ class GUI(customtkinter.CTk):
     def __init__(self):
         # By using super().__init__(), the subclass can invoke the initializer of its superclass, 
         # allowing it to perform any necessary initialization steps defined in the superclass. 
-        # This ensures that both the subclass-specific attributes and the superclass attributes are properly initialized.
+        # This ensures that both the subclass-specific attributes and the superclass attributes are properly initialized.        super().__init__()
         super().__init__()
         # WINDOW SETTINGS
         WIDTH = 1280
@@ -407,7 +408,6 @@ class GUI(customtkinter.CTk):
             Config.write(f)
         self.restart_program()
 
-
     def change_theme(self, choice):
         choice = self.OptionmenuTheme.get()
         #Set color options to selected language
@@ -430,7 +430,6 @@ class GUI(customtkinter.CTk):
             python = sys.executable
             print(python)
             os.execl(python, python, *sys.argv)
-
     def close_settings(self):
         self.window.destroy()
         self.window = None
