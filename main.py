@@ -322,7 +322,7 @@ class GUI(customtkinter.CTk):
 
         self.switch = customtkinter.CTkSwitch(master=self.window, 
                                                 text=SelectedLanguage["Theme Switch"], 
-                                                command=self.theme_change,)
+                                                command=self.style_change,)
         self.switch.place(relx=0.12, rely=0.65)
         if Config["DEFAULTS"]["style"] == "Dark":
             self.switch.select()
@@ -427,6 +427,9 @@ class GUI(customtkinter.CTk):
             print(python)
             os.execl(python, python, *sys.argv)
 
+    def close_settings(self):
+        self.window.destroy()
+        self.window = None
 
         # SETTINGS WINDOW #
 
@@ -434,12 +437,8 @@ class GUI(customtkinter.CTk):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1)
         if answer == 1:
             self.destroy()
-    
-    def close_settings(self):
-        self.window.destroy()
-        self.window = None
 
-    def theme_change(self):
+    def style_change(self):
         selected_style = "Light" if self.switch.get() == 0 else "Dark"
         customtkinter.set_appearance_mode(selected_style)
         Config.set("DEFAULTS", "Style", selected_style)
