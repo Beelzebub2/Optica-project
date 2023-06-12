@@ -1,6 +1,7 @@
 import os
 import ctypes
 import sys
+import threading
 import cv2
 import webbrowser
 from tkinter import filedialog, RIGHT, CENTER, LEFT
@@ -130,7 +131,7 @@ class GUI(customtkinter.CTk):
         self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
         self.maxsize(1920, 1080)
-        self.bind('<Escape>', lambda e: self.exit())
+        self.bind('<Escape>', lambda e: self.open_exit_window())
         current_screen = get_monitor_from_coord(self.winfo_x(), self.winfo_y())
         screen_width = current_screen.width
         screen_height = current_screen.height
@@ -138,6 +139,7 @@ class GUI(customtkinter.CTk):
         y_cord = int((screen_height / 2) - (HEIGHT / 2))
         self.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
         self.window = None
+        self.MB_TOPMOST = 0x00040000
         
         
         # WINDOW SETTINGS #
@@ -359,7 +361,7 @@ class GUI(customtkinter.CTk):
                                                     corner_radius=8, 
                                                     hover=True, 
                                                     text=SelectedLanguage["About Button"], 
-                                                    command=self.about, 
+                                                    command=self.open_about_window, 
                                                     image=self.about_img,
                                                     compound=RIGHT)
         self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
@@ -439,8 +441,12 @@ class GUI(customtkinter.CTk):
 
         # SETTINGS WINDOW #
 
+    def open_exit_window(self):
+        exit_thread = threading.Thread(target=self.exit)
+        exit_thread.start()
+
     def exit(self):
-        answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1)
+        answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1 | self.MB_TOPMOST)
         if answer == 1:
             self.destroy()
 
@@ -493,8 +499,14 @@ class GUI(customtkinter.CTk):
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
             self.send_errors_discord(eroro)
             
+    def open_about_window(self):
+        about_thread = threading.Thread(target=self.about)
+        about_thread.start()
+
     def about(self):
-        ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
+        ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"], self.MB_TOPMOST)
+
+
 
     def browse_Face(self):
         if os.path.exists(L.Universal["Faces Folder"]):

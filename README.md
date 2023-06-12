@@ -14,6 +14,7 @@ Beta 2.0 12/06/2023
 +   Added autorestart to apply changes
 +   Close settings window with "Esc" key
 +   Added French/Spanish/German translations
++   Fixed Program crash while trying to move main window after clicking on about button
 
 Beta 2.0 11/06/2023
 
