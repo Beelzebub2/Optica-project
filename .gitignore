@@ -1,13 +1,10 @@
-Necessary files/config.ini
+Necessary\ files/config.ini
 .vscode/settings.json
 Optica.spec
-Necessary files/config.ini
-Necessary files/config.ini
 Update-Handler.py
 test.py
 requirements.txt
-./dist
-./build
-
-
+dist/
+build/
+"create app.bat"
 Languages/__pycache__/Languages_packs.cpython-310.pyc

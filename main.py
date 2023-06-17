@@ -18,13 +18,26 @@ from configparser import ConfigParser
 import screeninfo
 import platform
 import traceback
-
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
 
 #DEBUG
 #start_time = datetime.now()
+# Constants for process priority classes
+HIGH_PRIORITY_CLASS = 0x00000080
+# Get the current process ID
+pid = os.getpid()
+# Open the current process with necessary access rights
+handle = ctypes.windll.kernel32.OpenProcess(
+    ctypes.c_uint(0x1000),  # PROCESS_ALL_ACCESS
+    ctypes.c_int(False),
+    ctypes.c_uint(pid)
+)
+# Set the priority of the process to high
+ctypes.windll.kernel32.SetPriorityClass(handle, HIGH_PRIORITY_CLASS)
+# Close the handle
+ctypes.windll.kernel32.CloseHandle(handle)
 
 def error_handler(func):
     def wrapper(*args, **kwargs):
@@ -1093,10 +1106,3 @@ def run():
  
 if __name__ == '__main__':
     run()
-    
-    
-    
-
-
-
-
