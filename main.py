@@ -295,6 +295,11 @@ class GUI(customtkinter.CTk):
                                                         compound=RIGHT)
         self.open_results_bt.place(relx=0.5, rely=0.53, anchor=CENTER)
         self.tooltip(self.open_results_bt, SelectedLanguage["Open Results Folder Tooltip"])
+
+        # PROGRESS BAR
+        self.progressbar = customtkinter.CTkProgressBar(self.Frame4)
+        
+        # PROGRESS BAR #
     
 
     # SETTINGS WINDOW 
@@ -575,7 +580,7 @@ class GUI(customtkinter.CTk):
                                                             corner_radius=8, 
                                                             hover=True, 
                                                             text=SelectedLanguage["Start Button"], 
-                                                            command=lambda:self.get_object_size(self.Face_path), 
+                                                            command=lambda:self.runnightmare(self.Face_path), 
                                                             image=self.start_img,
                                                             compound=RIGHT)
             self.button_Start.place(relx=0.5, rely=0.46, anchor=CENTER)
@@ -741,13 +746,21 @@ class GUI(customtkinter.CTk):
             self.send_errors_discord(eroo)
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
 
+    def runnightmare(self, image):
+        get_object_thread = threading.Thread(target=self.get_object_size, args=(image,))
+        get_object_thread.start()
+
     def get_object_size(self, image):
         try:
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
                 ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Get Object Size Error"], SelectedLanguage["Error Window Title"])
                 return
             # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
+            self.progressbar.place(relx=0.1, rely= 0.9)
+            self.progressbar.determinate_speed = 0.3
+            self.progressbar.set(0)
             import mediapipe
+            self.progressbar.start()
             self.mp_face_mesh = mediapipe.solutions.face_mesh
             self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
             try:
@@ -1013,22 +1026,26 @@ class GUI(customtkinter.CTk):
                     self.dnp_left = sqrt((self.l_cx - self.nose_point_for_dnp_X)**2 + (self.l_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
                     self.dnp_right = sqrt((self.r_cx - self.nose_point_for_dnp_X)**2 + (self.r_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
                     # dnp calculation #
-
-                    self.draw_on_img(self.img)
+                    
+                    draw_thread = threading.Thread(target=self.draw_on_img, args=(img,))
+                    draw_thread.start()
                 self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
                 self.t_stamp = self.t_stamp
                 cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
                 self.put_glasses()
                 imagee = Image.open("temp.png")
                 self.put_glasses(ImageInput=imagee)
+                self.progressbar.stop()
+                self.progressbar.set(100)
                 os.remove("temp.png")
             except Exception as e:
                 e = str(e)
                 self.send_errors_discord(e)
-                ctypes.windll.user32.MessageBoxW(0, f"Erro: {e}", SelectedLanguage["Error Window Title"])
+                ctypes.windll.user32.MessageBoxW(0, f"Erro: {e}", SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
         except AttributeError:
-            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
+            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
             return
+        
 
 app = GUI()
 #DEBUG

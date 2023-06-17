@@ -6,6 +6,8 @@ Necessary files/config.ini
 Update-Handler.py
 test.py
 requirements.txt
+./dist
+./build
 
 
 Languages/__pycache__/Languages_packs.cpython-310.pyc
