@@ -53,7 +53,7 @@ def error_handler(func):
 @error_handler
 def run_in_thread(func):
     def wrapper(*args, **kwargs):
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+        thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)
         thread.start()
     return wrapper
 
