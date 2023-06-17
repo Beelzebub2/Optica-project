@@ -1,12 +1,15 @@
-Necessary\ files/config.ini
-.vscode/settings.json
-Optica.spec
-"Update-Handler.py"
-"test.py"
-"requirements.txt"
-dist/
-build/
-"create\ app.bat"
+# Folders
 Output/
 Ready-images/
+dist/
+build/
+
+# Files
+"create\ app.bat"
+"requirements.txt"
+"test.py"
+"Update-Handler.py"
+.vscode/settings.json
+Optica.spec
 Languages/__pycache__/Languages_packs.cpython-310.pyc
+Necessary\ files/config.ini
