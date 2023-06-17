@@ -101,8 +101,18 @@ class HomogeneousBgDetector():
                 #cnt = cv2.approxPolyDP(cnt, 0.03*cv2.arcLength(cnt, True), True)
                 objects_contours.append(cnt)
         return objects_contours
+    
+def error_handler(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as error:
+            print("An error occurred:", str(error))
+    
+    return wrapper
 
 # gets center of main monitor so it can later initialize the program on screen center instead of random location
+@error_handler
 def get_monitor_from_coord(x, y):
     monitors = screeninfo.get_monitors()
 
@@ -303,11 +313,12 @@ class GUI(customtkinter.CTk):
     
 
     # SETTINGS WINDOW 
+    @error_handler
     def closed_set_window(self):
         self.window.destroy()
         self.window = None
         
-
+    @error_handler
     def settings(self): 
         if self.window != None:
             self.window.lift()
@@ -401,7 +412,8 @@ class GUI(customtkinter.CTk):
         self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
         self.OptionmenuTheme.set(Option_th_df)
         self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
-    
+
+    @error_handler
     def change_language(self, choice):
         choice = self.Optionmenu.get()
         language_mapping = {
@@ -418,6 +430,7 @@ class GUI(customtkinter.CTk):
             Config.write(f)
         self.restart_program()
 
+    @error_handler
     def change_theme(self, choice):
         choice = self.OptionmenuTheme.get()
         #Set color options to selected language
@@ -433,28 +446,34 @@ class GUI(customtkinter.CTk):
         with open(Config_File, "w") as f:
             Config.write(f)
         self.restart_program()
-    
+
+    @error_handler
     def restart_program(self):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Restart"], SelectedLanguage["Restart title"], 1)
         if answer == 1:
             python = sys.executable
             print(python)
             os.execl(python, python, *sys.argv)
+
+    @error_handler
     def close_settings(self):
         self.window.destroy()
         self.window = None
 
         # SETTINGS WINDOW #
 
+    @error_handler
     def open_exit_window(self):
         exit_thread = threading.Thread(target=self.exit)
         exit_thread.start()
 
+    @error_handler
     def exit(self):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1 | self.MB_TOPMOST)
         if answer == 1:
             self.destroy()
 
+    @error_handler
     def style_change(self):
         selected_style = "Light" if self.switch.get() == 0 else "Dark"
         customtkinter.set_appearance_mode(selected_style)
@@ -462,16 +481,17 @@ class GUI(customtkinter.CTk):
         with open(Config_File, "w") as f:
             Config.write(f)
 
-
+    @error_handler
     def report_command(self):
         try:
             url='https://forms.gle/n17W4q7ScDFCoEQT6'
             webbrowser.open(url)
-        except Exception as erroo:
-                erroo = str(erroo)
-                self.send_errors_discord(erroo)
+        except Exception as error:
+                error = str(error)
+                self.send_errors_discord(error)
                 ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Report Bug Error Window"], SelectedLanguage["Error Window Title"])
-            
+
+    @error_handler
     def tooltip(self, bt, mensg):
         ToolTip(bt, 
                     msg=mensg, 
@@ -482,7 +502,8 @@ class GUI(customtkinter.CTk):
                     bg="#1c1c1c",
                     padx=10, 
                     pady=10)
-
+        
+    @error_handler
     def add_faces(self):
         try:
             os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
@@ -493,26 +514,28 @@ class GUI(customtkinter.CTk):
                 icon_path = "icon.ico",
                 threaded = True,
             )
-        except Exception as errrro:
-            self.send_errors_discord(errrro)
+        except Exception as error:
+            self.send_errors_discord(error)
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Faces Folder Error"], SelectedLanguage["Error Window Title"])
 
+    @error_handler
     def open_results(self):
         try:
             os.startfile("{}\\{}".format(PATH, L.Universal["Ready Images Folder"]))
-        except Exception as eroro:
+        except Exception as error:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
-            self.send_errors_discord(eroro)
+            self.send_errors_discord(error)
             
+    @error_handler        
     def open_about_window(self):
         about_thread = threading.Thread(target=self.about)
         about_thread.start()
 
+    @error_handler
     def about(self):
         ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"], self.MB_TOPMOST)
 
-
-
+    @error_handler
     def browse_Face(self):
         if os.path.exists(L.Universal["Faces Folder"]):
             self.Face_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Face Window Title"], 
@@ -544,9 +567,11 @@ class GUI(customtkinter.CTk):
             self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
             self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
 
+    @error_handler
     def open_faces_folder():
         os.open(L.Universal["Faces Folder"])
-        
+
+    @error_handler
     def browse_Oculos(self):
         if os.path.exists(L.Universal["Glasses Folder"]):
             self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"],
@@ -586,14 +611,16 @@ class GUI(customtkinter.CTk):
             self.button_Start.place(relx=0.5, rely=0.46, anchor=CENTER)
             self.tooltip(self.button_Start, SelectedLanguage["Start Button Tooltip"])
 
+    @error_handler
     def tutorial(self):
         try:
             os.startfile("{}\\tutorial.mp4".format(L.Universal["Necessary Files Folder"]))
-        except:
-            err = str(err)
-            self.send_errors_discord(err)
+        except Exception as error:
+            error = str(error)
+            self.send_errors_discord(error)
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Tutorial Open Error Window"], SelectedLanguage["Error Window Title"])
-   
+    
+    @error_handler
     def draw_on_img(self, img):
         try:
             cv2.circle(img, self.center_left, int(self.l_radius), (255,0,255), 2, cv2.LINE_AA)
@@ -612,15 +639,17 @@ class GUI(customtkinter.CTk):
             self.medidas_label = customtkinter.CTkLabel(self, text=SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm\n" + SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.minleft, 2)} mm\n" + SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.minright, 2)} mm\n" + SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm\n" + SelectedLanguage["Right Height"] + f"{round(self.right_iris_Oculos, 2)} mm\n" + SelectedLanguage["Left Height"] + f"{round(self.left_iris_Oculos, 2)} mm")
             self.medidas_label.configure(font=("Courier", 18, "bold"), anchor="w", justify=LEFT)
             self.medidas_label.place(relx= 0.2, rely=0.67)
-        except Exception as eroro:
-            self.send_errors_discord(eroro,)
+        except Exception as error:
+            self.send_errors_discord(error,)
 
+    @error_handler
     def get_point(self, x, y, width_original, height_original, width_res, height_res): # used to get a point (x,y) from a rescaled image
         x_transforming_ratio = x / width_original # its a ratio to get from the old x point (non rescaled image) to the new x point on the rescaled img
         y_transforming_ratio = y / height_original # that but for the Y point
         self.x = int(width_res * x_transforming_ratio) # variable of the resized x
         self.y = int(height_res * y_transforming_ratio) # that but for the y point
 
+    @error_handler
     def put_glasses(self, ImageInput=None): #function to put glasses on the face
         img_path = "{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp)
         img = Image.open(img_path) if ImageInput is None else ImageInput
@@ -707,10 +736,11 @@ class GUI(customtkinter.CTk):
                 threaded = True,
             )
 
-    def send_errors_discord(self, erro):
+    @error_handler
+    def send_errors_discord(self, error):
         try:
-            erro = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + erro)
-            embed = DiscordEmbed(title='Erro', description=erro, color='03b2f8')
+            error = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + error)
+            embed = DiscordEmbed(title='error', description=error, color='03b2f8')
             embed.set_timestamp()
             webhook = DiscordWebhook(url='https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe')
             webhook.add_embed(embed)
@@ -719,6 +749,7 @@ class GUI(customtkinter.CTk):
             pass
        
 
+    @error_handler
     def salvar(self):
         try:
             self.comprimento = float(self.entry_comprimento.get())
@@ -741,15 +772,17 @@ class GUI(customtkinter.CTk):
             icon_path = "icon.ico",
             threaded = True,
             )
-        except Exception as eroo:
-            eroo = str(eroo)
-            self.send_errors_discord(eroo)
+        except Exception as error:
+            error = str(error)
+            self.send_errors_discord(error)
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
 
+    @error_handler
     def runnightmare(self, image):
         get_object_thread = threading.Thread(target=self.get_object_size, args=(image,))
         get_object_thread.start()
 
+    @error_handler
     def get_object_size(self, image):
         try:
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
@@ -776,9 +809,9 @@ class GUI(customtkinter.CTk):
                 self.aruco_perimeter = cv2.arcLength(corners[0], True)
                 # Pixel to mm ratio
                 self.pixel_mm_ratio = self.aruco_perimeter / 200
-            except Exception as ero:
-                ero = str(ero)
-                self.send_errors_discord(ero)
+            except Exception as error:
+                error = str(error)
+                self.send_errors_discord(error)
                 ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Aruco Marker Not detected"], SelectedLanguage["Error Window Title"])
 
             try:
@@ -1038,10 +1071,10 @@ class GUI(customtkinter.CTk):
                 self.progressbar.stop()
                 self.progressbar.set(100)
                 os.remove("temp.png")
-            except Exception as e:
-                e = str(e)
-                self.send_errors_discord(e)
-                ctypes.windll.user32.MessageBoxW(0, f"Erro: {e}", SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
+            except Exception as error:
+                error = str(error)
+                self.send_errors_discord(error)
+                ctypes.windll.user32.MessageBoxW(0, f"error: {error}", SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
         except AttributeError:
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
             return

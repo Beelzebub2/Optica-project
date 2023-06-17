@@ -14,6 +14,9 @@ Beta 2.1 17/06/2023
 +   Added the use of Threads for image processing
 +   Added a progress bar to the GUI
 +   Fixed some bugs that would crash the program
++   Added an error handler to decrease chances of crashing
++   Reorganized variable names
+
 
 Beta 2.0 12/06/2023
 
