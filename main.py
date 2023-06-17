@@ -22,8 +22,6 @@ import traceback
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
 
-#DEBUG
-#start_time = datetime.now()
 # Constants for process priority classes
 HIGH_PRIORITY_CLASS = 0x00000080
 # Get the current process ID
@@ -47,7 +45,6 @@ def error_handler(func):
             tb = traceback.extract_tb(error.__traceback__)
             line = tb[-1].lineno
             print(f"An error occurred at line {line}: {error}")
-    
     return wrapper
 
 @error_handler
@@ -163,7 +160,7 @@ class GUI(customtkinter.CTk):
         WIDTH = 1280
         HEIGHT = 720
         self.toast = ToastNotifier()
-        self.title("{} (Beta 2.0)".format(SelectedLanguage["Title"]))
+        self.title("{} {}".format(L.Universal["Title"], L.Universal["Version"]))
         self.wm_iconbitmap("{}\\icon.ico".format(L.Universal["Necessary Files Folder"]))
         self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
@@ -197,6 +194,7 @@ class GUI(customtkinter.CTk):
         # VISUALS #
         
         # FRAMES
+        # I have no idea which is which I knew when they were made, now only god knows.
         Frame1 = customtkinter.CTkFrame(self)
         Frame1.pack
 
@@ -686,7 +684,7 @@ class GUI(customtkinter.CTk):
         height_oculos_resized = int(mask_Oculos.size[1]) # same but height
         #print(height_oculos_resized)
 
-        mask_Oculos.save("temp.png") # temp img to be used later, former "slave" <-- joão marcos
+        mask_Oculos.save("temp.png") # temp img to be used later, former "slave.png" <-- joão marcos
         if self.Oculos_path.endswith("Oculos2.png"): # all these ifs verify which glasses where chosen and define the coordinates to be put on the face
             self.get_point(430,69,width_oculos_original, height_oculos_original, width_oculos_resized, height_oculos_resized)
             x = self.nose_x - self.x
@@ -758,6 +756,7 @@ class GUI(customtkinter.CTk):
             )
 
     @error_handler
+    @run_in_thread
     def send_errors_discord(self, error):
         try:
             error = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + error)

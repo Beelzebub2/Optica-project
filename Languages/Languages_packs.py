@@ -10,13 +10,15 @@ Universal = {
 
     "Faces Folder": "Faces",
 
+    "Title": "To be changed",
+
+    "Version": "Beta v2.1"
+
     ##/\ Folders /\##
 
 }
 
 PT_pt = {
-
-    "Title": "To be changed",
 
     ## Option menu ##
 
@@ -132,7 +134,7 @@ PT_pt = {
 
     "Report Bug Error Window": "Não foi possível abrir o link.",
 
-    "About Window Info": "Software desenvolvido por:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\nBeta 2.0",
+    "About Window Info": "Software desenvolvido por:\nRicardo Martins\nContacto: i210100@inete.net\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n{}".format(Universal["Version"]),
 
     "Tutorial Open Error Window": "Não foi possível abrir o tutorial\nO ficheiro pode estar corrompido",
 
@@ -203,8 +205,6 @@ PT_pt = {
 }
 
 English = {
-
-    "Title": "To be changed",
 
     ## Option menu ##
 
@@ -315,7 +315,7 @@ English = {
 
     "Report Bug Error Window": "It was not possible to open the link.",
 
-    "About Window Info": "Software developed by:\nRicardo Martins\nContacto: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+    "About Window Info": "Software developed by:\nRicardo Martins\nContacto: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\n{}".format(Universal["Version"]),
 
     "Tutorial Open Error Window": "It was not possible to open the tutorial\nThe file may be corrupted",
 
@@ -385,8 +385,6 @@ English = {
 }
 
 Spanish = {
-
-    "Title": "To be changed",
 
     ## Option menu ##
 
@@ -497,7 +495,7 @@ Spanish = {
 
     "Report Bug Error Window": "No se pudo abrir el enlace.",
 
-    "About Window Info": "Software desarrollado por:\nRicardo Martins\nContacto: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+    "About Window Info": "Software desarrollado por:\nRicardo Martins\nContacto: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContacto: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\n{}".format(Universal["Version"]),
 
     "Tutorial Open Error Window": "No se pudo abrir el tutorial. El archivo puede estar corrupto",
 
@@ -567,8 +565,6 @@ Spanish = {
 }
 
 French = {
-
-    "Title": "Mesures Digitales",
 
     ## Option menu ##
 
@@ -679,7 +675,7 @@ French = {
 
     "Report Bug Error Window": "Impossible d'ouvrir le lien.",
 
-    "About Window Info": "Logiciel développé par :\nRicardo Martins\nContact : ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContact : joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+    "About Window Info": "Logiciel développé par :\nRicardo Martins\nContact : ricardorocamartins2004@gmail.com\n\nJoão Marcos\nContact : joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\n{}".format(Universal["Version"]),
 
     "Tutorial Open Error Window": "Impossible d'ouvrir le tutoriel\nLe fichier peut être corrompu",
 
@@ -748,7 +744,6 @@ French = {
     ##/\ File Names /\## 
 }
 German = {
-    "Title": "Zu ändern",
 
     "Blue": "Blau",
 
@@ -834,7 +829,7 @@ German = {
 
     "Report Bug Error Window": "Der Link konnte nicht geöffnet werden.",
 
-    "About Window Info": "Entwickelt von:\nRicardo Martins\nKontakt: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nKontakt: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\nBeta 2.0",
+    "About Window Info": "Entwickelt von:\nRicardo Martins\nKontakt: ricardorocamartins2004@gmail.com\n\nJoão Marcos\nKontakt: joaomarcoscd@hotmail.com\n\nInete Teac21\n2021/2022\n{}".format(Universal["Version"]),
 
     "Tutorial Open Error Window": "Die Anleitung konnte nicht geöffnet werden.\nDie Datei ist möglicherweise beschädigt.",
 

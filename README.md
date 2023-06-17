@@ -19,6 +19,7 @@ Beta 2.1 17/06/2023
 +   Optimized error handler
 +   Added decorator for threading
 +   Fixed bug where program would not close if a thread was still running
++   Rearranged Languages values
 
 
 Beta 2.0 12/06/2023
