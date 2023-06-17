@@ -17,6 +17,7 @@ import Languages.Languages_packs as L
 from configparser import ConfigParser
 import screeninfo
 import platform
+import traceback
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
@@ -24,57 +25,77 @@ import platform
 
 #DEBUG
 #start_time = datetime.now()
-PATH = os.path.dirname(os.path.realpath(__file__))
-Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
-Config = ConfigParser()
-Config.read(Config_File)
 
-Language = Config["DEFAULTS"]["Language"]
-language_mapping = {
-    "Pt-pt": (L.PT_pt, "Português-pt"),
-    "English": (L.English, "English"),
-    "German": (L.German, "Allemand"),
-    "FR": (L.French, "Français"),
-    "ES": (L.Spanish, "Espanõl")
-    #"Pt-Br": (L.PT_br, "Português-br"),
-}
-SelectedLanguage, Option_lg_df = language_mapping.get(Language)
+def error_handler(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as error:
+            tb = traceback.extract_tb(error.__traceback__)
+            line = tb[-1].lineno
+            print(f"An error occurred at line {line}: {error}")
+    
+    return wrapper
 
-Theme = Config["DEFAULTS"]["Theme"]
-match Theme:
-    case "Green":
-        Program_Theme = "green"
-        Option_th_df = SelectedLanguage["Green"]
-    case "Blue":
-        Program_Theme = "blue"
-        Option_th_df = SelectedLanguage["Blue"]
-    case "Dark-Blue":
-        Program_Theme = "dark-blue"
-        Option_th_df = SelectedLanguage["Dark-Blue"]
-    case "Red":
-        Program_Theme = "Necessary files\\Red-Theme.json"
-        Option_th_df = SelectedLanguage["Red"]
-    case "Orange":
-        Program_Theme = "Necessary files\\Orange-Theme.json"
-        Option_th_df = SelectedLanguage["Orange"]
+@error_handler
+def run_in_thread(func):
+    def wrapper(*args, **kwargs):
+        thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+        thread.start()
+    return wrapper
 
-Style = Config["DEFAULTS"]["style"]
-match Style:
-    case "Dark":
-        customtkinter.set_appearance_mode("dark")
-    case "Light":
-        customtkinter.set_appearance_mode("light")
-    case "":
-        customtkinter.set_appearance_mode("dark") 
+@error_handler
+def read_config():
+    PATH = os.path.dirname(os.path.realpath(__file__))
+    Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
+    Config = ConfigParser()
+    Config.read(Config_File)
+
+    Language = Config["DEFAULTS"]["Language"]
+    language_mapping = {
+        "Pt-pt": (L.PT_pt, "Português-pt"),
+        "English": (L.English, "English"),
+        "German": (L.German, "Allemand"),
+        "FR": (L.French, "Français"),
+        "ES": (L.Spanish, "Espanõl")
+        #"Pt-Br": (L.PT_br, "Português-br"),
+    }
+    SelectedLanguage, Option_lg_df = language_mapping.get(Language)
+
+    Theme = Config["DEFAULTS"]["Theme"]
+    match Theme:
+        case "Green":
+            Program_Theme = "green"
+            Option_th_df = SelectedLanguage["Green"]
+        case "Blue":
+            Program_Theme = "blue"
+            Option_th_df = SelectedLanguage["Blue"]
+        case "Dark-Blue":
+            Program_Theme = "dark-blue"
+            Option_th_df = SelectedLanguage["Dark-Blue"]
+        case "Red":
+            Program_Theme = "Necessary files\\Red-Theme.json"
+            Option_th_df = SelectedLanguage["Red"]
+        case "Orange":
+            Program_Theme = "Necessary files\\Orange-Theme.json"
+            Option_th_df = SelectedLanguage["Orange"]
+
+    Style = Config["DEFAULTS"]["style"]
+    match Style:
+        case "Dark":
+            customtkinter.set_appearance_mode("dark")
+        case "Light", "":
+            customtkinter.set_appearance_mode("light")
+    return PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme
+
+PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme = read_config()
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
-
-
 image_extensions = r"*.jpg *.jpeg *.png"
-# variáveis importantes
+# important variables
 
-# pontos do mediapipe mesh da google na cara para os olhos e a iris
+# Mediapipe necessary points to find iris on image
 LEFT_EYE =[362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398]
 RIGHT_EYE=[33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161 , 246] 
 LEFT_IRIS = [474,475, 476, 477]
@@ -86,6 +107,8 @@ count_imgs = []
 class HomogeneousBgDetector():
     def __init__(self):
         pass
+
+    @error_handler
     def detect_objects(self, img):
         # Convert Image to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -101,15 +124,6 @@ class HomogeneousBgDetector():
                 #cnt = cv2.approxPolyDP(cnt, 0.03*cv2.arcLength(cnt, True), True)
                 objects_contours.append(cnt)
         return objects_contours
-    
-def error_handler(func):
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except Exception as error:
-            print("An error occurred:", str(error))
-    
-    return wrapper
 
 # gets center of main monitor so it can later initialize the program on screen center instead of random location
 @error_handler
@@ -141,7 +155,7 @@ class GUI(customtkinter.CTk):
         self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
         self.maxsize(1920, 1080)
-        self.bind('<Escape>', lambda e: self.open_exit_window())
+        self.bind('<Escape>', lambda e: self.exit())
         current_screen = get_monitor_from_coord(self.winfo_x(), self.winfo_y())
         screen_width = current_screen.width
         screen_height = current_screen.height
@@ -377,7 +391,7 @@ class GUI(customtkinter.CTk):
                                                     corner_radius=8, 
                                                     hover=True, 
                                                     text=SelectedLanguage["About Button"], 
-                                                    command=self.open_about_window, 
+                                                    command=self.about, 
                                                     image=self.about_img,
                                                     compound=RIGHT)
         self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
@@ -462,12 +476,9 @@ class GUI(customtkinter.CTk):
 
         # SETTINGS WINDOW #
 
-    @error_handler
-    def open_exit_window(self):
-        exit_thread = threading.Thread(target=self.exit)
-        exit_thread.start()
 
     @error_handler
+    @run_in_thread
     def exit(self):
         answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1 | self.MB_TOPMOST)
         if answer == 1:
@@ -526,12 +537,8 @@ class GUI(customtkinter.CTk):
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
             self.send_errors_discord(error)
             
-    @error_handler        
-    def open_about_window(self):
-        about_thread = threading.Thread(target=self.about)
-        about_thread.start()
-
     @error_handler
+    @run_in_thread
     def about(self):
         ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"], self.MB_TOPMOST)
 
@@ -605,7 +612,7 @@ class GUI(customtkinter.CTk):
                                                             corner_radius=8, 
                                                             hover=True, 
                                                             text=SelectedLanguage["Start Button"], 
-                                                            command=lambda:self.runnightmare(self.Face_path), 
+                                                            command=lambda:self.get_object_size(self.Face_path), 
                                                             image=self.start_img,
                                                             compound=RIGHT)
             self.button_Start.place(relx=0.5, rely=0.46, anchor=CENTER)
@@ -621,6 +628,7 @@ class GUI(customtkinter.CTk):
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Tutorial Open Error Window"], SelectedLanguage["Error Window Title"])
     
     @error_handler
+    @run_in_thread
     def draw_on_img(self, img):
         try:
             cv2.circle(img, self.center_left, int(self.l_radius), (255,0,255), 2, cv2.LINE_AA)
@@ -740,7 +748,7 @@ class GUI(customtkinter.CTk):
     def send_errors_discord(self, error):
         try:
             error = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + error)
-            embed = DiscordEmbed(title='error', description=error, color='03b2f8')
+            embed = DiscordEmbed(title='error', description=error, color='ff0000')
             embed.set_timestamp()
             webhook = DiscordWebhook(url='https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe')
             webhook.add_embed(embed)
@@ -778,11 +786,7 @@ class GUI(customtkinter.CTk):
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
 
     @error_handler
-    def runnightmare(self, image):
-        get_object_thread = threading.Thread(target=self.get_object_size, args=(image,))
-        get_object_thread.start()
-
-    @error_handler
+    @run_in_thread
     def get_object_size(self, image):
         try:
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
@@ -1059,9 +1063,8 @@ class GUI(customtkinter.CTk):
                     self.dnp_left = sqrt((self.l_cx - self.nose_point_for_dnp_X)**2 + (self.l_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
                     self.dnp_right = sqrt((self.r_cx - self.nose_point_for_dnp_X)**2 + (self.r_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
                     # dnp calculation #
+                    self.draw_on_img
                     
-                    draw_thread = threading.Thread(target=self.draw_on_img, args=(img,))
-                    draw_thread.start()
                 self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
                 self.t_stamp = self.t_stamp
                 cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
@@ -1079,11 +1082,12 @@ class GUI(customtkinter.CTk):
             ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
             return
         
-
 app = GUI()
 #DEBUG
 #end_time = datetime.now()
 #print('Duration: {}'.format(end_time - start_time))
+
+@error_handler
 def run():
     app.mainloop()
  
