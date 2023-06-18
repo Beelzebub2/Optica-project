@@ -64,7 +64,7 @@ def run_in_thread(func):
 @error_handler
 def read_config():
     PATH = os.path.dirname(os.path.realpath(__file__))
-    Confi_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
+    Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
     Config = ConfigParser()
     Config.read(Config_File)
 
