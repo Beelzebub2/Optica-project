@@ -1,5 +1,6 @@
 # To be changed 2.0
-![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge)  
+![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge)  ![Static Badge](https://img.shields.io/badge/Language-python-f98536?style=for-the-badge)  
+
 Program made in python with the purpose of detecting face dimensions and predicting how the glasses would stay on it 
 
 ## Preview
