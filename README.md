@@ -1,4 +1,5 @@
 # To be changed 2.0
+![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge)
 Program made in python with the purpose of detecting face dimensions and predicting how the glasses would stay on it 
 
 ## Preview
@@ -13,6 +14,7 @@ Beta 2.1 18/06/2023
 +   Added a Warning window handler
 +   Fixed bug where program would crash if a warning window was opened
 +   Fixed warning window duplication
++   Added error log file
 
 Beta 2.1 17/06/2023
 

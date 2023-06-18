@@ -19,6 +19,8 @@ from configparser import ConfigParser
 import screeninfo
 import platform
 import traceback
+import colorama
+from colorama import Fore, Style
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
@@ -38,7 +40,7 @@ handle = ctypes.windll.kernel32.OpenProcess(
 ctypes.windll.kernel32.SetPriorityClass(handle, HIGH_PRIORITY_CLASS)
 # Close the handle
 ctypes.windll.kernel32.CloseHandle(handle)
-
+colorama.init()
 def error_handler(func):
     def wrapper(*args, **kwargs):
         try:
@@ -46,7 +48,10 @@ def error_handler(func):
         except Exception as error:
             tb = traceback.extract_tb(error.__traceback__)
             line = tb[-1].lineno
-            print(f"An error occurred at line {line}: {error}")
+            error_message = f"An error occurred at line {line}: {error}"
+            print(Fore.RED + Style.BRIGHT + "\n" + error_message + "\n" + Style.RESET_ALL)
+            with open("error_log.txt", "a") as file:
+                file.write(error_message + "\n")
     return wrapper
 
 @error_handler
@@ -59,7 +64,7 @@ def run_in_thread(func):
 @error_handler
 def read_config():
     PATH = os.path.dirname(os.path.realpath(__file__))
-    Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
+    Confi_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
     Config = ConfigParser()
     Config.read(Config_File)
 
@@ -154,7 +159,7 @@ parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 detector = HomogeneousBgDetector()
 
-
+@error_handler
 class GUI(customtkinter.CTk):
     def __init__(self):
         # By using super().__init__(), the subclass can invoke the initializer of its superclass, 
@@ -1124,7 +1129,7 @@ class GUI(customtkinter.CTk):
             self.Warning_window(SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
             return
         
-app = GUI()
+
 #DEBUG
 #end_time = datetime.now()
 #print('Duration: {}'.format(end_time - start_time))
@@ -1134,4 +1139,5 @@ def run():
     app.mainloop()
  
 if __name__ == '__main__':
+    app = GUI()
     run()

@@ -13,3 +13,4 @@ build/
 Optica.spec
 Languages/__pycache__/Languages_packs.cpython-310.pyc
 Necessary\ files/config.ini
+error_log.txt
