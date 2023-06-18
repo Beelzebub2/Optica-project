@@ -1,5 +1,6 @@
 import os
 import ctypes
+import queue
 import sys
 import threading
 import cv2
@@ -18,6 +19,7 @@ from configparser import ConfigParser
 import screeninfo
 import platform
 import traceback
+
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
@@ -98,12 +100,15 @@ def read_config():
             customtkinter.set_appearance_mode("light")
     return PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme
 
+# Important variables
 PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme = read_config()
 user = os.getlogin()
 user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
 image_extensions = r"*.jpg *.jpeg *.png"
-# important variables
+thread_completed = threading.Event()
+answer_queue = queue.Queue()
+window_lock = threading.Lock()
 
 # Mediapipe necessary points to find iris on image
 LEFT_EYE =[362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398]
@@ -174,6 +179,7 @@ class GUI(customtkinter.CTk):
         self.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, x_cord, y_cord))
         self.window = None
         self.MB_TOPMOST = 0x00040000
+        self.window_opened = False
         
         
         # WINDOW SETTINGS #
@@ -342,6 +348,24 @@ class GUI(customtkinter.CTk):
     def closed_set_window(self):
         self.window.destroy()
         self.window = None
+    
+    @error_handler
+    @run_in_thread
+    def Warning_window(self, message, title, Options=False):
+        # Acquire the lock to check and update the window status
+        with window_lock:
+            if self.window_opened:
+                # Window is already open, so return immediately
+                return
+        self.window_opened = True
+        if not Options:
+            answer_queue.put(ctypes.windll.user32.MessageBoxW(0, message, title, self.MB_TOPMOST))
+        else:
+            answer_queue.put(ctypes.windll.user32.MessageBoxW(0, message, title, 1 | self.MB_TOPMOST))
+        with window_lock:
+            self.window_opened = False
+            thread_completed.set()
+
         
     @error_handler
     def settings(self): 
@@ -474,7 +498,9 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     def restart_program(self):
-        answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Restart"], SelectedLanguage["Restart title"], 1)
+        self.Warning_window(SelectedLanguage["Restart"], SelectedLanguage["Restart title"], True)
+        thread_completed.wait()
+        answer = answer_queue.get()
         if answer == 1:
             python = sys.executable
             print(python)
@@ -491,9 +517,13 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def exit(self):
-        answer = ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], 1 | self.MB_TOPMOST)
+        self.Warning_window(SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], True)
+        thread_completed.wait()
+        answer = answer_queue.get()
         if answer == 1:
-            self.destroy()
+            #self.destroy()
+            self.quit()
+            sys.exit()
 
     @error_handler
     def style_change(self):
@@ -511,7 +541,7 @@ class GUI(customtkinter.CTk):
         except Exception as error:
                 error = str(error)
                 self.send_errors_discord(error)
-                ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Report Bug Error Window"], SelectedLanguage["Error Window Title"])
+                self.Warning_window(SelectedLanguage["Report Bug Error Window"], SelectedLanguage["Error Window Title"])
 
     @error_handler
     def tooltip(self, bt, mensg):
@@ -538,20 +568,20 @@ class GUI(customtkinter.CTk):
             )
         except Exception as error:
             self.send_errors_discord(error)
-            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Faces Folder Error"], SelectedLanguage["Error Window Title"])
+            self.Warning_window(SelectedLanguage["Open Faces Folder Error"], SelectedLanguage["Error Window Title"])
 
     @error_handler
     def open_results(self):
         try:
             os.startfile("{}\\{}".format(PATH, L.Universal["Ready Images Folder"]))
         except Exception as error:
-            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
+            self.Warning_window(SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
             self.send_errors_discord(error)
             
     @error_handler
     @run_in_thread
     def about(self):
-        ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"], self.MB_TOPMOST)
+        self.Warning_window(SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
 
     @error_handler
     def browse_Face(self):
@@ -636,7 +666,7 @@ class GUI(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Tutorial Open Error Window"], SelectedLanguage["Error Window Title"])
+            self.Warning_window(SelectedLanguage["Tutorial Open Error Window"], SelectedLanguage["Error Window Title"])
     
     @error_handler
     @run_in_thread
@@ -775,7 +805,7 @@ class GUI(customtkinter.CTk):
             self.comprimento = float(self.entry_comprimento.get())
             self.altura = float(self.entry_altura.get())
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
-                ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Save  Measurements Error"], SelectedLanguage["Error Window Title"])
+                self.Warning_window(SelectedLanguage["Save  Measurements Error"], SelectedLanguage["Error Window Title"])
                 self.toast.show_toast(
                 "Optica",
                 SelectedLanguage["Save Measurements Error Notification"],
@@ -795,14 +825,14 @@ class GUI(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
+            self.Warning_window(SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
 
     @error_handler
     @run_in_thread
     def get_object_size(self, image):
         try:
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
-                ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Get Object Size Error"], SelectedLanguage["Error Window Title"])
+                self.Warning_window(SelectedLanguage["Get Object Size Error"], SelectedLanguage["Error Window Title"])
                 return
             # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
             self.progressbar.place(relx=0.1, rely= 0.9)
@@ -828,7 +858,7 @@ class GUI(customtkinter.CTk):
             except Exception as error:
                 error = str(error)
                 self.send_errors_discord(error)
-                ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Aruco Marker Not detected"], SelectedLanguage["Error Window Title"])
+                self.Warning_window(SelectedLanguage["Aruco Marker Not detected"], SelectedLanguage["Error Window Title"])
 
             try:
                 self.img = cv2.imread(image)
@@ -1089,9 +1119,9 @@ class GUI(customtkinter.CTk):
             except Exception as error:
                 error = str(error)
                 self.send_errors_discord(error)
-                ctypes.windll.user32.MessageBoxW(0, f"error: {error}", SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
+                self.Warning_window(f"error: {error}", SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
         except AttributeError:
-            ctypes.windll.user32.MessageBoxW(0, SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
+            self.Warning_window(SelectedLanguage["Started Without Measurements Error"], SelectedLanguage["Error Window Title"])
             return
         
 app = GUI()

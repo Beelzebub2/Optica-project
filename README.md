@@ -9,6 +9,11 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.1 18/06/2023
++   Added a Warning window handler
++   Fixed bug where program would crash if a warning window was opened
++   Fixed warning window duplication
+
 Beta 2.1 17/06/2023
 
 +   Added the use of Threads for image processing
