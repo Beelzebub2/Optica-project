@@ -4,21 +4,16 @@ import queue
 import sys
 import threading
 import cv2
-import webbrowser
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from tktooltip import ToolTip
 import customtkinter
 from PIL import ImageTk, Image
-from discord_webhook import DiscordWebhook, DiscordEmbed
 import numpy as np
 from datetime import datetime
 from math import sqrt
 from win10toast import ToastNotifier
 import Languages.Languages_packs as L
-from configparser import ConfigParser
-import screeninfo
 import platform
-import traceback
 import colorama
 from colorama import Fore, Style
 
@@ -46,6 +41,7 @@ def error_handler(func):
         try:
             return func(*args, **kwargs)
         except Exception as error:
+            import traceback
             tb = traceback.extract_tb(error.__traceback__)
             line = tb[-1].lineno
             error_message = f"An error occurred at line {line}: {error}"
@@ -63,6 +59,7 @@ def run_in_thread(func):
 
 @error_handler
 def read_config():
+    from configparser import ConfigParser
     PATH = os.path.dirname(os.path.realpath(__file__))
     Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
     Config = ConfigParser()
@@ -148,6 +145,7 @@ class HomogeneousBgDetector():
 # gets center of main monitor so it can later initialize the program on screen center instead of random location
 @error_handler
 def get_monitor_from_coord(x, y):
+    import screeninfo
     monitors = screeninfo.get_monitors()
 
     for m in reversed(monitors):
@@ -541,6 +539,7 @@ class GUI(customtkinter.CTk):
     @error_handler
     def report_command(self):
         try:
+            import webbrowser
             url='https://forms.gle/n17W4q7ScDFCoEQT6'
             webbrowser.open(url)
         except Exception as error:
@@ -794,6 +793,7 @@ class GUI(customtkinter.CTk):
     @run_in_thread
     def send_errors_discord(self, error):
         try:
+            from discord_webhook import DiscordWebhook, DiscordEmbed
             error = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + error)
             embed = DiscordEmbed(title='error', description=error, color='ff0000')
             embed.set_timestamp()
