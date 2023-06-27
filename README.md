@@ -1,4 +1,4 @@
-# To be changed 2.0
+# To be changed 2.1
 ![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge&logo=v)
 ![Static Badge](https://img.shields.io/badge/Language-python-3776ab?style=for-the-badge&logo=python)
 ![Static Badge](https://img.shields.io/badge/Made%20by-Ricardo%20Martins%20and%20Jo%C3%A3o%20Marcos-851ebc?style=for-the-badge)  
@@ -14,7 +14,19 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.1 27/06/2023
+
+!   Working on better measurement algorithm
+!   Working on better mm to pixel ratio predictor 
++   Fixed minor issues with error handler
++   Fix minor bug with style selection
++   Rearranged send error to discord function
++   Added more data collection (gpu, processor, ram)
++   Fixed minor bug with program priority elevator
+
+
 Beta 2.1 18/06/2023
+
 +   Added a Warning window handler
 +   Fixed bug where program would crash if a warning window was opened
 +   Fixed warning window duplication

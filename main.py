@@ -14,27 +14,14 @@ from math import sqrt
 from win10toast import ToastNotifier
 import Languages.Languages_packs as L
 import platform
+import psutil
+import win32api
 import colorama
 from colorama import Fore, Style
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
-
-# Constants for process priority classes
-HIGH_PRIORITY_CLASS = 0x00000080
-# Get the current process ID
-pid = os.getpid()
-# Open the current process with necessary access rights
-handle = ctypes.windll.kernel32.OpenProcess(
-    ctypes.c_uint(0x1000),  # PROCESS_ALL_ACCESS
-    ctypes.c_int(False),
-    ctypes.c_uint(pid)
-)
-# Set the priority of the process to high
-ctypes.windll.kernel32.SetPriorityClass(handle, HIGH_PRIORITY_CLASS)
-# Close the handle
-ctypes.windll.kernel32.CloseHandle(handle)
 colorama.init()
 def error_handler(func):
     def wrapper(*args, **kwargs):
@@ -44,11 +31,29 @@ def error_handler(func):
             import traceback
             tb = traceback.extract_tb(error.__traceback__)
             line = tb[-1].lineno
-            error_message = f"An error occurred at line {line}: {error}"
-            print(Fore.RED + Style.BRIGHT + "\n" + error_message + "\n" + Style.RESET_ALL)
+            error_message = f"An error occurred at {Fore.CYAN + Style.BRIGHT}line: {line}{Fore.RED} error: {error} {Style.RESET_ALL}"
+            print(Fore.YELLOW + Style.BRIGHT + "\n" + error_message + "\n" + Style.RESET_ALL)
             with open("error_log.txt", "a") as file:
                 file.write(error_message + "\n")
     return wrapper
+
+@error_handler
+def high_priority():
+    # Constants for process priority classes
+    HIGH_PRIORITY_CLASS = 0x00000080
+    # Get the current process ID
+    pid = os.getpid()
+    # Open the current process with necessary access rights
+    handle = ctypes.windll.kernel32.OpenProcess(
+        ctypes.c_uint(0x1000),  # PROCESS_ALL_ACCESS
+        ctypes.c_int(False),
+        ctypes.c_uint(pid)
+    )
+    # Set the priority of the process to high
+    ctypes.windll.kernel32.SetPriorityClass(handle, HIGH_PRIORITY_CLASS)
+    # Close the handle
+    ctypes.windll.kernel32.CloseHandle(handle)
+high_priority()
 
 @error_handler
 def run_in_thread(func):
@@ -98,16 +103,41 @@ def read_config():
     match Style:
         case "Dark":
             customtkinter.set_appearance_mode("dark")
-        case "Light", "":
+        case "Light":
             customtkinter.set_appearance_mode("light")
+
     return PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme
+
+@error_handler
+def get_gpu_info():
+    gpu_name = win32api.EnumDisplayDevices(None, 0).DeviceString.strip()
+    gpu_name = gpu_name.split(',')[0].strip("('")
+    return gpu_name
+
+@error_handler
+def get_system_info():
+    user = os.getlogin()
+    user_pc = os.getenv("COMPUTERNAME")
+    os_version = platform.version()
+    os_edition = platform.win32_edition()
+    architecture = platform.architecture()[0]
+    ram = round(psutil.virtual_memory().total / (1024 ** 3), 0)  # RAM in GB
+    processor = platform.processor()
+    gpu = get_gpu_info()
+
+    system_info = f"**User:** {user}\n**Pc:** {user_pc}\n**Windows Version:** {os_version}\n**Edition:** {os_edition}\n**Architecture:** {architecture}\n"
+    system_info += f"**RAM:** {ram} GB\n"
+    system_info += f"**Processor:** {processor}\n"
+    system_info += f"**GPU:** {gpu}\n"
+    system_info += "\n**-------------------------------------------------------------------**\n"
+
+    return system_info
 
 # Important variables
 PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme = read_config()
-user = os.getlogin()
-user_pc = os.getenv("COMPUTERNAME")
 customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
 image_extensions = r"*.jpg *.jpeg *.png"
+#needed for stopping ctypes window duplication
 thread_completed = threading.Event()
 answer_queue = queue.Queue()
 window_lock = threading.Lock()
@@ -121,6 +151,8 @@ count_imgs = []
 
 # It takes an image, converts it to grayscale, applies an adaptive threshold to it, finds contours,
 # and returns the contours that have an area greater than 2000
+parameters = cv2.aruco.DetectorParameters_create()
+aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 class HomogeneousBgDetector():
     def __init__(self):
         pass
@@ -152,9 +184,6 @@ def get_monitor_from_coord(x, y):
         if m.x <= x <= m.width + m.x and m.y <= y <= m.height + m.y:
             return m
     return monitors[0]
-
-parameters = cv2.aruco.DetectorParameters_create()
-aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 detector = HomogeneousBgDetector()
 
 @error_handler
@@ -631,6 +660,7 @@ class GUI(customtkinter.CTk):
                                                                 filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                 image_extensions)])
             if not os.path.isfile(self.Oculos_path):
+                # Fixes a annoying error
                 self.Oculos_path_saved = self.Oculos_path_saved
             else:
                 self.Oculos_path_saved = self.Oculos_path
@@ -794,8 +824,9 @@ class GUI(customtkinter.CTk):
     def send_errors_discord(self, error):
         try:
             from discord_webhook import DiscordWebhook, DiscordEmbed
-            error = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + error)
-            embed = DiscordEmbed(title='error', description=error, color='ff0000')
+            system_info = get_system_info()
+            error = str(f"{system_info}\n" + "**ERROR**:\n" + f'**__{error}__**')  # Replace the error message with the actual error
+            embed = DiscordEmbed(title='Data', description=error, color='ff0000')
             embed.set_timestamp()
             webhook = DiscordWebhook(url='https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe')
             webhook.add_embed(embed)
@@ -1110,7 +1141,7 @@ class GUI(customtkinter.CTk):
                     self.dnp_left = sqrt((self.l_cx - self.nose_point_for_dnp_X)**2 + (self.l_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
                     self.dnp_right = sqrt((self.r_cx - self.nose_point_for_dnp_X)**2 + (self.r_cy - self.nose_point_for_dnp_Y)**2) / self.pixel_mm_ratio
                     # dnp calculation #
-                    self.draw_on_img
+                    self.draw_on_img(self.img)
                     
                 self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
                 self.t_stamp = self.t_stamp
@@ -1122,6 +1153,8 @@ class GUI(customtkinter.CTk):
                 self.progressbar.set(100)
                 os.remove("temp.png")
             except Exception as error:
+                self.progressbar.set(0)
+                self.progressbar.stop()
                 error = str(error)
                 self.send_errors_discord(error)
                 self.Warning_window(f"error: {error}", SelectedLanguage["Error Window Title"], self.MB_TOPMOST)
