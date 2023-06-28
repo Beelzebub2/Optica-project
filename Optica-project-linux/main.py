@@ -14,7 +14,7 @@ from math import sqrt
 from colorama import Fore, Style, init
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk, GLib
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
@@ -191,7 +191,9 @@ class InfoWindowThread(threading.Thread):
 
         window = Gtk.Window(title=self.title)
         window.set_border_width(10)
-
+        window.set_resizable(False)
+        window.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        window.set_keep_above(True)
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         window.add(vbox)
 
@@ -228,7 +230,6 @@ class InfoWindowThread(threading.Thread):
         window.connect('destroy', Gtk.main_quit)
         window.show_all()
         window.set_position(Gtk.WindowPosition.CENTER)
-        #window.move(int(screen.get_width() / 2 - window.get_width() / 2), int(screen.get_height() / 2 - window.get_height() / 2))
 
         Gtk.main()
     @error_handler

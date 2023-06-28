@@ -22,6 +22,8 @@ Beta 2.2 28/06/2023
 +   Fixed Linux information windows not working
 +   Fixed aruco marker not being detected on Linux
 +   Fixed themes and languages not working on Linux
++   Fixed information window not being created on center of the screen
++   Fixed informtaion window not staying on toplevel
 
 Beta 2.1 27/06/2023
 
