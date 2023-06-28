@@ -1,4 +1,4 @@
-# To be changed 2.1
+# To be changed 2.2
 ![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge&logo=v)
 ![Static Badge](https://img.shields.io/badge/Language-python-3776ab?style=for-the-badge&logo=python)
 ![Static Badge](https://img.shields.io/badge/Made%20by-Ricardo%20Martins%20and%20Jo%C3%A3o%20Marcos-851ebc?style=for-the-badge)  
@@ -14,11 +14,14 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
-Beta 2.1 28/06/2023
+Beta 2.2 28/06/2023
 
-!   Started Linux development
 +   Added show file with error on error hanlder
 +   Cleaned imports
++   Linux version created
++   Fixed Linux information windows not working
++   Fixed aruco marker not being detected on Linux
++   Fixed themes and languages not working on Linux
 
 Beta 2.1 27/06/2023
 

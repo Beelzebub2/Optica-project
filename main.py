@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os, ctypes, sys, platform, psutil, win32api
 import queue, threading
 import cv2, numpy as np
