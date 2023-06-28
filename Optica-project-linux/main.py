@@ -14,7 +14,7 @@ from math import sqrt
 from colorama import Fore, Style, init
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
@@ -167,6 +167,11 @@ def get_monitor_from_coord(x, y):
     return monitors[0]
 detector = HomogeneousBgDetector()
 
+def on_key_press(window, event):
+    keyval_name = Gdk.keyval_name(event.keyval)
+    if keyval_name == "Escape":
+        window.close()
+
 @error_handler
 class InfoWindowThread(threading.Thread):
     @error_handler
@@ -177,10 +182,10 @@ class InfoWindowThread(threading.Thread):
         self.options = options
         self.answer_queue = queue.Queue()
 
+
     @error_handler
     def run(self):
         windows = Gtk.Window.list_toplevels()
-        print(windows)
         for window in windows:
             if window.get_visible():
                 return
@@ -192,6 +197,9 @@ class InfoWindowThread(threading.Thread):
         window.set_keep_above(True)
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         window.add(vbox)
+        window.set_skip_taskbar_hint(True)
+        window.set_skip_pager_hint(True)
+        window.connect("key-press-event", on_key_press)
 
         label = Gtk.Label(label=self.message)
         vbox.pack_start(label, True, True, 0)
@@ -224,6 +232,7 @@ class InfoWindowThread(threading.Thread):
             hbox.pack_start(button2, True, True, 0)
 
         window.connect('destroy', Gtk.main_quit)
+        window.present_with_time(Gtk.get_current_event_time())
         window.show_all()
         window.set_position(Gtk.WindowPosition.CENTER)
 
@@ -236,7 +245,9 @@ class InfoWindowThread(threading.Thread):
 def show_info_window(title, message, options=False):
     info_thread = InfoWindowThread(title, message, options)
     info_thread.start()
-    return info_thread.get_answer()
+    if options:
+        return info_thread.get_answer()
+    return
 
 
 
@@ -560,6 +571,7 @@ class GUI(customtkinter.CTk):
         self.restart_program()
 
     @error_handler
+    @run_in_thread
     def restart_program(self):
         answer = self.Warning_window(SelectedLanguage["Restart"], SelectedLanguage["Restart title"], True)
         if answer == "Ok":
