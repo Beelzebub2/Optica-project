@@ -12,7 +12,7 @@ Universal = {
 
     "Title": "To be changed",
 
-    "Version": "Beta v2.1"
+    "Version": "Beta v2.2"
 
     ##/\ Folders /\##
 

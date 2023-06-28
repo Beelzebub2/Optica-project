@@ -14,7 +14,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
-Beta 2.2 28/06/2023
+Beta 2.2 28/06/2023 (**Linux**)
 
 +   Added show file with error on error hanlder
 +   Cleaned imports
@@ -24,6 +24,9 @@ Beta 2.2 28/06/2023
 +   Fixed themes and languages not working on Linux
 +   Fixed information window not being created on center of the screen
 +   Fixed informtaion window not staying on toplevel
++   Fixed information window duplication
++   Fixed program not responding when a information window was opened
++   Fixed program not closing with exit uppon pressing <esc>
 
 Beta 2.1 27/06/2023
 

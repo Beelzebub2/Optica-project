@@ -14,7 +14,7 @@ from math import sqrt
 from colorama import Fore, Style, init
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
@@ -122,7 +122,6 @@ image_extensions = r"*.jpg *.jpeg *.png"
 #needed for stopping ctypes window duplication
 thread_completed = threading.Event()
 answer_queue = queue.Queue()
-window_lock = threading.Lock()
 
 # Mediapipe necessary points to find iris on image
 LEFT_EYE = [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398]
@@ -177,17 +176,14 @@ class InfoWindowThread(threading.Thread):
         self.message = message
         self.options = options
         self.answer_queue = queue.Queue()
-        self.window_opened = False
-        self.window_lock = threading.Lock()
 
     @error_handler
     def run(self):
-        with self.window_lock:
-            if self.window_opened:
-                # Window is already open, so return immediately
+        windows = Gtk.Window.list_toplevels()
+        print(windows)
+        for window in windows:
+            if window.get_visible():
                 return
-
-            self.window_opened = True
 
         window = Gtk.Window(title=self.title)
         window.set_border_width(10)
@@ -581,11 +577,8 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def exit(self):
-        self.Warning_window(SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], True)
-        thread_completed.wait()
-        answer = answer_queue.get()
-        print(answer)
-        if answer == "ok":
+        answer = self.Warning_window(SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], True)
+        if answer == "Ok":
             #self.destroy()
             self.quit()
             sys.exit()
@@ -641,7 +634,15 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def about(self):
+        #if not self.are_windows_open():
         self.Warning_window(SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
+
+    def are_windows_open(self):
+        windows = Gtk.Window.list_toplevels()
+        for window in windows:
+            if window.get_visible():
+                return True
+        return False
 
     @error_handler
     def browse_Face(self):
