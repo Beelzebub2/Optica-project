@@ -14,6 +14,12 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.1 28/06/2023
+
+!   Started Linux development
++   Added show file with error on error hanlder
++   Cleaned imports
+
 Beta 2.1 27/06/2023
 
 !   Working on better measurement algorithm

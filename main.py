@@ -1,28 +1,21 @@
-import os
-import ctypes
-import queue
-import sys
-import threading
-import cv2
+#!/usr/bin/env python
+import os, ctypes, sys, platform, psutil, win32api
+import queue, threading
+import cv2, numpy as np
+import customtkinter
+import Languages.Languages_packs as L
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from tktooltip import ToolTip
-import customtkinter
 from PIL import ImageTk, Image
-import numpy as np
 from datetime import datetime
 from math import sqrt
 from win10toast import ToastNotifier
-import Languages.Languages_packs as L
-import platform
-import psutil
-import win32api
-import colorama
-from colorama import Fore, Style
+from colorama import Fore, Style, init
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
-colorama.init()
+init()
 def error_handler(func):
     def wrapper(*args, **kwargs):
         try:
@@ -30,12 +23,12 @@ def error_handler(func):
         except Exception as error:
             import traceback
             tb = traceback.extract_tb(error.__traceback__)
+            file = tb[-1].filename  # Extract the filename
             line = tb[-1].lineno
-            error_message = f"An error occurred at {Fore.CYAN + Style.BRIGHT}line: {line}{Fore.RED} error: {error} {Style.RESET_ALL}"
+            error_message = f"An error occurred in {Fore.CYAN + Style.BRIGHT}{file}{Style.RESET_ALL}\n{Fore.CYAN + Style.BRIGHT}Line: {line}{Fore.RED} error: {error} {Style.RESET_ALL}"
             print(Fore.YELLOW + Style.BRIGHT + "\n" + error_message + "\n" + Style.RESET_ALL)
-            with open("error_log.txt", "a") as file:
-                file.write(error_message + "\n")
     return wrapper
+
 
 @error_handler
 def high_priority():
@@ -110,8 +103,7 @@ def read_config():
 
 @error_handler
 def get_gpu_info():
-    gpu_name = win32api.EnumDisplayDevices(None, 0).DeviceString.strip()
-    gpu_name = gpu_name.split(',')[0].strip("('")
+    gpu_name = win32api.EnumDisplayDevices(None, 0).DeviceString
     return gpu_name
 
 @error_handler
@@ -143,8 +135,8 @@ answer_queue = queue.Queue()
 window_lock = threading.Lock()
 
 # Mediapipe necessary points to find iris on image
-LEFT_EYE =[362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398]
-RIGHT_EYE=[33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161 , 246] 
+LEFT_EYE = [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398]
+RIGHT_EYE= [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161 , 246] 
 LEFT_IRIS = [474,475, 476, 477]
 RIGHT_IRIS = [469, 470, 471, 472]
 count_imgs = []
