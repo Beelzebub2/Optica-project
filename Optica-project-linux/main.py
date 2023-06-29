@@ -11,7 +11,7 @@ from math import sqrt
 from configparser import ConfigParser
 from colorama import Fore, Style, init
 from discord_webhook import DiscordWebhook, DiscordEmbed
-from tkinter import filedialog, RIGHT, CENTER, LEFT, messagebox
+from tkinter import filedialog, RIGHT, CENTER, LEFT
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
@@ -268,6 +268,9 @@ class InfoWindowThread(threading.Thread):
         window.set_keep_above(True)
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         window.add(vbox)
+        window.set_skip_taskbar_hint(True)
+        window.set_skip_pager_hint(True)
+        window.connect("key-press-event", on_key_press)
 
         label = Gtk.Label(label=self.message)
         vbox.pack_start(label, True, True, 0)
@@ -314,7 +317,9 @@ class InfoWindowThread(threading.Thread):
 def show_info_window(title, message, options=False):
     info_thread = InfoWindowThread(title, message, options)
     info_thread.start()
-    return info_thread.get_answer()
+    if options:
+        return info_thread.get_answer()
+    return
 
 
 @error_handler
@@ -696,6 +701,7 @@ class GUI(customtkinter.CTk):
         self.restart_program()
 
     @error_handler
+    @run_in_thread
     def restart_program(self):
         answer = self.Warning_window(
             SelectedLanguage["Restart"], SelectedLanguage["Restart title"], True
