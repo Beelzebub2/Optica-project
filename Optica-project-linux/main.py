@@ -1,17 +1,28 @@
 #!/usr/bin/env python
-import subprocess, traceback, os, sys, platform, psutil, screeninfo, gi, webbrowser
-import queue, threading
-import cv2, numpy as np, mediapipe
+import gi
+import os
+import sys
+import cv2
+import queue
+import psutil
+import platform
+import threading
+import mediapipe
+import traceback
+import webbrowser
+import screeninfo
+import subprocess
+import numpy as np
 import customtkinter
 import Languages.Languages_packs as L
-from tktooltip import ToolTip
-from PIL import ImageTk, Image
-from datetime import datetime
 from math import sqrt
+from tktooltip import ToolTip
+from datetime import datetime
+from PIL import ImageTk, Image
 from configparser import ConfigParser
 from colorama import Fore, Style, init
-from discord_webhook import DiscordWebhook, DiscordEmbed
 from tkinter import filedialog, RIGHT, CENTER, LEFT
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
