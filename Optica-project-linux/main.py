@@ -571,7 +571,7 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     def settings(self):
-        if self.window != None:
+        if self.window is not None:
             self.window.lift()
             return
         self.window = customtkinter.CTkToplevel(self)
@@ -1321,7 +1321,7 @@ class GUI(customtkinter.CTk):
                 url="https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe"
             )
             webhook.add_embed(embed)
-            response = webhook.execute()
+            webhook.execute()
         except Exception:
             pass
 
