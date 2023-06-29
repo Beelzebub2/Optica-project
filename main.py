@@ -4,6 +4,7 @@ import cv2
 import queue
 import psutil
 import ctypes
+import win32api
 import platform
 import threading
 import traceback
