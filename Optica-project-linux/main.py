@@ -5,6 +5,7 @@ import sys
 import cv2
 import queue
 import psutil
+import notify2
 import platform
 import threading
 import mediapipe
@@ -25,13 +26,11 @@ from tkinter import filedialog, RIGHT, CENTER, LEFT
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
-init()
-
 
 def error_handler(func):
     def wrapper(*args, **kwargs):
@@ -254,6 +253,9 @@ def get_monitor_from_coord(x, y):
 
 detector = HomogeneousBgDetector()
 
+def on_key_press(window, event):
+        if event.keyval == Gdk.KEY_Escape:
+            window.close()
 
 @error_handler
 class InfoWindowThread(threading.Thread):
@@ -568,6 +570,14 @@ class GUI(customtkinter.CTk):
     @error_handler
     def Warning_window(self, message, title, Options=False):
         return show_info_window(title, message, Options)
+    
+    @error_handler
+    @run_in_thread
+    def show_notification(self, title, message):
+        notify2.init(L.Universal["Title"])
+        notification = notify2.Notification(title, message, f'{PATH}/icon.ico')
+        notification.show()
+
 
     @error_handler
     def settings(self):
@@ -780,6 +790,7 @@ class GUI(customtkinter.CTk):
             subprocess.run(
                 ["xdg-open", "{}//{}".format(PATH, L.Universal["Faces Folder"])]
             )
+            self.show_notification(L.Universal["Title"], SelectedLanguage["Add Faces Toast notification"])
 
         except Exception as error:
             self.send_errors_discord(error)
@@ -2162,4 +2173,5 @@ def run():
 
 if __name__ == "__main__":
     app = GUI()
+    init()
     run()
