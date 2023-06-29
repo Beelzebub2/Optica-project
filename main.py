@@ -1,19 +1,26 @@
-import traceback, os, ctypes, sys, platform, psutil, win32api
-import queue, threading
-import cv2, numpy as np
-import customtkinter
+import os
+import sys
+import cv2
+import queue
+import psutil
+import ctypes
+import platform
+import threading
+import traceback
 import webbrowser
-import Languages.Languages_packs as L
 import screeninfo
-from discord_webhook import DiscordWebhook, DiscordEmbed
-from tkinter import filedialog, RIGHT, CENTER, LEFT
-from tktooltip import ToolTip
-from PIL import ImageTk, Image
-from datetime import datetime
+import numpy as np
+import customtkinter
+import Languages.Languages_packs as L
 from math import sqrt
+from tktooltip import ToolTip
+from datetime import datetime
+from PIL import ImageTk, Image
 from win10toast import ToastNotifier
-from colorama import Fore, Style, init
 from configparser import ConfigParser
+from colorama import Fore, Style, init
+from tkinter import filedialog, RIGHT, CENTER, LEFT
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
@@ -494,6 +501,14 @@ class GUI(customtkinter.CTk):
         self.window = None
 
     @error_handler
+    def clear_queue(self, q):
+        try:
+            while True:
+                answer_queue.get_nowait()
+        except queue.Empty:
+            pass
+
+    @error_handler
     @run_in_thread
     def Warning_window(self, message, title, Options=False):
         # Acquire the lock to check and update the window status
@@ -666,6 +681,7 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     def restart_program(self):
+        self.clear_queue(answer_queue)
         self.Warning_window(
             SelectedLanguage["Restart"], SelectedLanguage["Restart title"], True
         )
@@ -673,8 +689,8 @@ class GUI(customtkinter.CTk):
         answer = answer_queue.get()
         if answer == 1:
             python = sys.executable
-            print(python)
             os.execl(python, python, *sys.argv)
+        return
 
     @error_handler
     def close_settings(self):
@@ -686,6 +702,7 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def exit(self):
+        self.clear_queue(answer_queue)
         self.Warning_window(
             SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], True
         )

@@ -17,6 +17,7 @@ Program made in python with the purpose of detecting face dimensions and predict
 Beta 2.2 29/06/2023 (Linux/Windows)
 
 +   Reorganized code
++   Fixed bug where previous answers on information windows would afect other windows
 
 
 Beta 2.2 28/06/2023 (Linux)
