@@ -14,6 +14,13 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.2 30/06/2023 (Linux/Windows)
+
++   Fixed exception raised when width and/or height of glasses wasn't input by the user
++   Added a check to let the user know if the aruco marker wasn't detected
++   Linux notifications finished
++   Fixed result images getting saved in wrong folder on linux 
+
 Beta 2.2 29/06/2023 (Linux/Windows)
 
 +   Reorganized code
