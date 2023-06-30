@@ -1354,6 +1354,12 @@ class GUI(customtkinter.CTk):
                 SelectedLanguage["Error Window Title"],
             )
             return
+        if self.width is None or self.height is None:
+            self.Warning_window(
+                SelectedLanguage["Started Without Measurements Error"],
+                SelectedLanguage["Error Window Title"],
+            )
+            return
 
         if self.width not in range(100, 250) or self.height not in range(20, 100):
             self.Warning_window(
