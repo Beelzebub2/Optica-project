@@ -1309,10 +1309,10 @@ class GUI(customtkinter.CTk):
     def save_measurements(self):
         try:
             self.width = (
-                0 if self.entry_width.get() == "" else float(self.entry_width.get())
+                0 if self.entry_width.get() == "" or not self.entry_width.get().isdigit() else float(self.entry_width.get())
             )
             self.height = (
-                0 if self.entry_height.get() == "" else float(self.entry_height.get())
+                0 if self.entry_height.get() == "" or not self.entry_height.get().isdigit() else float(self.entry_height.get())
             )
             if self.width not in range(100, 250) or self.height not in range(20, 100):
                 self.Warning_window(
