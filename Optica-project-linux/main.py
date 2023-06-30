@@ -767,17 +767,52 @@ class GUI(customtkinter.CTk):
     @error_handler
     def add_faces(self):
         try:
-            subprocess.run(["nautilus", f'{L.Universal["Faces Folder"]}'])
-        except FileNotFoundError:
-            subprocess.run(["xdg-open", f'{L.Universal["Faces Folder"]}'])
+            subprocess.call(["open", f'{PATH}/{L.Universal["Faces Folder"]}'])
+        except Exception as error:
+            self.send_errors_discord(error)
+            try:
+                process = subprocess.run(
+                    ["xdg-base-dirs", f'{PATH}/{L.Universal["Faces Folder"]}']
+                )
+                path = process.stdout.decode("utf-8").strip()
+                os.startfile(path)
+            except Exception as error:
+                self.send_errors_discord(error)
+                try:
+                    process = subprocess.run(
+                        ["xdg-open", f'{PATH}/{L.Universal["Faces Folder"]}']
+                    )
+                except Exception as error:
+                    self.send_errors_discord(error)
+                    process = subprocess.run(
+                        ["nautilus", f'{PATH}/{L.Universal["Faces Folder"]}']
+                    )
+
         self.show_notification(SelectedLanguage["Add Faces Toast notification"])
 
     @error_handler
     def open_results(self):
         try:
-            subprocess.run(["nautilus", f'{L.Universal["Ready Images Folder"]}'])
-        except FileNotFoundError:
-            subprocess.run(["xdg-open", f'{L.Universal["Ready Images Folder"]}'])
+            subprocess.call(["open", f'{PATH}/{L.Universal["Ready Images Folder"]}'])
+        except Exception as error:
+            self.send_errors_discord(error)
+            try:
+                process = subprocess.run(
+                    ["xdg-base-dirs", f'{PATH}/{L.Universal["Ready Images Folder"]}']
+                )
+                path = process.stdout.decode("utf-8").strip()
+                os.startfile(path)
+            except Exception as error:
+                self.send_errors_discord(error)
+                try:
+                    process = subprocess.run(
+                        ["xdg-open", f'{PATH}/{L.Universal["Ready Images Folder"]}']
+                    )
+                except Exception as error:
+                    self.send_errors_discord(error)
+                    process = subprocess.run(
+                        ["nautilus", f'{PATH}/{L.Universal["Ready Images Folder"]}']
+                    )
 
     @error_handler
     @run_in_thread
