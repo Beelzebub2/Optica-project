@@ -1308,8 +1308,12 @@ class GUI(customtkinter.CTk):
     @error_handler
     def save_measurements(self):
         try:
-            self.width = float(self.entry_width.get())
-            self.height = float(self.entry_height.get())
+            self.width = (
+                0 if self.entry_width.get() == "" else float(self.entry_width.get())
+            )
+            self.height = (
+                0 if self.entry_height.get() == "" else float(self.entry_height.get())
+            )
             if self.width not in range(100, 250) or self.height not in range(20, 100):
                 self.Warning_window(
                     SelectedLanguage["Save  Measurements Error"],
@@ -1348,12 +1352,6 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def get_object_size(self, image):
-        if self.width is None or self.height is None:
-            self.Warning_window(
-                SelectedLanguage["Started Without Measurements Error"],
-                SelectedLanguage["Error Window Title"],
-            )
-            return
         if self.width is None or self.height is None:
             self.Warning_window(
                 SelectedLanguage["Started Without Measurements Error"],
