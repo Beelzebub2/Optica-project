@@ -458,7 +458,7 @@ class GUI(customtkinter.CTk):
             corner_radius=8,
             hover=True,
             text=SelectedLanguage["Save Measurements Button"],
-            command=lambda: self.salvar(),
+            command=lambda: self.save_measurements(),
             image=self.save_img,
             compound=RIGHT,
         )
@@ -1306,7 +1306,7 @@ class GUI(customtkinter.CTk):
             pass
 
     @error_handler
-    def salvar(self):
+    def save_measurements(self):
         try:
             self.width = float(self.entry_width.get())
             self.height = float(self.entry_height.get())
