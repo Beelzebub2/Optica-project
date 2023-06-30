@@ -122,12 +122,17 @@ def read_config():
 @error_handler
 def get_gpu_info():
     try:
-        gpu_info = subprocess.check_output(
-            ["lspci", "-vnn", "-d", "10de:"], encoding="utf-8"
+        output = subprocess.check_output(["lspci", "-vnn", "-d", "10de:"]).decode(
+            "utf-8"
         )
-        return gpu_info.strip()
+        gpus = [
+            line.strip()
+            for line in output.splitlines()
+            if "VGA compatible controller" in line
+        ]
+        return gpus if gpus else "GPU not available"
     except subprocess.CalledProcessError:
-        return "GPU information not available"
+        return "Failed to get GPU information"
 
 
 @error_handler
@@ -141,7 +146,7 @@ def get_system_info():
     processor = platform.processor()
     gpu = get_gpu_info()
 
-    system_info = f"**User:** {user}\n**Pc:** {user_pc}\n**Windows Version:** {os_version}\n**Edition:** {os_edition}\n**Architecture:** {architecture}\n"
+    system_info = f"**User:** {user}\n**Pc:** {user_pc}\n**Linux Version:** {os_version}\n**Edition:** {os_edition}\n**Architecture:** {architecture}\n"
     system_info += f"**RAM:** {ram} GB\n"
     system_info += f"**Processor:** {processor}\n"
     system_info += f"**GPU:** {gpu}\n"
@@ -217,30 +222,6 @@ parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 
 
-class HomogeneousBgDetector:
-    def __init__(self):
-        pass
-
-    @error_handler
-    def detect_objects(self, img):
-        # Convert Image to grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # Create a Mask with adaptive threshold
-        mask = cv2.adaptiveThreshold(
-            gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 19, 5
-        )
-        # Find contours
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        # cv2.imshow("mask", mask)
-        objects_contours = []
-        for cnt in contours:
-            area = cv2.contourArea(cnt)
-            if area > 2000:
-                # cnt = cv2.approxPolyDP(cnt, 0.03*cv2.arcLength(cnt, True), True)
-                objects_contours.append(cnt)
-        return objects_contours
-
-
 # gets center of main monitor so it can later initialize the program on screen center instead of random location
 @error_handler
 def get_monitor_from_coord(x, y):
@@ -250,9 +231,6 @@ def get_monitor_from_coord(x, y):
         if m.x <= x <= m.width + m.x and m.y <= y <= m.height + m.y:
             return m
     return monitors[0]
-
-
-detector = HomogeneousBgDetector()
 
 
 def on_key_press(window, event):
@@ -341,9 +319,6 @@ def show_info_window(title, message, options=False):
 @error_handler
 class GUI(customtkinter.CTk):
     def __init__(self):
-        # By using super().__init__(), the subclass can invoke the initializer of its superclass,
-        # allowing it to perform any necessary initialization steps defined in the superclass.
-        # This ensures that both the subclass-specific attributes and the superclass attributes are properly initialized.        super().__init__()
         super().__init__()
         # WINDOW SETTINGS
         WIDTH = 1280
@@ -525,7 +500,7 @@ class GUI(customtkinter.CTk):
         # INPUT FRAME HEIGHT LABEL #
 
         # SAVE MEASUREMENTS BUTTON
-        self.button_medidas_oculos = customtkinter.CTkButton(
+        self.button_meaurements_Glasses = customtkinter.CTkButton(
             self.Frame2,
             width=200,
             height=50,
@@ -537,9 +512,9 @@ class GUI(customtkinter.CTk):
             image=self.save_img,
             compound=RIGHT,
         )
-        self.button_medidas_oculos.place(relx=0.5, rely=0.9, anchor=CENTER)
+        self.button_meaurements_Glasses.place(relx=0.5, rely=0.9, anchor=CENTER)
         self.tooltip(
-            self.button_medidas_oculos,
+            self.button_meaurements_Glasses,
             SelectedLanguage["Save Measurements Button Tooltip"],
         )
         # SAVE MEASUREMENTS BUTTON #
@@ -792,46 +767,25 @@ class GUI(customtkinter.CTk):
     @error_handler
     def add_faces(self):
         try:
-            subprocess.run(
-                ["xdg-open", "{}//{}".format(PATH, L.Universal["Faces Folder"])]
-            )
-            self.show_notification(SelectedLanguage["Add Faces Toast notification"])
-
-        except Exception as error:
-            self.send_errors_discord(error)
-            self.Warning_window(
-                SelectedLanguage["Open Faces Folder Error"],
-                SelectedLanguage["Error Window Title"],
-            )
+            subprocess.run(["nautilus", f'{L.Universal["Faces Folder"]}'])
+        except FileNotFoundError:
+            subprocess.run(["xdg-open", f'{L.Universal["Faces Folder"]}'])
+        self.show_notification(SelectedLanguage["Add Faces Toast notification"])
 
     @error_handler
     def open_results(self):
         try:
-            subprocess.run(
-                ["xdg-open", "{}/{}".format(PATH, L.Universal["Ready Images Folder"])]
-            )
-        except Exception as error:
-            self.Warning_window(
-                SelectedLanguage["Open Results Folder Error"],
-                SelectedLanguage["Error Window Title"],
-            )
-            self.send_errors_discord(error)
+            subprocess.run(["nautilus", f'{L.Universal["Ready Images Folder"]}'])
+        except FileNotFoundError:
+            subprocess.run(["xdg-open", f'{L.Universal["Ready Images Folder"]}'])
 
     @error_handler
     @run_in_thread
     def about(self):
-        # if not self.are_windows_open():
         self.Warning_window(
             SelectedLanguage["About Window Info"],
             SelectedLanguage["About Window Title"],
         )
-
-    def are_windows_open(self):
-        windows = Gtk.Window.list_toplevels()
-        for window in windows:
-            if window.get_visible():
-                return True
-        return False
 
     @error_handler
     def browse_Face(self):
@@ -856,7 +810,7 @@ class GUI(customtkinter.CTk):
             self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
             self.panel_Face.place(relx=0.33, rely=0.45, anchor=CENTER)
             # button
-            self.button_get_Oculos = customtkinter.CTkButton(
+            self.button_get_Glasses = customtkinter.CTkButton(
                 self.Frame2,
                 width=200,
                 height=50,
@@ -864,51 +818,47 @@ class GUI(customtkinter.CTk):
                 corner_radius=8,
                 hover=True,
                 text=SelectedLanguage["Select Glasses Button"],
-                command=self.browse_Oculos,
+                command=self.browse_Glasses,
                 image=self.glasses_img,
                 compound=RIGHT,
             )
-            self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
+            self.button_get_Glasses.place(relx=0.5, rely=0.39, anchor=CENTER)
             self.tooltip(
-                self.button_get_Oculos,
+                self.button_get_Glasses,
                 SelectedLanguage["Select Glasses Button Tooltip"],
             )
 
     @error_handler
-    def open_faces_folder():
-        os.open(L.Universal["Faces Folder"])
-
-    @error_handler
-    def browse_Oculos(self):
+    def browse_Glasses(self):
         if os.path.exists(L.Universal["Glasses Folder"]):
-            self.Oculos_path = filedialog.askopenfilename(
+            self.Glasses_path = filedialog.askopenfilename(
                 title=SelectedLanguage["Browse Glasses Window Title"],
                 initialdir=L.Universal["Glasses Folder"],
                 filetypes=[(SelectedLanguage["Browse Window Hint"], image_extensions)],
             )
-            if not os.path.isfile(self.Oculos_path):
+            if not os.path.isfile(self.Glasses_path):
                 # Fixes a annoying error
-                self.Oculos_path_saved = self.Oculos_path_saved
+                self.Glasses_path_saved = self.Glasses_path_saved
             else:
-                self.Oculos_path_saved = self.Oculos_path
+                self.Glasses_path_saved = self.Glasses_path
         else:
-            self.Oculos_path = filedialog.askopenfilename(
+            self.Glasses_path = filedialog.askopenfilename(
                 title=SelectedLanguage["Browse Glasses Window Title"],
                 filetypes=[(SelectedLanguage["Browse Window Hint"], image_extensions)],
             )
-            if not os.path.isfile(self.Oculos_path):
-                self.Oculos_path_saved = self.Oculos_path_saved
+            if not os.path.isfile(self.Glasses_path):
+                self.Glasses_path_saved = self.Glasses_path_saved
             else:
-                self.Oculos_path_saved = self.Oculos_path
+                self.Glasses_path_saved = self.Glasses_path
         # image
-        if os.path.isfile(self.Oculos_path):
-            self.Oculos_image = Image.open(self.Oculos_path)
-            self.Oculos_image = self.Oculos_image.resize(
+        if os.path.isfile(self.Glasses_path):
+            self.Glasses_image = Image.open(self.Glasses_path)
+            self.Glasses_image = self.Glasses_image.resize(
                 (700, 250), Image.Resampling.LANCZOS
             )
-            self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
-            self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
-            self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=CENTER)
+            self.Glasses_image = ImageTk.PhotoImage(self.Glasses_image)
+            self.panel_Glasses = customtkinter.CTkLabel(image=self.Glasses_image)
+            self.panel_Glasses.place(relx=0.73, rely=0.45, anchor=CENTER)
             # button
             self.button_Start = customtkinter.CTkButton(
                 self.Frame2,
@@ -1040,7 +990,7 @@ class GUI(customtkinter.CTk):
                 2,
                 cv2.LINE_AA,
             )
-            self.medidas_label = customtkinter.CTkLabel(
+            self.meaurements_label = customtkinter.CTkLabel(
                 self,
                 text=SelectedLanguage["Pupillary Distance"]
                 + f"{round(self.iris_to_iris_line_distance, 2)} mm\n"
@@ -1051,14 +1001,14 @@ class GUI(customtkinter.CTk):
                 + SelectedLanguage["Face Length"]
                 + f"{round(self.left_to_right_face, 2)} mm\n"
                 + SelectedLanguage["Right Height"]
-                + f"{round(self.right_iris_Oculos, 2)} mm\n"
+                + f"{round(self.right_iris_Glasses, 2)} mm\n"
                 + SelectedLanguage["Left Height"]
-                + f"{round(self.left_iris_Oculos, 2)} mm",
+                + f"{round(self.left_iris_Glasses, 2)} mm",
             )
-            self.medidas_label.configure(
+            self.meaurements_label.configure(
                 font=("Courier", 18, "bold"), anchor="w", justify=LEFT
             )
-            self.medidas_label.place(relx=0.2, rely=0.67)
+            self.meaurements_label.place(relx=0.2, rely=0.67)
         except Exception as error:
             self.send_errors_discord(
                 error,
@@ -1086,181 +1036,181 @@ class GUI(customtkinter.CTk):
         img = Image.open(img_path) if ImageInput is None else ImageInput
         width_pic = int(img.size[0])  # gets the original picture width
         height_pic = int(img.size[1])  # gets the original picture height
-        mask_Oculos = Image.open(self.Oculos_path)  # opens the Oculos image
-        width_oculos_original = int(
-            mask_Oculos.size[0]
+        mask_Glasses = Image.open(self.Glasses_path)  # opens the Glasses image
+        width_Glasses_original = int(
+            mask_Glasses.size[0]
         )  # gets the glasses image's width
-        height_oculos_original = int(mask_Oculos.size[1])  # same but for the height
-        # print(height_oculos_original)
-        self.width_Oculos = int(
+        height_Glasses_original = int(mask_Glasses.size[1])  # same but for the height
+        # print(height_Glasses_original)
+        self.width_Glasses = int(
             self.width * self.pixel_mm_ratio
-        )  # sets the width of the Oculos image to be the same as the distance between 2 points of the face
-        mask_Oculos = mask_Oculos.resize(
-            (self.width_Oculos, int(self.height * self.pixel_mm_ratio))
+        )  # sets the width of the Glasses image to be the same as the distance between 2 points of the face
+        mask_Glasses = mask_Glasses.resize(
+            (self.width_Glasses, int(self.height * self.pixel_mm_ratio))
         )  # resizes the glasses to the correct width.
-        width_oculos_resized = int(
-            mask_Oculos.size[0]
+        width_Glasses_resized = int(
+            mask_Glasses.size[0]
         )  # gets the resized size of the width
-        height_oculos_resized = int(mask_Oculos.size[1])  # same but height
-        # print(height_oculos_resized)
+        height_Glasses_resized = int(mask_Glasses.size[1])  # same but height
+        # print(height_Glasses_resized)
 
-        mask_Oculos.save(
+        mask_Glasses.save(
             "temp.png"
         )  # temp img to be used later, former "slave.png" <-- joão marcos
-        if self.Oculos_path.endswith(
+        if self.Glasses_path.endswith(
             "Oculos2.png"
         ):  # all these ifs verify which glasses where chosen and define the coordinates to be put on the face
             self.get_point(
                 430,
                 69,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             x = self.nose_x - self.x
             y = self.nose_y - self.y
             self.get_point(
                 245,
                 278,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             right_iris_x = self.x + x
             right_iris_y = self.y + y
             self.get_point(
                 612,
                 279,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos1.png"):
+        elif self.Glasses_path.endswith("Glasses1.png"):
             self.get_point(
                 453,
                 26,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             x = self.nose_x - self.x
             y = self.nose_y - self.y
             self.get_point(
                 226,
                 236,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             right_iris_x = self.x + x
             right_iris_y = self.y + y
             self.get_point(
                 700,
                 230,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos3.png"):
+        elif self.Glasses_path.endswith("Oculos3.png"):
             self.get_point(
                 667,
                 121,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             x = self.nose_x - self.x
             y = self.nose_y - self.y
             self.get_point(
                 334,
                 397,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             right_iris_x = self.x + x
             right_iris_y = self.y + y
             self.get_point(
                 974,
                 400,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos7.png"):
+        elif self.Glasses_path.endswith("Oculos7.png"):
             self.get_point(
                 465,
                 117,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             x = self.nose_x - self.x
             y = self.nose_y - self.y
             self.get_point(
                 255,
                 323,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             right_iris_x = self.x + x
             right_iris_y = self.y + y
             self.get_point(
                 671,
                 319,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             left_iris_x = self.x + x
             left_iris_y = self.y + y
-        elif self.Oculos_path.endswith("Oculos9.png"):
+        elif self.Glasses_path.endswith("Oculos9.png"):
             self.get_point(
                 353,
                 83,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             x = self.nose_x - self.x
             y = self.nose_y - self.y
             self.get_point(
                 190,
                 247,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             right_iris_x = self.x + x
             right_iris_y = self.y + y
             self.get_point(
                 528,
                 249,
-                width_oculos_original,
-                height_oculos_original,
-                width_oculos_resized,
-                height_oculos_resized,
+                width_Glasses_original,
+                height_Glasses_original,
+                width_Glasses_resized,
+                height_Glasses_resized,
             )
             left_iris_x = self.x + x
             left_iris_y = self.y + y
@@ -1308,14 +1258,14 @@ class GUI(customtkinter.CTk):
             cv2.LINE_AA,
         )
         cv2.imwrite("temp.png", self.img)
-        Oculos_img = Image.new(
+        Glasses_img = Image.new(
             "RGBA", (width_pic, height_pic), (0, 0, 0, 0)
         )  # creates a blank image same size as the original
-        Oculos_img.paste(img, (0, 0))  # pastes the original on the blank
-        Oculos_img.paste(
-            mask_Oculos, (x, y), mask=mask_Oculos
-        )  # pastes the Oculos over the original over the blank
-        Oculos_img.save(
+        Glasses_img.paste(img, (0, 0))  # pastes the original on the blank
+        Glasses_img.paste(
+            mask_Glasses, (x, y), mask=mask_Glasses
+        )  # pastes the Glasses over the original over the blank
+        Glasses_img.save(
             "{}/{}/{}-{}.png".format(
                 PATH,
                 L.Universal["Ready Images Folder"],
@@ -1426,7 +1376,7 @@ class GUI(customtkinter.CTk):
         try:
             self.img = cv2.imread(image)
             self.imy, self.imx, _ = self.img.shape
-            # opens the image with pil to put them Oculos on
+            # opens the image with pil to put them Glasses on
             # é necessário converter a imagem de Blue green red para Red green blue
             rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
             # tamanho da imagem
@@ -1441,8 +1391,8 @@ class GUI(customtkinter.CTk):
                 right_face = facial_landmarks.landmark[356]
                 right_face2 = facial_landmarks.landmark[251]
                 left_face2 = facial_landmarks.landmark[21]
-                bottom_Oculos = facial_landmarks.landmark[101]
-                top_Oculos = facial_landmarks.landmark[66]
+                bottom_Glasses = facial_landmarks.landmark[101]
+                top_Glasses = facial_landmarks.landmark[66]
                 bottom_bottom = facial_landmarks.landmark[111]
                 bottom_b_left = facial_landmarks.landmark[330]
                 bottom_g_left = facial_landmarks.landmark[419]
@@ -1468,16 +1418,16 @@ class GUI(customtkinter.CTk):
                 self.left_face_y1 = int(left_face2.y * height)
                 self.right_face_x1 = int(right_face2.x * width)
                 self.right_face_y1 = int(right_face2.y * height)
-                self.bottom_glasses_x = int(bottom_Oculos.x * width)
-                self.bottom_glasses_y = int(bottom_Oculos.y * height)
+                self.bottom_glasses_x = int(bottom_Glasses.x * width)
+                self.bottom_glasses_y = int(bottom_Glasses.y * height)
                 self.bottom_bottom_x = int(bottom_bottom.x * width)
                 self.bottom_bottom_y = int(bottom_bottom.y * height)
                 self.bottom_glasses_left_x = int(bottom_g_left.x * width)
                 self.bottom_glasses_left_y = int(bottom_g_left.y * height)
                 self.bblx = int(bottom_b_left.x * width)
                 self.bbly = int(bottom_b_left.y * height)
-                self.tgx = int(top_Oculos.x * width)
-                self.tgy = int(top_Oculos.y * height)
+                self.tgx = int(top_Glasses.x * width)
+                self.tgy = int(top_Glasses.y * height)
                 self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
                 self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
                 self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
@@ -1594,12 +1544,12 @@ class GUI(customtkinter.CTk):
                         + (self.left_face_y - self.right_face_y) ** 2
                     )
                 ) / self.pixel_mm_ratio
-                self.right_iris_Oculos = round(
+                self.right_iris_Glasses = round(
                     (sqrt((self.r_cx - self.bmx) ** 2 + (self.r_cy - self.bmy) ** 2))
                     / self.pixel_mm_ratio,
                     2,
                 )
-                self.left_iris_Oculos = round(
+                self.left_iris_Glasses = round(
                     (sqrt((self.l_cx - self.bmlx) ** 2 + (self.l_cy - self.bmly) ** 2))
                     / self.pixel_mm_ratio,
                     2,

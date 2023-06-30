@@ -19,7 +19,10 @@ Beta 2.2 30/06/2023 (Linux/Windows)
 +   Fixed exception raised when width and/or height of glasses wasn't input by the user
 +   Added a check to let the user know if the aruco marker wasn't detected
 +   Linux notifications finished
-+   Fixed result images getting saved in wrong folder on linux 
++   Fixed result images getting saved in wrong folder on linux
++   Fixed results folder and add faces folder not opening on some linux distributions
++   Removed forgoten useless code
++   Updated get graphics card function on linux
 
 Beta 2.2 29/06/2023 (Linux/Windows)
 
