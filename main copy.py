@@ -381,7 +381,7 @@ class GUI(customtkinter.CTk):
         # PROGRESS BAR #
     
 
-    # SETTINGS WINDOW 
+    # SETTINGS WINDOW  
     @error_handler
     def closed_set_window(self):
         self.window.destroy()
