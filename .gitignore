@@ -3,6 +3,9 @@ Output/
 Ready-images/
 dist/
 build/
+.vscode/
+Languages/__pycache__/
+
 
 # Files
 "create\ app.bat"

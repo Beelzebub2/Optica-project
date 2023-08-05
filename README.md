@@ -1,4 +1,4 @@
-# To be changed 2.0
+# To be changed 2.2
 ![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge&logo=v)
 ![Static Badge](https://img.shields.io/badge/Language-python-3776ab?style=for-the-badge&logo=python)
 ![Static Badge](https://img.shields.io/badge/Made%20by-Ricardo%20Martins%20and%20Jo%C3%A3o%20Marcos-851ebc?style=for-the-badge)  
@@ -14,7 +14,49 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.2 30/06/2023 (Linux/Windows)
+
++   Fixed exception raised when width and/or height of glasses wasn't input by the user
++   Added a check to let the user know if the aruco marker wasn't detected
++   Linux notifications finished
++   Fixed result images getting saved in wrong folder on linux
++   Fixed results folder and add faces folder not opening on some linux distributions
++   Removed forgoten useless code
++   Updated get graphics card function on linux
+
+Beta 2.2 29/06/2023 (Linux/Windows)
+
++   Reorganized code
++   Fixed bug where previous answers on information windows would afect other windows
+
+
+Beta 2.2 28/06/2023 (Linux)
+
++   Added show file with error on error handler
++   Cleaned imports
++   Linux version created
++   Fixed Linux information windows not working
++   Fixed aruco marker not being detected on Linux
++   Fixed themes and languages not working on Linux
++   Fixed information window not being created on center of the screen
++   Fixed informtaion window not staying on toplevel
++   Fixed information window duplication
++   Fixed program not responding when a information window was opened
++   Fixed program not closing with exit uppon pressing <esc>
+
+Beta 2.1 27/06/2023
+
+!   Working on better measurement algorithm
+!   Working on better mm to pixel ratio predictor 
++   Fixed minor issues with error handler
++   Fix minor bug with style selection
++   Rearranged send error to discord function
++   Added more data collection (gpu, processor, ram)
++   Fixed minor bug with program priority elevator
+
+
 Beta 2.1 18/06/2023
+
 +   Added a Warning window handler
 +   Fixed bug where program would crash if a warning window was opened
 +   Fixed warning window duplication
