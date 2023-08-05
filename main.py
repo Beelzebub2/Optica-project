@@ -864,14 +864,14 @@ class GUI(customtkinter.CTk):
             )
             cv2.line(
                 img,
-                (self.nose_point_for_dnp_X, self.nose_point_for_dnp_Y),
+                (self.closest_xL, self.closest_yL),
                 self.center_left,
                 (0, 255, 0),
                 1,
             )
             cv2.line(
                 img,
-                (self.nose_point_for_dnp_X, self.nose_point_for_dnp_Y),
+                (self.closest_xR, self.closest_yR),
                 self.center_right,
                 (0, 255, 0),
                 1,
@@ -961,9 +961,9 @@ class GUI(customtkinter.CTk):
                 text=SelectedLanguage["Pupillary Distance"]
                 + f"{round(self.iris_to_iris_line_distance, 2)} mm\n"
                 + SelectedLanguage["Left Nasopupillary distance"]
-                + f"{round(self.minleft, 2)} mm\n"
+                + f"{round(self.dnp_left, 2)} mm\n"
                 + SelectedLanguage["Right Nasopupillary distance"]
-                + f"{round(self.minright, 2)} mm\n"
+                + f"{round(self.dnp_right, 2)} mm\n"
                 + SelectedLanguage["Face Length"]
                 + f"{round(self.left_to_right_face, 2)} mm\n"
                 + SelectedLanguage["Right Height"]
@@ -1315,14 +1315,43 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     @run_in_thread
+    def get_points(self, x1, y1, x2, y2, num):
+        self.y_points.append(y1)
+        self.x_points.append(x1)
+        difX = x2 - x1
+        difY = y2 - y1
+        shiftX = difX / num
+        shiftY = difY / num
+        for i in range(num):
+            y1 = y1 + shiftY
+            self.y_points.append(y1)
+            self.x_points.append(x1 + shiftX)
+            x1 = x1 + shiftX
+            i+=1
+
+    @error_handler
+    def find_closest_number(self, target, number_list):
+        closest_number = None
+        min_difference = float('inf')
+
+        for number in number_list:
+            difference = abs(number - target)
+            if difference < min_difference:
+                min_difference = difference
+                closest_number = number
+
+        return int(closest_number)
+
+    @error_handler
+    @run_in_thread
     def get_object_size(self, image):
+
         if self.width is None or self.height is None:
             self.Warning_window(
                 SelectedLanguage["Started Without Measurements Error"],
                 SelectedLanguage["Error Window Title"],
             )
             return
-
         if self.width not in range(100, 250) or self.height not in range(20, 100):
             self.Warning_window(
                 SelectedLanguage["Get Object Size Error"],
@@ -1362,717 +1391,108 @@ class GUI(customtkinter.CTk):
         self.aruco_perimeter = cv2.arcLength(corners[0], True)
         # Pixel to mm ratio
         self.pixel_mm_ratio = self.aruco_perimeter / 200
-
         try:
             self.img = cv2.imread(image)
             self.imy, self.imx, _ = self.img.shape
-            # opens the image with pil to put them Glasses on
+            # opens the image with pil to put them Oculos on
             # é necessário converter a imagem de Blue green red para Red green blue
             rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
             # tamanho da imagem
-            height, width, _ = self.img.shape
+            self.height, self.width, _ = self.img.shape
             result = self.face_mesh.process(rgb_img)
             for facial_landmarks in result.multi_face_landmarks:
-                middle_nose = facial_landmarks.landmark[168]
-                middle_nose_bottom = facial_landmarks.landmark[8]
-                more_points_bottom_nose = facial_landmarks.landmark[197]
-                bottom_nose = facial_landmarks.landmark[6]
-                left_face = facial_landmarks.landmark[127]
-                right_face = facial_landmarks.landmark[356]
+                nose_1 = facial_landmarks.landmark[8] #first nose point
+                nose_2 = facial_landmarks.landmark[168] # second nose point
+                nose_3 = facial_landmarks.landmark[6] #third nose point
+                nose_4 = facial_landmarks.landmark[197] # fourth nose point
+                
+                left_face = facial_landmarks.landmark[127] 
+                right_face = facial_landmarks.landmark[356] 
                 right_face2 = facial_landmarks.landmark[251]
                 left_face2 = facial_landmarks.landmark[21]
-                bottom_Glasses = facial_landmarks.landmark[101]
-                top_Glasses = facial_landmarks.landmark[66]
+                bottom_Oculos = facial_landmarks.landmark[101]
+                top_Oculos = facial_landmarks.landmark[66]
                 bottom_bottom = facial_landmarks.landmark[111]
                 bottom_b_left = facial_landmarks.landmark[330]
                 bottom_g_left = facial_landmarks.landmark[419]
-                # coordenadas não podem ser floats
-                # pontos necessários
-                self.bottom_x = int(more_points_bottom_nose.x * width)
-                self.bottom_y = int(more_points_bottom_nose.y * height)
-                self.bottom_nose_x = int(bottom_nose.x * width)
-                self.bottom_nose_y = int(bottom_nose.y * height)
-                self.middle_nose_bottom_x = int(
-                    middle_nose_bottom.x * width
-                )  # middle nose bottom "x"
-                self.middle_nose_bottom_y = int(
-                    middle_nose_bottom.y * height
-                )  # middle nose bottom "y"
-                self.nose_x = int(middle_nose.x * width)  # nose "x"
-                self.nose_y = int(middle_nose.y * height)  # nose "y"
-                self.left_face_x = int(left_face.x * width)  # left face "x"
-                self.left_face_y = int(left_face.y * height)  # Left face "y"
-                self.right_face_x = int(right_face.x * width)  # right face "x"
-                self.right_face_y = int(right_face.y * height)  # right face "y"
-                self.left_face_x1 = int(left_face2.x * width)
-                self.left_face_y1 = int(left_face2.y * height)
-                self.right_face_x1 = int(right_face2.x * width)
-                self.right_face_y1 = int(right_face2.y * height)
-                self.bottom_glasses_x = int(bottom_Glasses.x * width)
-                self.bottom_glasses_y = int(bottom_Glasses.y * height)
-                self.bottom_bottom_x = int(bottom_bottom.x * width)
-                self.bottom_bottom_y = int(bottom_bottom.y * height)
-                self.bottom_glasses_left_x = int(bottom_g_left.x * width)
-                self.bottom_glasses_left_y = int(bottom_g_left.y * height)
-                self.bblx = int(bottom_b_left.x * width)
-                self.bbly = int(bottom_b_left.y * height)
-                self.tgx = int(top_Glasses.x * width)
-                self.tgy = int(top_Glasses.y * height)
+
+                self.left_face_x = int(left_face.x * self.width) #left face "x"
+                self.left_face_y = int(left_face.y * self.height) #Left face "y"
+                self.right_face_x = int(right_face.x * self.width) #right face "x"
+                self.right_face_y = int(right_face.y * self.height) #right face "y"
+                self.left_face_x1 = int(left_face2.x * self.width)
+                self.left_face_y1 = int(left_face2.y * self.height)
+                self.right_face_x1 = int(right_face2.x * self.width)
+                self.right_face_y1 = int(right_face2.y * self.height)
+                self.bottom_glasses_x = int(bottom_Oculos.x * self.width)
+                self.bottom_glasses_y = int(bottom_Oculos.y * self.height)
+                self.bottom_bottom_x = int(bottom_bottom.x * self.width)
+                self.bottom_bottom_y = int(bottom_bottom.y * self.height)
+                self.bottom_glasses_left_x = int(bottom_g_left.x * self.width)
+                self.bottom_glasses_left_y = int(bottom_g_left.y * self.height)
+                self.bblx = int(bottom_b_left.x * self.width)
+                self.bbly = int(bottom_b_left.y * self.height)
+                self.tgx = int(top_Oculos.x * self.width)
+                self.tgy = int(top_Oculos.y * self.height)
                 self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
                 self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
                 self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
                 self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
-                self.midpoint_nose_x = int(
-                    (self.middle_nose_bottom_x + self.nose_x) / 2
-                )
-                self.midpoint_nose_y = int(
-                    (self.middle_nose_bottom_y + self.nose_y) / 2
-                )
-                self.mid_nose_x = int((self.bottom_nose_x + self.nose_x) / 2)
-                self.mid_nose_y = int((self.bottom_nose_y + self.nose_y) / 2)
-                self.mid_mid_bottom_x = int((self.bottom_nose_x + self.mid_nose_x) / 2)
-                self.mid_mid_bottom_y = int((self.bottom_nose_y + self.mid_nose_y) / 2)
-                self.mid_mid_top_x = int((self.nose_x + self.mid_nose_x) / 2)
-                self.mid_mid_top_y = int((self.nose_y + self.mid_nose_y) / 2)
-                self.midier_nose_x = int((self.mid_mid_top_x + self.mid_nose_x) / 2)
-                self.midier_nose_y = int((self.mid_mid_top_y + self.mid_nose_y) / 2)
-                self.mid_more_points_x = int((self.bottom_nose_x + self.bottom_x) / 2)
-                self.mid_more_points_y = int((self.bottom_nose_y + self.bottom_y) / 2)
-                self.mid_mid_mid_bottom_x = int(
-                    (self.bottom_nose_x + self.mid_mid_bottom_x) / 2
-                )
-                self.mid_mid_mid_bottom_y = int(
-                    (self.bottom_nose_y + self.mid_mid_bottom_y) / 2
-                )
-                self.mid_medium_mid_x = int(
-                    (self.mid_nose_x + self.mid_mid_bottom_x) / 2
-                )
-                self.mid_medium_mid_y = int(
-                    (self.mid_nose_y + self.mid_mid_bottom_y) / 2
-                )
-                self.mid_midier_top_x = int(
-                    (self.midier_nose_x + self.mid_mid_top_x) / 2
-                )
-                self.mid_midier_top_y = int(
-                    (self.midier_nose_y + self.mid_mid_top_y) / 2
-                )
-                self.mid_midier_bottom_x = int(
-                    (self.midier_nose_x + self.mid_nose_x) / 2
-                )
-                self.mid_midier_bottom_y = int(
-                    (self.midier_nose_y + self.mid_nose_y) / 2
-                )
-                self.mid_medium_nose_x = int(
-                    (self.mid_medium_mid_x + self.mid_nose_x) / 2
-                )
-                self.mid_medium_nose_y = int(
-                    (self.mid_medium_mid_y + self.mid_nose_y) / 2
-                )
-                self.mid_medium_bottom_x = int(
-                    (self.mid_medium_mid_x + self.mid_mid_bottom_x) / 2
-                )
-                self.mid_medium_bottom_y = int(
-                    (self.mid_medium_mid_y + self.mid_mid_bottom_y) / 2
-                )
-                self.mid_x = int(
-                    (self.mid_mid_mid_bottom_x + self.mid_mid_bottom_x) / 2
-                )
-                self.mid_y = int(
-                    (self.mid_mid_mid_bottom_y + self.mid_mid_bottom_y) / 2
-                )
-                self.mid2_x = int((self.mid_mid_mid_bottom_x + self.bottom_nose_x) / 2)
-                self.mid2_y = int((self.mid_mid_mid_bottom_y + self.bottom_nose_y) / 2)
-                self.mid3_x = int((self.mid_more_points_x + self.bottom_nose_x) / 2)
-                self.mid3_y = int((self.mid_more_points_y + self.bottom_nose_y) / 2)
-                self.mid4_x = int((self.mid3_x + self.bottom_nose_x) / 2)
-                self.mid4_y = int((self.mid3_y + self.bottom_nose_y) / 2)
-                self.mid5_x = int((self.mid4_x + self.bottom_nose_x) / 2)
-                self.mid5_y = int((self.mid4_y + self.bottom_nose_y) / 2)
-                self.mid6_x = int((self.mid4_x + self.mid3_x) / 2)
-                self.mid6_y = int((self.mid4_y + self.mid3_y) / 2)
-                self.mid7_x = int((self.mid_more_points_x + self.mid3_x) / 2)
-                self.mid7_y = int((self.mid_more_points_y + self.mid3_y) / 2)
-                self.mid8_x = int((self.mid7_x + self.mid3_x) / 2)
-                self.mid8_y = int((self.mid7_y + self.mid3_y) / 2)
-                self.mid9_x = int((self.mid7_x + self.mid_more_points_x) / 2)
-                self.mid9_y = int((self.mid7_y + self.mid_more_points_y) / 2)
-                self.mid10_x = int((self.bottom_x + self.mid_more_points_x) / 2)
-                self.mid10_y = int((self.bottom_y + self.mid_more_points_y) / 2)
-                self.mid11_x = int((self.nose_x + self.mid_mid_top_x) / 2)
-                self.mid11_y = int((self.nose_y + self.mid_mid_top_y) / 2)
-                self.mesh_points = np.array(
-                    [
-                        np.multiply([p.x, p.y], [width, height]).astype(int)
-                        for p in result.multi_face_landmarks[0].landmark
-                    ]
-                )
-                # x do circulo esquerdo/ y do ... raio do ...
-                (self.l_cx, self.l_cy), self.l_radius = cv2.minEnclosingCircle(
-                    self.mesh_points[LEFT_IRIS]
-                )
-                # x do circulo direito/ y do ... raio do ...
-                (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(
-                    self.mesh_points[RIGHT_IRIS]
-                )
-                # distancias
-                self.iris_to_iris_line_distance = (
-                    sqrt((self.r_cx - self.l_cx) ** 2 + (self.r_cy - self.l_cy) ** 2)
-                ) / self.pixel_mm_ratio
-                self.left_iris_to_nose = (
-                    sqrt(
-                        (self.l_cx - self.nose_x) ** 2 + (self.l_cy - self.nose_y) ** 2
-                    )
-                ) / self.pixel_mm_ratio
-                self.right_iris_to_nose = (
-                    sqrt(
-                        (self.r_cx - self.nose_x) ** 2 + (self.r_cy - self.nose_y) ** 2
-                    )
-                ) / self.pixel_mm_ratio
-                self.left_to_right_face = (
-                    sqrt(
-                        (self.left_face_x - self.right_face_x) ** 2
-                        + (self.left_face_y - self.right_face_y) ** 2
-                    )
-                ) / self.pixel_mm_ratio
-                self.right_iris_Glasses = round(
-                    (sqrt((self.r_cx - self.bmx) ** 2 + (self.r_cy - self.bmy) ** 2))
-                    / self.pixel_mm_ratio,
-                    2,
-                )
-                self.left_iris_Glasses = round(
-                    (sqrt((self.l_cx - self.bmlx) ** 2 + (self.l_cy - self.bmly) ** 2))
-                    / self.pixel_mm_ratio,
-                    2,
-                )
-                self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
-                self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
-                right_iris_nose = []
-                left_iris_nose = []
-                iris_nose_points_x = [
-                    self.nose_x,
-                    self.mid_nose_x,
-                    self.mid_mid_bottom_x,
-                    self.mid_mid_top_x,
-                    self.bottom_nose_x,
-                    self.mid_more_points_x,
-                    self.midier_nose_x,
-                    self.mid_mid_mid_bottom_x,
-                    self.mid_medium_mid_x,
-                    self.mid_midier_top_x,
-                    self.mid_midier_bottom_x,
-                    self.mid_medium_nose_x,
-                    self.mid_medium_bottom_x,
-                    self.mid_x,
-                    self.mid2_x,
-                    self.mid3_x,
-                    self.mid4_x,
-                    self.mid5_x,
-                    self.mid6_x,
-                    self.mid7_x,
-                    self.mid8_x,
-                    self.mid9_x,
-                    self.mid10_x,
-                    self.mid11_x,
-                ]
+                # coordenadas não podem ser floats
+                # pontos necessários
+            self.x_points = []
+            self.y_points = []
+            self.get_points(nose_1.x * self.width, nose_1.y * self.height, nose_2.x * self.width, nose_2.y * self.height, 500)
+            self.get_points(nose_2.x * self.width, nose_2.y * self.height, nose_3.x * self.width, nose_3.y * self.height, 500)
+            self.get_points(nose_3.x * self.width, nose_3.y * self.height, nose_4.x * self.width, nose_4.y * self.height, 500)
 
-                iris_nose_points_y = [
-                    self.nose_y,
-                    self.mid_nose_y,
-                    self.mid_mid_bottom_y,
-                    self.mid_mid_top_y,
-                    self.bottom_nose_y,
-                    self.mid_more_points_y,
-                    self.midier_nose_y,
-                    self.mid_mid_mid_bottom_y,
-                    self.mid_medium_mid_y,
-                    self.mid_midier_top_y,
-                    self.mid_midier_bottom_y,
-                    self.mid_medium_nose_y,
-                    self.mid_medium_bottom_y,
-                    self.mid_y,
-                    self.mid2_y,
-                    self.mid3_y,
-                    self.mid4_y,
-                    self.mid5_y,
-                    self.mid6_y,
-                    self.mid7_y,
-                    self.mid8_y,
-                    self.mid9_y,
-                    self.mid10_y,
-                    self.mid11_y,
-                ]
+            self.nose_x = int(nose_2.x * self.width) #nose "x"
+            self.nose_y = int(nose_2.y * self.height) #nose "y"
 
-                right_iris_nose.append(self.right_iris_to_nose)
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_nose_x) ** 2
-                            + (self.r_cy - self.mid_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_mid_bottom_x) ** 2
-                            + (self.r_cy - self.mid_mid_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_mid_top_x) ** 2
-                            + (self.r_cy - self.mid_mid_top_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.bottom_nose_x) ** 2
-                            + (self.r_cy - self.bottom_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_more_points_x) ** 2
-                            + (self.r_cy - self.mid_more_points_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.midier_nose_x) ** 2
-                            + (self.r_cy - self.midier_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_mid_mid_bottom_x) ** 2
-                            + (self.r_cy - self.mid_mid_mid_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_medium_mid_x) ** 2
-                            + (self.r_cy - self.mid_medium_mid_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_midier_top_x) ** 2
-                            + (self.r_cy - self.mid_midier_top_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_midier_bottom_x) ** 2
-                            + (self.r_cy - self.mid_midier_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_medium_nose_x) ** 2
-                            + (self.r_cy - self.mid_medium_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_medium_bottom_x) ** 2
-                            + (self.r_cy - self.mid_medium_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid_x) ** 2
-                            + (self.r_cy - self.mid_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid2_x) ** 2
-                            + (self.r_cy - self.mid2_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid3_x) ** 2
-                            + (self.r_cy - self.mid3_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid4_x) ** 2
-                            + (self.r_cy - self.mid4_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid5_x) ** 2
-                            + (self.r_cy - self.mid5_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid6_x) ** 2
-                            + (self.r_cy - self.mid6_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid7_x) ** 2
-                            + (self.r_cy - self.mid7_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid8_x) ** 2
-                            + (self.r_cy - self.mid8_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid9_x) ** 2
-                            + (self.r_cy - self.mid9_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid10_x) ** 2
-                            + (self.r_cy - self.mid10_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                right_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.r_cx - self.mid11_x) ** 2
-                            + (self.r_cy - self.mid11_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(self.left_iris_to_nose)
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_nose_x) ** 2
-                            + (self.l_cy - self.mid_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_mid_bottom_x) ** 2
-                            + (self.l_cy - self.mid_mid_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_mid_top_x) ** 2
-                            + (self.l_cy - self.mid_mid_top_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.bottom_nose_x) ** 2
-                            + (self.l_cy - self.bottom_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_more_points_x) ** 2
-                            + (self.l_cy - self.mid_more_points_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.midier_nose_x) ** 2
-                            + (self.l_cy - self.midier_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_mid_mid_bottom_x) ** 2
-                            + (self.l_cy - self.mid_mid_mid_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_medium_mid_x) ** 2
-                            + (self.l_cy - self.mid_medium_mid_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_midier_top_x) ** 2
-                            + (self.l_cy - self.mid_midier_top_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_midier_bottom_x) ** 2
-                            + (self.l_cy - self.mid_midier_bottom_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_medium_nose_x) ** 2
-                            + (self.l_cy - self.mid_medium_nose_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_medium_bottom_x) ** 2
-                            + (self.l_cy - self.mid_medium_bottom_x) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid_x) ** 2
-                            + (self.l_cy - self.mid_x) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid2_x) ** 2
-                            + (self.l_cy - self.mid2_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid3_x) ** 2
-                            + (self.l_cy - self.mid3_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid4_x) ** 2
-                            + (self.l_cy - self.mid4_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid5_x) ** 2
-                            + (self.l_cy - self.mid5_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid6_x) ** 2
-                            + (self.l_cy - self.mid6_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid7_x) ** 2
-                            + (self.l_cy - self.mid7_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid8_x) ** 2
-                            + (self.l_cy - self.mid8_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid9_x) ** 2
-                            + (self.l_cy - self.mid9_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid10_x) ** 2
-                            + (self.l_cy - self.mid10_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                left_iris_nose.append(
-                    (
-                        sqrt(
-                            (self.l_cx - self.mid11_x) ** 2
-                            + (self.l_cy - self.mid11_y) ** 2
-                        )
-                    )
-                    / self.pixel_mm_ratio
-                )
-                self.minright = right_iris_nose[0]
-                self.minleft = left_iris_nose[0]
+            self.mesh_points = np.array([np.multiply([p.x, p.y], [self.width, self.height]).astype(int) for p in result.multi_face_landmarks[0].landmark])
+            # x do circulo esquerdo/ y do ... raio do ...
+            (self.l_cx, self.l_cy), self.l_radius = cv2.minEnclosingCircle(self.mesh_points[LEFT_IRIS])
+            # x do circulo direito/ y do ... raio do ...
+            (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(self.mesh_points[RIGHT_IRIS])
+            #distancias
+            self.iris_to_iris_line_distance = (sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
+            self.left_iris_to_nose = (sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+            self.right_iris_to_nose = (sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+            self.left_to_right_face = (sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
+            self.right_iris_Glasses = round((sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
+            self.left_iris_Glasses = round((sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
+            self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
+            self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
 
-                # to get the smallest distance bet. the pupils and a horizontal point on the nose
-                for i in right_iris_nose:
-                    if i < self.minright:
-                        self.minright = i
-                for n in left_iris_nose:
-                    if n < self.minleft:
-                        self.minleft = n
-                # end of the smallest thing's verify #
+            self.closest_yR = self.find_closest_number(self.r_cy, self.y_points)
+            self.closest_yL = self.find_closest_number(self.l_cy, self.y_points)
+            print(self.l_cy)
+            print(self.closest_yR)
+            counterR = 0
+            counterL = 0
 
-                if self.minright in right_iris_nose:
-                    index = right_iris_nose.index(self.minright)
-                    self.pointX_R = iris_nose_points_x[index]
-                    self.pointY_R = iris_nose_points_y[index]
-                if self.minleft in left_iris_nose:
-                    index_left = left_iris_nose.index(self.minleft)
-                    self.pointX_L = iris_nose_points_x[index_left]
-                    self.pointY_L = iris_nose_points_y[index_left]
-
-                # midpoint calculation, to get a horizontal line between both pupils
-                self.nose_point_for_dnp_X = int((self.pointX_R + self.pointX_L) / 2)
-                self.nose_point_for_dnp_Y = int((self.pointY_R + self.pointY_L) / 2)
-                # midpoint calculation #~
-
-                # dnp calculation
-                self.dnp_left = (
-                    sqrt(
-                        (self.l_cx - self.nose_point_for_dnp_X) ** 2
-                        + (self.l_cy - self.nose_point_for_dnp_Y) ** 2
-                    )
-                    / self.pixel_mm_ratio
-                )
-                self.dnp_right = (
-                    sqrt(
-                        (self.r_cx - self.nose_point_for_dnp_X) ** 2
-                        + (self.r_cy - self.nose_point_for_dnp_Y) ** 2
-                    )
-                    / self.pixel_mm_ratio
-                )
-                # dnp calculation #
-                self.draw_on_img(self.img)
-
+            for Rplaceholder in self.y_points:
+                if Rplaceholder == self.closest_yR:
+                    counterR += 1
+                    break
+                counterR += 1
+            for Lplaceholder in self.y_points:
+                if Lplaceholder == self.closest_yL:
+                    counterL += 1
+                    break
+                counterL += 1
+            
+            self.closest_xR = int(self.x_points[counterR-1]) 
+            self.closest_xL = int(self.x_points[counterL-1])               
+            # dnp calculation
+            self.dnp_left = sqrt((self.l_cx - self.closest_xL)**2 + (self.l_cy - self.closest_yL)**2) / self.pixel_mm_ratio
+            self.dnp_right = sqrt((self.r_cx - self.closest_xR)**2 + (self.r_cy - self.closest_yR)**2) / self.pixel_mm_ratio
+            # dnp calculation #
+            self.draw_on_img(self.img)
+                
             self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
             self.t_stamp = self.t_stamp
-            cv2.imwrite(
-                "{}\\{}\\{}--{}.png".format(
-                    PATH,
-                    L.Universal["Ready Images Folder"],
-                    SelectedLanguage["Measurements Image"],
-                    self.t_stamp,
-                ),
-                self.img,
-            )
+            cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
             self.put_glasses()
             imagee = Image.open("temp.png")
             self.put_glasses(ImageInput=imagee)

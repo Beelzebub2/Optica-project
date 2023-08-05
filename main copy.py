@@ -900,144 +900,170 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def get_object_size(self, image):
-        if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
-            self.Warning_window(SelectedLanguage["Get Object Size Error"], SelectedLanguage["Error Window Title"])
+
+        if self.comprimento is None or self.altura is None:
+            self.Warning_window(
+                SelectedLanguage["Started Without Measurements Error"],
+                SelectedLanguage["Error Window Title"],
+            )
+            return
+        if self.comprimento not in range(100, 250) or self.altura not in range(20, 100):
+            self.Warning_window(
+                SelectedLanguage["Get Object Size Error"],
+                SelectedLanguage["Error Window Title"],
+            )
             return
         # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
-        self.progressbar.place(relx=0.1, rely= 0.9)
+        self.progressbar.place(relx=0.1, rely=0.9)
         self.progressbar.determinate_speed = 0.3
         self.progressbar.set(0)
         import mediapipe
+
         self.progressbar.start()
         self.mp_face_mesh = mediapipe.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh(static_image_mode=True, refine_landmarks=True, min_detection_confidence=0.5)
+        self.face_mesh = self.mp_face_mesh.FaceMesh(
+            static_image_mode=True,
+            refine_landmarks=True,
+            min_detection_confidence=0.5,
+        )
+        self.image = image
+        img = cv2.imread(image)
+        # ir buscar o aruco marker
+        corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
+        int_corners = np.int0(corners)
+        if len(int_corners) == 0:
+            self.Warning_window(
+                SelectedLanguage["Aruco Marker Not detected"],
+                SelectedLanguage["Error Window Title"],
+            )
+            self.progressbar.stop()
+            self.progressbar.set(0)
+            return
+        # desenhamos linhas verdes a volta do aruco marker sabendo que ele tem um perímetro de 20cm
+        cv2.polylines(img, int_corners, True, (0, 255, 0), 5)
+        # perímetro do aruco
+        # funciona com apenas 1 aruco marker
+        self.aruco_perimeter = cv2.arcLength(corners[0], True)
+        # Pixel to mm ratio
+        self.pixel_mm_ratio = self.aruco_perimeter / 200
         try:
-            self.image = image
-            img = cv2.imread(image)
-            # ir buscar o aruco marker
-            corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
-            int_corners = np.int0(corners)
-            # desenhamos linhas verdes a volta do aruco marker sabendo que ele tem um perímetro de 20cm
-            cv2.polylines(img, int_corners, True, (0, 255, 0), 5)
-            # perímetro do aruco
-            # funciona com apenas 1 aruco marker
-            self.aruco_perimeter = cv2.arcLength(corners[0], True)
-            # Pixel to mm ratio
-            self.pixel_mm_ratio = self.aruco_perimeter / 200
+            self.img = cv2.imread(image)
+            self.imy, self.imx, _ = self.img.shape
+            # opens the image with pil to put them Oculos on
+            # é necessário converter a imagem de Blue green red para Red green blue
+            rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+            # tamanho da imagem
+            self.height, self.width, _ = self.img.shape
+            result = self.face_mesh.process(rgb_img)
+            for facial_landmarks in result.multi_face_landmarks:
+                nose_1 = facial_landmarks.landmark[8] #first nose point
+                nose_2 = facial_landmarks.landmark[168] # second nose point
+                nose_3 = facial_landmarks.landmark[6] #third nose point
+                nose_4 = facial_landmarks.landmark[197] # fourth nose point
+                
+                left_face = facial_landmarks.landmark[127] 
+                right_face = facial_landmarks.landmark[356] 
+                right_face2 = facial_landmarks.landmark[251]
+                left_face2 = facial_landmarks.landmark[21]
+                bottom_Oculos = facial_landmarks.landmark[101]
+                top_Oculos = facial_landmarks.landmark[66]
+                bottom_bottom = facial_landmarks.landmark[111]
+                bottom_b_left = facial_landmarks.landmark[330]
+                bottom_g_left = facial_landmarks.landmark[419]
+
+                self.left_face_x = int(left_face.x * self.width) #left face "x"
+                self.left_face_y = int(left_face.y * self.height) #Left face "y"
+                self.right_face_x = int(right_face.x * self.width) #right face "x"
+                self.right_face_y = int(right_face.y * self.height) #right face "y"
+                self.left_face_x1 = int(left_face2.x * self.width)
+                self.left_face_y1 = int(left_face2.y * self.height)
+                self.right_face_x1 = int(right_face2.x * self.width)
+                self.right_face_y1 = int(right_face2.y * self.height)
+                self.bottom_glasses_x = int(bottom_Oculos.x * self.width)
+                self.bottom_glasses_y = int(bottom_Oculos.y * self.height)
+                self.bottom_bottom_x = int(bottom_bottom.x * self.width)
+                self.bottom_bottom_y = int(bottom_bottom.y * self.height)
+                self.bottom_glasses_left_x = int(bottom_g_left.x * self.width)
+                self.bottom_glasses_left_y = int(bottom_g_left.y * self.height)
+                self.bblx = int(bottom_b_left.x * self.width)
+                self.bbly = int(bottom_b_left.y * self.height)
+                self.tgx = int(top_Oculos.x * self.width)
+                self.tgy = int(top_Oculos.y * self.height)
+                self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
+                self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
+                self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
+                self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
+                # coordenadas não podem ser floats
+                # pontos necessários
+            self.x_points = []
+            self.y_points = []
+            self.get_points(nose_1.x * self.width, nose_1.y * self.height, nose_2.x * self.width, nose_2.y * self.height, 500)
+            self.get_points(nose_2.x * self.width, nose_2.y * self.height, nose_3.x * self.width, nose_3.y * self.height, 500)
+            self.get_points(nose_3.x * self.width, nose_3.y * self.height, nose_4.x * self.width, nose_4.y * self.height, 500)
+
+            self.nose_x = int(nose_2.x * self.width) #nose "x"
+            self.nose_y = int(nose_2.y * self.height) #nose "y"
+
+            self.mesh_points = np.array([np.multiply([p.x, p.y], [self.width, self.height]).astype(int) for p in result.multi_face_landmarks[0].landmark])
+            # x do circulo esquerdo/ y do ... raio do ...
+            (self.l_cx, self.l_cy), self.l_radius = cv2.minEnclosingCircle(self.mesh_points[LEFT_IRIS])
+            # x do circulo direito/ y do ... raio do ...
+            (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(self.mesh_points[RIGHT_IRIS])
+            #distancias
+            self.iris_to_iris_line_distance = (sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
+            self.left_iris_to_nose = (sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+            self.right_iris_to_nose = (sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
+            self.left_to_right_face = (sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
+            self.right_iris_Oculos = round((sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
+            self.left_iris_Oculos = round((sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
+            self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
+            self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
+
+            self.closest_yR = self.find_closest_number(self.r_cy, self.y_points)
+            self.closest_yL = self.find_closest_number(self.l_cy, self.y_points)
+            print(self.l_cy)
+            print(self.closest_yR)
+            counterR = 0
+            counterL = 0
+
+            for Rplaceholder in self.y_points:
+                if Rplaceholder == self.closest_yR:
+                    counterR += 1
+                    break
+                counterR += 1
+            for Lplaceholder in self.y_points:
+                if Lplaceholder == self.closest_yL:
+                    counterL += 1
+                    break
+                counterL += 1
+            
+            self.closest_xR = int(self.x_points[counterR-1]) 
+            self.closest_xL = int(self.x_points[counterL-1])               
+            # dnp calculation
+            self.dnp_left = sqrt((self.l_cx - self.closest_xL)**2 + (self.l_cy - self.closest_yL)**2) / self.pixel_mm_ratio
+            self.dnp_right = sqrt((self.r_cx - self.closest_xR)**2 + (self.r_cy - self.closest_yR)**2) / self.pixel_mm_ratio
+            # dnp calculation #
+            self.draw_on_img(self.img)
+                
+            self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
+            self.t_stamp = self.t_stamp
+            cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
+            self.put_glasses()
+            imagee = Image.open("temp.png")
+            self.put_glasses(ImageInput=imagee)
+            self.progressbar.stop()
+            self.progressbar.set(100)
+            os.remove("temp.png")
         except Exception as error:
+            self.progressbar.set(0)
+            self.progressbar.stop()
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Aruco Marker Not detected"], SelectedLanguage["Error Window Title"])
-
-
-        self.img = cv2.imread(image)
-        self.imy, self.imx, _ = self.img.shape
-        # opens the image with pil to put them Oculos on
-        # é necessário converter a imagem de Blue green red para Red green blue
-        rgb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
-        # tamanho da imagem
-        self.height, self.width, _ = self.img.shape
-        result = self.face_mesh.process(rgb_img)
-        for facial_landmarks in result.multi_face_landmarks:
-            nose_1 = facial_landmarks.landmark[8] #first nose point
-            nose_2 = facial_landmarks.landmark[168] # second nose point
-            nose_3 = facial_landmarks.landmark[6] #third nose point
-            nose_4 = facial_landmarks.landmark[197] # fourth nose point
-            
-            left_face = facial_landmarks.landmark[127] 
-            right_face = facial_landmarks.landmark[356] 
-            right_face2 = facial_landmarks.landmark[251]
-            left_face2 = facial_landmarks.landmark[21]
-            bottom_Oculos = facial_landmarks.landmark[101]
-            top_Oculos = facial_landmarks.landmark[66]
-            bottom_bottom = facial_landmarks.landmark[111]
-            bottom_b_left = facial_landmarks.landmark[330]
-            bottom_g_left = facial_landmarks.landmark[419]
-
-            self.left_face_x = int(left_face.x * self.width) #left face "x"
-            self.left_face_y = int(left_face.y * self.height) #Left face "y"
-            self.right_face_x = int(right_face.x * self.width) #right face "x"
-            self.right_face_y = int(right_face.y * self.height) #right face "y"
-            self.left_face_x1 = int(left_face2.x * self.width)
-            self.left_face_y1 = int(left_face2.y * self.height)
-            self.right_face_x1 = int(right_face2.x * self.width)
-            self.right_face_y1 = int(right_face2.y * self.height)
-            self.bottom_glasses_x = int(bottom_Oculos.x * self.width)
-            self.bottom_glasses_y = int(bottom_Oculos.y * self.height)
-            self.bottom_bottom_x = int(bottom_bottom.x * self.width)
-            self.bottom_bottom_y = int(bottom_bottom.y * self.height)
-            self.bottom_glasses_left_x = int(bottom_g_left.x * self.width)
-            self.bottom_glasses_left_y = int(bottom_g_left.y * self.height)
-            self.bblx = int(bottom_b_left.x * self.width)
-            self.bbly = int(bottom_b_left.y * self.height)
-            self.tgx = int(top_Oculos.x * self.width)
-            self.tgy = int(top_Oculos.y * self.height)
-            self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
-            self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
-            self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
-            self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
-            # coordenadas não podem ser floats
-            # pontos necessários
-        self.x_points = []
-        self.y_points = []
-        self.get_points(nose_1.x * self.width, nose_1.y * self.height, nose_2.x * self.width, nose_2.y * self.height, 500)
-        self.get_points(nose_2.x * self.width, nose_2.y * self.height, nose_3.x * self.width, nose_3.y * self.height, 500)
-        self.get_points(nose_3.x * self.width, nose_3.y * self.height, nose_4.x * self.width, nose_4.y * self.height, 500)
-
-        self.nose_x = int(nose_2.x * self.width) #nose "x"
-        self.nose_y = int(nose_2.y * self.height) #nose "y"
-
-        self.mesh_points = np.array([np.multiply([p.x, p.y], [self.width, self.height]).astype(int) for p in result.multi_face_landmarks[0].landmark])
-        # x do circulo esquerdo/ y do ... raio do ...
-        (self.l_cx, self.l_cy), self.l_radius = cv2.minEnclosingCircle(self.mesh_points[LEFT_IRIS])
-        # x do circulo direito/ y do ... raio do ...
-        (self.r_cx, self.r_cy), self.r_radius = cv2.minEnclosingCircle(self.mesh_points[RIGHT_IRIS])
-        #distancias
-        self.iris_to_iris_line_distance = (sqrt((self.r_cx - self.l_cx)**2 + (self.r_cy - self.l_cy)**2)) / self.pixel_mm_ratio
-        self.left_iris_to_nose = (sqrt((self.l_cx - self.nose_x)**2 + (self.l_cy - self.nose_y)**2)) / self.pixel_mm_ratio
-        self.right_iris_to_nose = (sqrt((self.r_cx - self.nose_x)**2 + (self.r_cy - self.nose_y)**2)) / self.pixel_mm_ratio
-        self.left_to_right_face = (sqrt((self.left_face_x - self.right_face_x)**2 + (self.left_face_y - self.right_face_y)**2)) / self.pixel_mm_ratio
-        self.right_iris_Oculos = round((sqrt((self.r_cx - self.bmx)**2 + (self.r_cy - self.bmy)**2)) / self.pixel_mm_ratio, 2)
-        self.left_iris_Oculos = round((sqrt((self.l_cx - self.bmlx)**2 + (self.l_cy - self.bmly)**2)) / self.pixel_mm_ratio, 2)
-        self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
-        self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
-
-        self.closest_yR = self.find_closest_number(self.r_cy, self.y_points)
-        self.closest_yL = self.find_closest_number(self.l_cy, self.y_points)
-        print(self.l_cy)
-        print(self.closest_yR)
-        counterR = 0
-        counterL = 0
-
-        for Rplaceholder in self.y_points:
-            if Rplaceholder == self.closest_yR:
-                counterR += 1
-                break
-            counterR += 1
-        for Lplaceholder in self.y_points:
-            if Lplaceholder == self.closest_yL:
-                counterL += 1
-                break
-            counterL += 1
-        
-        self.closest_xR = int(self.x_points[counterR-1]) 
-        self.closest_xL = int(self.x_points[counterL-1])               
-        # dnp calculation
-        self.dnp_left = sqrt((self.l_cx - self.closest_xL)**2 + (self.l_cy - self.closest_yL)**2) / self.pixel_mm_ratio
-        self.dnp_right = sqrt((self.r_cx - self.closest_xR)**2 + (self.r_cy - self.closest_yR)**2) / self.pixel_mm_ratio
-        # dnp calculation #
-        self.draw_on_img(self.img)
-            
-        self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
-        self.t_stamp = self.t_stamp
-        cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
-        self.put_glasses()
-        imagee = Image.open("temp.png")
-        self.put_glasses(ImageInput=imagee)
-        self.progressbar.stop()
-        self.progressbar.set(100)
-        os.remove("temp.png")
-        
+            self.Warning_window(
+                f"error: {error}",
+                SelectedLanguage["Error Window Title"],
+                self.MB_TOPMOST,
+            )
 
 #DEBUG
 #end_time = datetime.now()
