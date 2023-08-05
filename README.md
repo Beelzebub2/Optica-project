@@ -14,6 +14,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.2 5/08/2023 (Linux/Windows)
+
++   Tested and implemented better measeurement algorithm
+
 Beta 2.2 30/06/2023 (Linux/Windows)
 
 +   Fixed exception raised when width and/or height of glasses wasn't input by the user
