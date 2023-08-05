@@ -1,11 +1,14 @@
 import os
 import ctypes
 import queue
+import psutil
 import sys
+import win32api
 import threading
 import cv2
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from tktooltip import ToolTip
+from configparser import ConfigParser
 import customtkinter
 from PIL import ImageTk, Image
 import numpy as np
@@ -14,41 +17,51 @@ from math import sqrt
 from win10toast import ToastNotifier
 import Languages.Languages_packs as L
 import platform
-import colorama
+from colorama import Fore, Style, init
+import traceback
 from colorama import Fore, Style
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
 
-# Constants for process priority classes
-HIGH_PRIORITY_CLASS = 0x00000080
-# Get the current process ID
-pid = os.getpid()
-# Open the current process with necessary access rights
-handle = ctypes.windll.kernel32.OpenProcess(
-    ctypes.c_uint(0x1000),  # PROCESS_ALL_ACCESS
-    ctypes.c_int(False),
-    ctypes.c_uint(pid)
-)
-# Set the priority of the process to high
-ctypes.windll.kernel32.SetPriorityClass(handle, HIGH_PRIORITY_CLASS)
-# Close the handle
-ctypes.windll.kernel32.CloseHandle(handle)
-colorama.init()
 def error_handler(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except Exception as error:
-            import traceback
             tb = traceback.extract_tb(error.__traceback__)
+            file = tb[-1].filename  # Extract the filename
             line = tb[-1].lineno
-            error_message = f"An error occurred at line {line}: {error}"
-            print(Fore.RED + Style.BRIGHT + "\n" + error_message + "\n" + Style.RESET_ALL)
-            with open("error_log.txt", "a") as file:
-                file.write(error_message + "\n")
+            error_message = f"An error occurred in {Fore.CYAN + Style.BRIGHT}{file}{Style.RESET_ALL}\n{Fore.CYAN + Style.BRIGHT}Line: {line}{Fore.RED} error: {error} {Style.RESET_ALL}"
+            print(
+                Fore.YELLOW
+                + Style.BRIGHT
+                + "\n"
+                + error_message
+                + "\n"
+                + Style.RESET_ALL
+            )
+
     return wrapper
+
+@error_handler
+def high_priority():
+    # Constants for process priority classes
+    HIGH_PRIORITY_CLASS = 0x00000080
+    # Get the current process ID
+    pid = os.getpid()
+    # Open the current process with necessary access rights
+    handle = ctypes.windll.kernel32.OpenProcess(
+        ctypes.c_uint(0x1000),  # PROCESS_ALL_ACCESS
+        ctypes.c_int(False),
+        ctypes.c_uint(pid),
+    )
+    # Set the priority of the process to high
+    ctypes.windll.kernel32.SetPriorityClass(handle, HIGH_PRIORITY_CLASS)
+    # Close the handle
+    ctypes.windll.kernel32.CloseHandle(handle)
 
 @error_handler
 def run_in_thread(func):
@@ -59,9 +72,10 @@ def run_in_thread(func):
 
 @error_handler
 def read_config():
-    from configparser import ConfigParser
     PATH = os.path.dirname(os.path.realpath(__file__))
-    Config_File = os.path.join(PATH, L.Universal["Necessary Files Folder"], "config.ini")
+    Config_File = os.path.join(
+        PATH, L.Universal["Necessary Files Folder"], "config.ini"
+    )
     Config = ConfigParser()
     Config.read(Config_File)
 
@@ -72,7 +86,7 @@ def read_config():
         "German": (L.German, "Allemand"),
         "FR": (L.French, "Français"),
         "ES": (L.Spanish, "Espanõl")
-        #"Pt-Br": (L.PT_br, "Português-br"),
+        # "Pt-Br": (L.PT_br, "Português-br"),
     }
     SelectedLanguage, Option_lg_df = language_mapping.get(Language)
 
@@ -98,16 +112,61 @@ def read_config():
     match Style:
         case "Dark":
             customtkinter.set_appearance_mode("dark")
-        case "Light", "":
+        case "Light":
             customtkinter.set_appearance_mode("light")
-    return PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme
+
+    return (
+        PATH,
+        Config,
+        Config_File,
+        SelectedLanguage,
+        Option_th_df,
+        Option_lg_df,
+        Program_Theme,
+    )
+
+@error_handler
+def get_gpu_info():
+    gpu_name = win32api.EnumDisplayDevices(None, 0).DeviceString
+    return gpu_name
+
+
+@error_handler
+def get_system_info():
+    user = os.getlogin()
+    user_pc = os.getenv("COMPUTERNAME")
+    os_version = platform.version()
+    os_edition = platform.win32_edition()
+    architecture = platform.architecture()[0]
+    ram = round(psutil.virtual_memory().total / (1024**3), 0)  # RAM in GB
+    processor = platform.processor()
+    gpu = get_gpu_info()
+
+    system_info = f"**User:** {user}\n**Pc:** {user_pc}\n**Windows Version:** {os_version}\n**Edition:** {os_edition}\n**Architecture:** {architecture}\n"
+    system_info += f"**RAM:** {ram} GB\n"
+    system_info += f"**Processor:** {processor}\n"
+    system_info += f"**GPU:** {gpu}\n"
+    system_info += (
+        "\n**-------------------------------------------------------------------**\n"
+    )
+
+    return system_info
 
 # Important variables
-PATH, Config, Config_File, SelectedLanguage, Option_th_df, Option_lg_df, Program_Theme = read_config()
-user = os.getlogin()
-user_pc = os.getenv("COMPUTERNAME")
-customtkinter.set_default_color_theme(Program_Theme)  # Themes: blue (default), dark-blue, green
+(
+    PATH,
+    Config,
+    Config_File,
+    SelectedLanguage,
+    Option_th_df,
+    Option_lg_df,
+    Program_Theme,
+) = read_config()
+customtkinter.set_default_color_theme(
+    Program_Theme
+)  # Themes: blue (default), dark-blue, green
 image_extensions = r"*.jpg *.jpeg *.png"
+# needed for stopping ctypes window duplication
 thread_completed = threading.Event()
 answer_queue = queue.Queue()
 window_lock = threading.Lock()
@@ -118,29 +177,6 @@ RIGHT_EYE=[33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 16
 LEFT_IRIS = [474,475, 476, 477]
 RIGHT_IRIS = [469, 470, 471, 472]
 count_imgs = []
-
-# It takes an image, converts it to grayscale, applies an adaptive threshold to it, finds contours,
-# and returns the contours that have an area greater than 2000
-class HomogeneousBgDetector():
-    def __init__(self):
-        pass
-
-    @error_handler
-    def detect_objects(self, img):
-        # Convert Image to grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # Create a Mask with adaptive threshold
-        mask = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 19, 5)
-        # Find contours
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #cv2.imshow("mask", mask)
-        objects_contours = []
-        for cnt in contours:
-            area = cv2.contourArea(cnt)
-            if area > 2000:
-                #cnt = cv2.approxPolyDP(cnt, 0.03*cv2.arcLength(cnt, True), True)
-                objects_contours.append(cnt)
-        return objects_contours
 
 # gets center of main monitor so it can later initialize the program on screen center instead of random location
 @error_handler
@@ -155,7 +191,6 @@ def get_monitor_from_coord(x, y):
 
 parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
-detector = HomogeneousBgDetector()
 
 @error_handler
 class GUI(customtkinter.CTk):
@@ -790,13 +825,17 @@ class GUI(customtkinter.CTk):
     @run_in_thread
     def send_errors_discord(self, error):
         try:
-            from discord_webhook import DiscordWebhook, DiscordEmbed
-            error = str(f"User: {user}\nPc: {user_pc}\nWindows Version: {platform.platform()}\nArchitecture: {platform.architecture()}\n\n" + error)
-            embed = DiscordEmbed(title='error', description=error, color='ff0000')
+            system_info = get_system_info()
+            error = str(
+                f"{system_info}\n" + "**ERROR**:\n" + f"**__{error}__**"
+            )  # Replace the error message with the actual error
+            embed = DiscordEmbed(title="Data", description=error, color="ff0000")
             embed.set_timestamp()
-            webhook = DiscordWebhook(url='https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe')
+            webhook = DiscordWebhook(
+                url="https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe"
+            )
             webhook.add_embed(embed)
-            response = webhook.execute()
+            webhook.execute()
         except Exception:
             pass
        
@@ -1010,4 +1049,6 @@ def run():
  
 if __name__ == '__main__':
     app = GUI()
+    high_priority()
+    init()
     run()
