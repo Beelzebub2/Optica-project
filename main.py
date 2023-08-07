@@ -18,6 +18,7 @@ from PIL import ImageTk, Image
 from win10toast import ToastNotifier
 from configparser import ConfigParser
 from colorama import Fore, Style, init
+from CTkMessagebox import CTkMessagebox
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -191,6 +192,9 @@ def get_monitor_from_coord(x, y):
 parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 
+customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
 @error_handler
 class GUI(customtkinter.CTk):
     def __init__(self):
@@ -275,7 +279,7 @@ class GUI(customtkinter.CTk):
 
         # ICON
         self.icon_img = ImageTk.PhotoImage(self.icon_img)
-        self.panel_icon = customtkinter.CTkLabel(self.Frame4, image=self.icon_img)
+        self.panel_icon = customtkinter.CTkLabel(self.Frame4, image=self.icon_img, text="")
         self.panel_icon.place(relx=0.5, rely=0.52, anchor=CENTER)
         # ICON #
         
@@ -315,7 +319,7 @@ class GUI(customtkinter.CTk):
                                                             command=self.add_faces, 
                                                             image=self.add_face_img,
                                                             compound=RIGHT, 
-                                                            border_color=self.fg_color)
+                                                            border_color=self._fg_color)
         self.button_add_Face.place(relx=0.5, rely=0.6, anchor=CENTER)
         self.tooltip(self.button_add_Face, SelectedLanguage["Add Faces Button Tooltip"])
         # ADD FACE BUTTON #
@@ -407,7 +411,7 @@ class GUI(customtkinter.CTk):
     @error_handler
     def settings(self): 
         if self.window != None:
-            self.window.lift()
+            self.window.focus()
             self.toast.show_toast(
                 "Optica",
                 f'{SelectedLanguage["Duplicate Window"]}',
@@ -463,7 +467,7 @@ class GUI(customtkinter.CTk):
                                                     corner_radius=8, 
                                                     hover=True, 
                                                     text=SelectedLanguage["About Button"], 
-                                                    command=self.about, 
+                                                    command=self.betterAbout, 
                                                     image=self.about_img,
                                                     compound=RIGHT)
         self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
@@ -498,6 +502,7 @@ class GUI(customtkinter.CTk):
         self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
         self.OptionmenuTheme.set(Option_th_df)
         self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
+    
 
     @error_handler
     def change_language(self, choice):
@@ -617,9 +622,8 @@ class GUI(customtkinter.CTk):
             self.send_errors_discord(error)
             
     @error_handler
-    @run_in_thread
-    def about(self):
-        self.Warning_window(SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
+    def betterAbout(self):
+        CTkMessagebox(message=SelectedLanguage["About Window Info"], title=SelectedLanguage["About Window Title"], fg_color=self._fg_color)
 
     @error_handler
     def browse_Face(self):
@@ -637,7 +641,7 @@ class GUI(customtkinter.CTk):
             self.Face_image = Image.open(self.Face_path)
             self.Face_image = self.Face_image.resize((250, 250), Image.Resampling.LANCZOS)
             self.Face_image = ImageTk.PhotoImage(self.Face_image)
-            self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
+            self.panel_Face = customtkinter.CTkLabel(image=self.Face_image, master=self, text="")
             self.panel_Face.place(relx=0.33, rely=0.45, anchor=CENTER)
         #button
             self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
@@ -681,7 +685,7 @@ class GUI(customtkinter.CTk):
             self.Oculos_image = Image.open(self.Oculos_path)
             self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
             self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
-            self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
+            self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image, master=self, text="")
             self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=CENTER)
         #button
             self.button_Start = customtkinter.CTkButton(self.Frame2, 
