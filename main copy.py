@@ -1,25 +1,24 @@
 import os
-import ctypes
+import sys
+import cv2
 import queue
 import psutil
-import sys
+import ctypes
 import win32api
-import threading
-import cv2
-from tkinter import filedialog, RIGHT, CENTER, LEFT
-from tktooltip import ToolTip
-from configparser import ConfigParser
-import customtkinter
-from PIL import ImageTk, Image
-import numpy as np
-from datetime import datetime
-from math import sqrt
-from win10toast import ToastNotifier
-import Languages.Languages_packs as L
 import platform
-from colorama import Fore, Style, init
+import threading
 import traceback
-from colorama import Fore, Style
+import numpy as np
+import customtkinter
+import Languages.Languages_packs as L
+from math import sqrt
+from tktooltip import ToolTip
+from datetime import datetime
+from PIL import ImageTk, Image
+from win10toast import ToastNotifier
+from configparser import ConfigParser
+from colorama import Fore, Style, init
+from tkinter import filedialog, RIGHT, CENTER, LEFT
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 #
@@ -896,6 +895,33 @@ class GUI(customtkinter.CTk):
                 closest_number = number
 
         return int(closest_number)
+    
+    @error_handler
+    @run_in_thread
+    def detect_aruco_marker(self, image):
+        # Load the Aruco dictionary
+        aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_1000)
+
+        # Convert the image to grayscale
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Detect Aruco markers
+        parameters = cv2.aruco.DetectorParameters_create()
+        corners, ids, _ = cv2.aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
+
+        # Draw lines around detected markers
+        cv2.aruco.drawDetectedMarkers(image, corners, ids)
+
+        # Calculate pixels per centimeter
+        if len(corners) > 0:
+            # Assuming the marker size is 5 cm x 5 cm
+            marker_size = 5.0
+            pixel_mm_ratio = np.mean([np.linalg.norm(corners[i][0][0] - corners[i][0][1]) for i in range(len(corners))]) / marker_size
+            self.pixel_mm_ratio = round(pixel_mm_ratio / 10, 2)
+
+            return self.pixel_mm_ratio
+
+        return None
 
     @error_handler
     @run_in_thread
@@ -926,26 +952,11 @@ class GUI(customtkinter.CTk):
             refine_landmarks=True,
             min_detection_confidence=0.5,
         )
+        
         self.image = image
         img = cv2.imread(image)
-        # ir buscar o aruco marker
-        corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
-        int_corners = np.int0(corners)
-        if len(int_corners) == 0:
-            self.Warning_window(
-                SelectedLanguage["Aruco Marker Not detected"],
-                SelectedLanguage["Error Window Title"],
-            )
-            self.progressbar.stop()
-            self.progressbar.set(0)
-            return
-        # desenhamos linhas verdes a volta do aruco marker sabendo que ele tem um perímetro de 20cm
-        cv2.polylines(img, int_corners, True, (0, 255, 0), 5)
-        # perímetro do aruco
-        # funciona com apenas 1 aruco marker
-        self.aruco_perimeter = cv2.arcLength(corners[0], True)
-        # Pixel to mm ratio
-        self.pixel_mm_ratio = self.aruco_perimeter / 200
+        self.detect_aruco_marker(img)
+
         try:
             self.img = cv2.imread(image)
             self.imy, self.imx, _ = self.img.shape
@@ -1064,10 +1075,6 @@ class GUI(customtkinter.CTk):
                 SelectedLanguage["Error Window Title"],
                 self.MB_TOPMOST,
             )
-
-#DEBUG
-#end_time = datetime.now()
-#print('Duration: {}'.format(end_time - start_time))
 
 @error_handler
 def run():
