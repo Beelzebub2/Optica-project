@@ -1,4 +1,4 @@
-# To be changed 2.2
+# To be changed 2.3
 ![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge&logo=v)
 ![Static Badge](https://img.shields.io/badge/Language-python-3776ab?style=for-the-badge&logo=python)
 ![Static Badge](https://img.shields.io/badge/Made%20by-Ricardo%20Martins%20and%20Jo%C3%A3o%20Marcos-851ebc?style=for-the-badge)  
@@ -13,6 +13,11 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 ## Changes
 ```diff
+
+Beta 2.3 7/08/2023 (Linux/Windows)
+
+!   Working on Multiprocessing
++   Implemented new Aruco detection algorithm
 
 Beta 2.2 5/08/2023 (Linux/Windows)
 
