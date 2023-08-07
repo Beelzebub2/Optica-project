@@ -841,7 +841,6 @@ class GUI(customtkinter.CTk):
             webhook.execute()
         except Exception:
             pass
-       
 
     @error_handler
     def salvar(self):
