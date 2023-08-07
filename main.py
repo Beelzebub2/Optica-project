@@ -144,7 +144,7 @@ def get_system_info():
     os_version = platform.version()
     os_edition = platform.win32_edition()
     architecture = platform.architecture()[0]
-    ram = round(psutil.virtual_memory().total / (1024**3), 0)  # RAM in GB
+    ram = round(psutil.virtual_memory().total / (1024**3), 0)  # RAM in GBs
     processor = platform.processor()
     gpu = get_gpu_info()
 
