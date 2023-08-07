@@ -23,10 +23,10 @@ from colorama import Fore, Style, init
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
+
 def error_handler(func):
     def wrapper(*args, **kwargs):
         try:
