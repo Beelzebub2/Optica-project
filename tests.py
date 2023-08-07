@@ -18,6 +18,7 @@ from PIL import ImageTk, Image
 from win10toast import ToastNotifier
 from configparser import ConfigParser
 from colorama import Fore, Style, init
+from CTkMessagebox import CTkMessagebox
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -194,15 +195,20 @@ aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
-class App(customtkinter.CTk):
+@error_handler
+class GUI(customtkinter.CTk):
     def __init__(self):
+        # By using super().__init__(), the subclass can invoke the initializer of its superclass, 
+        # allowing it to perform any necessary initialization steps defined in the superclass. 
+        # This ensures that both the subclass-specific attributes and the superclass attributes are properly initialized.        super().__init__()
         super().__init__()
-        self.title("{} {}".format(L.Universal["Title"], L.Universal["Version"]))
-        self.toast = ToastNotifier()
-        self.wm_iconbitmap("{}\\icon.ico".format(L.Universal["Necessary Files Folder"]))
-        self.attributes('-topmost',True)
+        # WINDOW SETTINGS
         WIDTH = 1280
         HEIGHT = 720
+        self.toast = ToastNotifier()
+        self.title("{} {}".format(L.Universal["Title"], L.Universal["Version"]))
+        self.wm_iconbitmap("{}\\icon.ico".format(L.Universal["Necessary Files Folder"]))
+        self.attributes('-topmost',True)
         self.minsize(WIDTH, HEIGHT)
         self.maxsize(1920, 1080)
         self.bind('<Escape>', lambda e: self.exit())
@@ -215,8 +221,11 @@ class App(customtkinter.CTk):
         self.window = None
         self.MB_TOPMOST = 0x00040000
         self.window_opened = False
+        
+        
+        # WINDOW SETTINGS #
 
-
+        # VISUALS
         self.settings_img = ImageTk.PhotoImage(Image.open("{}/visuals1.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
         self.add_face_img = ImageTk.PhotoImage(Image.open("{}/visuals2.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
         self.bug_report_img = ImageTk.PhotoImage(Image.open("{}/visuals3.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
@@ -229,7 +238,10 @@ class App(customtkinter.CTk):
         self.icon_img = Image.open("{}/visuals10.png".format(L.Universal["Necessary Files Folder"])).resize((220, 100))
         self.about_img = ImageTk.PhotoImage(Image.open("{}/visuals11.png".format(L.Universal["Necessary Files Folder"])).resize((20, 20)))
         
-
+        # VISUALS #
+        
+        # FRAMES
+        # I have no idea which is which I knew when they were made, now only god knows.
         Frame1 = customtkinter.CTkFrame(self)
         Frame1.pack
 
@@ -252,7 +264,7 @@ class App(customtkinter.CTk):
                             rely=0, 
                             relwidth=0.18, 
                             relheight=0.12)
-        
+
         self.Frame4 = customtkinter.CTkFrame(self.Frame2, 
                                             width=200, 
                                             height=155)                    
@@ -263,13 +275,15 @@ class App(customtkinter.CTk):
                             relwidth=1, 
                             relheight=0.261)
         self.attributes('-topmost',False)
+        # FRAMES #
 
-
+        # ICON
         self.icon_img = ImageTk.PhotoImage(self.icon_img)
-        self.panel_icon = customtkinter.CTkLabel(self.Frame4, image=self.icon_img)
+        self.panel_icon = customtkinter.CTkLabel(self.Frame4, image=self.icon_img, text="")
         self.panel_icon.place(relx=0.5, rely=0.52, anchor=CENTER)
-
-
+        # ICON #
+        
+        # SETTINGS BUTTON
         self.settings_bt = customtkinter.CTkButton(self.Frame3, 
                                                     text=SelectedLanguage["Settings Button"],
                                                     image=self.settings_img,
@@ -277,8 +291,9 @@ class App(customtkinter.CTk):
                                                     command=self.settings)
         self.settings_bt.place(relx=0.5, rely=0.47, anchor=CENTER)
         self.tooltip(self.settings_bt, SelectedLanguage["Settings Button Tooltip"])
+        # SETTINGS BUTTON #
 
-
+        # SELECT FACE BUTTON
         self.button_get_Face = customtkinter.CTkButton(self.Frame2, 
                                                             width=200, 
                                                             height=50, 
@@ -291,8 +306,23 @@ class App(customtkinter.CTk):
                                                             compound=RIGHT)
         self.button_get_Face.place(relx=0.5, rely=0.32, anchor=CENTER)
         self.tooltip(self.button_get_Face, SelectedLanguage["Select Face Button tooltip"])
-        
 
+        self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
+                                                                width=200, 
+                                                                height=50, 
+                                                                border_width=0, 
+                                                                corner_radius=8, 
+                                                                hover=True, 
+                                                                text=SelectedLanguage["Select Glasses Button"], 
+                                                                command=self.browse_Oculos, 
+                                                                image=self.glasses_img,
+                                                                compound=RIGHT,
+                                                                state="disabled")
+        self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
+        self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
+        # SELECT FACE BUTTON #
+
+        # ADD FACE BUTTON
         self.button_add_Face = customtkinter.CTkButton(self.Frame2, 
                                                             width=200, 
                                                             height=50, 
@@ -306,36 +336,78 @@ class App(customtkinter.CTk):
                                                             border_color=self._fg_color)
         self.button_add_Face.place(relx=0.5, rely=0.6, anchor=CENTER)
         self.tooltip(self.button_add_Face, SelectedLanguage["Add Faces Button Tooltip"])
+        # ADD FACE BUTTON #
+
+        # INPUT FRAME LENGTH 
+        self.entry_comprimento = customtkinter.CTkEntry(self.Frame2, 
+                                                        placeholder_text="mm")
+        self.entry_comprimento.place(relx=0.5, rely=0.72, anchor=CENTER)
+        self.tooltip(self.entry_comprimento, SelectedLanguage["Length Tooltip"])
+        # INPUT FRAME LENGTH #
+
+        # INPUT FRAME HEIGHT
+        self.entry_altura = customtkinter.CTkEntry(self.Frame2, 
+                                                    placeholder_text="mm")
+        self.entry_altura.place(relx=0.5, rely=0.82, anchor=CENTER)
+        self.tooltip(self.entry_altura, SelectedLanguage["Height Tooltip"])
+        # INPUT FRAME HEIGHT #
+
+        # INPUT FRAME LENGTH LABEL
+        self.label_comprimento = customtkinter.CTkLabel(self.Frame2, 
+                                                        text=SelectedLanguage["Length Label"])
+        self.label_comprimento.place(relx=0.5, rely=0.67, anchor=CENTER)
+        # INPUT FRAME LENGTH LABEL #
         
+        # INPUT FRAME HEIGHT LABEL
+        self.label_altura = customtkinter.CTkLabel(self.Frame2, 
+                                                    text=SelectedLanguage["Height Label"])
+        self.label_altura.place(relx=0.5, rely=0.77, anchor=CENTER)
+        # INPUT FRAME HEIGHT LABEL #
+
+        # SAVE MEASUREMENTS BUTTON
+        self.button_medidas_oculos = customtkinter.CTkButton(self.Frame2, 
+                                                                width=200, 
+                                                                height=50, 
+                                                                border_width=0, 
+                                                                corner_radius=8, 
+                                                                hover=True, 
+                                                                text=SelectedLanguage["Save Measurements Button"], 
+                                                                command=lambda:self.salvar(), 
+                                                                image=self.save_img,
+                                                                compound=RIGHT)
+        self.button_medidas_oculos.place(relx=0.5, rely=0.9, anchor=CENTER)
+        self.tooltip(self.button_medidas_oculos, SelectedLanguage["Save Measurements Button Tooltip"])
+        # SAVE MEASUREMENTS BUTTON #
+
+        self.open_results_bt = customtkinter.CTkButton(self.Frame2, 
+                                                        width=200, 
+                                                        height=50, 
+                                                        border_width=0, 
+                                                        corner_radius=8, 
+                                                        hover=True, 
+                                                        text=SelectedLanguage["Open Results Folder Button"], 
+                                                        command=self.open_results, 
+                                                        image=self.folder_img,
+                                                        compound=RIGHT)
+        self.open_results_bt.place(relx=0.5, rely=0.53, anchor=CENTER)
+        self.tooltip(self.open_results_bt, SelectedLanguage["Open Results Folder Tooltip"])
+
+        # PROGRESS BAR
+        self.progressbar = customtkinter.CTkProgressBar(self.Frame4)
+        
+        # PROGRESS BAR #
+    
 
     # SETTINGS WINDOW  
     @error_handler
     def closed_set_window(self):
         self.window.destroy()
         self.window = None
-    
-    @error_handler
-    @run_in_thread
-    def Warning_window(self, message, title, Options=False):
-        # Acquire the lock to check and update the window status
-        with window_lock:
-            if self.window_opened:
-                # Window is already open, so return immediately
-                return
-        self.window_opened = True
-        if not Options:
-            answer_queue.put(ctypes.windll.user32.MessageBoxW(0, message, title, self.MB_TOPMOST))
-        else:
-            answer_queue.put(ctypes.windll.user32.MessageBoxW(0, message, title, 1 | self.MB_TOPMOST))
-        with window_lock:
-            self.window_opened = False
-            thread_completed.set()
 
-        
     @error_handler
     def settings(self): 
         if self.window != None:
-            self.window.lift()
+            self.window.focus()
             self.toast.show_toast(
                 "Optica",
                 f'{SelectedLanguage["Duplicate Window"]}',
@@ -391,7 +463,7 @@ class App(customtkinter.CTk):
                                                     corner_radius=8, 
                                                     hover=True, 
                                                     text=SelectedLanguage["About Button"], 
-                                                    command=self.about, 
+                                                    command=self.betterAbout, 
                                                     image=self.about_img,
                                                     compound=RIGHT)
         self.about_bt.place(relx=0.05, rely=0.45, anchor="w")
@@ -426,6 +498,7 @@ class App(customtkinter.CTk):
         self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
         self.OptionmenuTheme.set(Option_th_df)
         self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
+    
 
     @error_handler
     def change_language(self, choice):
@@ -463,10 +536,16 @@ class App(customtkinter.CTk):
 
     @error_handler
     def restart_program(self):
-        self.Warning_window(SelectedLanguage["Restart"], SelectedLanguage["Restart title"], True)
-        thread_completed.wait()
-        answer = answer_queue.get()
-        if answer == 1:
+        restart = CTkMessagebox(
+                                title=SelectedLanguage["Restart title"], 
+                                message=SelectedLanguage["Restart"], icon="question", 
+                                option_2=SelectedLanguage["Yes"], 
+                                option_1=SelectedLanguage["No"], 
+                                option_focus=SelectedLanguage["Yes"], 
+                                justify="center"
+                                )
+        answer = restart.get()
+        if answer == SelectedLanguage["Yes"]:
             python = sys.executable
             print(python)
             os.execl(python, python, *sys.argv)
@@ -482,10 +561,17 @@ class App(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def exit(self):
-        self.Warning_window(SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], True)
-        thread_completed.wait()
-        answer = answer_queue.get()
-        if answer == 1:
+        exit_program = CTkMessagebox(
+                                     title=SelectedLanguage["Exit Window Title"], 
+                                     message=SelectedLanguage["Exit Window"], 
+                                     icon="question", 
+                                     option_2=SelectedLanguage["Yes"], 
+                                     option_1=SelectedLanguage["No"], 
+                                     option_focus=SelectedLanguage["Yes"], 
+                                     justify="center"
+                                     )
+        answer = exit_program.get()
+        if answer == SelectedLanguage["Yes"]:
             #self.destroy()
             self.quit()
             sys.exit()
@@ -507,7 +593,12 @@ class App(customtkinter.CTk):
         except Exception as error:
                 error = str(error)
                 self.send_errors_discord(error)
-                self.Warning_window(SelectedLanguage["Report Bug Error Window"], SelectedLanguage["Error Window Title"])
+                CTkMessagebox(
+                              title=SelectedLanguage["Error Window Title"], 
+                              message=SelectedLanguage["Report Bug Error Window"], 
+                              icon="cancel", 
+                              justify="center"
+                              )
 
     @error_handler
     def tooltip(self, bt, mensg):
@@ -524,30 +615,37 @@ class App(customtkinter.CTk):
     @error_handler
     def add_faces(self):
         try:
-            os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
-            self.toast.show_toast(
-                "Optica",
-                f'{SelectedLanguage["Add Faces Toast notification"]}',
-                duration = 15,
-                icon_path = "icon.ico",
-                threaded = True,
-            )
+            warning = CTkMessagebox(
+                                    title="Optica", 
+                                    message=SelectedLanguage["Add Faces Toast notification"], 
+                                    icon="warning", 
+                                    option_1="Continue", 
+                                    option_2="Cancel", 
+                                    justify="center", 
+                                    option_focus="Continue"
+                                    )
+            response = warning.get()
+            if response == "Continue":
+                os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
+            if response == "Cancel":
+                return
+            else:
+                return
         except Exception as error:
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Open Faces Folder Error"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Open Faces Folder Error"], icon="Cancel", justify="center")
 
     @error_handler
     def open_results(self):
         try:
             os.startfile("{}\\{}".format(PATH, L.Universal["Ready Images Folder"]))
         except Exception as error:
-            self.Warning_window(SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Open Results Folder Error"], icon="cancel", justify="center")
             self.send_errors_discord(error)
             
     @error_handler
-    @run_in_thread
-    def about(self):
-        self.Warning_window(SelectedLanguage["About Window Info"], SelectedLanguage["About Window Title"])
+    def betterAbout(self):
+        CTkMessagebox(message=SelectedLanguage["About Window Info"], title=SelectedLanguage["About Window Title"], justify="center")
 
     @error_handler
     def browse_Face(self):
@@ -561,25 +659,28 @@ class App(customtkinter.CTk):
                                                                                     filetypes=[(SelectedLanguage["Browse Window Hint"], 
                                                                                     image_extensions)]) 
         #image
+        self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
+        self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
         if os.path.isfile(self.Face_path):
             self.Face_image = Image.open(self.Face_path)
             self.Face_image = self.Face_image.resize((250, 250), Image.Resampling.LANCZOS)
             self.Face_image = ImageTk.PhotoImage(self.Face_image)
-            self.panel_Face = customtkinter.CTkLabel(image=self.Face_image)
+            self.panel_Face = customtkinter.CTkLabel(image=self.Face_image, master=self, text="")
             self.panel_Face.place(relx=0.33, rely=0.45, anchor=CENTER)
+            self.button_get_Oculos.configure(state="enabled", hover=True)
         #button
-            self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
-                                                                width=200, 
-                                                                height=50, 
-                                                                border_width=0, 
-                                                                corner_radius=8, 
-                                                                hover=True, 
-                                                                text=SelectedLanguage["Select Glasses Button"], 
-                                                                command=self.browse_Oculos, 
-                                                                image=self.glasses_img,
-                                                                compound=RIGHT)
-            self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
-            self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
+            #self.button_get_Oculos = customtkinter.CTkButton(self.Frame2, 
+            #                                                    width=200, 
+            #                                                    height=50, 
+            #                                                    border_width=0, 
+            #                                                    corner_radius=8, 
+            #                                                    hover=True, 
+            #                                                    text=SelectedLanguage["Select Glasses Button"], 
+            #                                                    command=self.browse_Oculos, 
+            #                                                    image=self.glasses_img,
+            #                                                    compound=RIGHT)
+            #self.button_get_Oculos.place(relx=0.5, rely=0.39, anchor=CENTER)
+            #self.tooltip(self.button_get_Oculos, SelectedLanguage["Select Glasses Button Tooltip"])
 
     @error_handler
     def open_faces_folder():
@@ -609,7 +710,7 @@ class App(customtkinter.CTk):
             self.Oculos_image = Image.open(self.Oculos_path)
             self.Oculos_image = self.Oculos_image.resize((700, 250), Image.Resampling.LANCZOS)
             self.Oculos_image = ImageTk.PhotoImage(self.Oculos_image)
-            self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image)
+            self.panel_Oculos = customtkinter.CTkLabel(image=self.Oculos_image, master=self, text="")
             self.panel_Oculos.place(relx=0.73, rely=0.45, anchor=CENTER)
         #button
             self.button_Start = customtkinter.CTkButton(self.Frame2, 
@@ -632,7 +733,7 @@ class App(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Tutorial Open Error Window"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Tutorial Open Error Window"], icon="cancel", justify="center")
     
     @error_handler
     @run_in_thread
@@ -765,7 +866,6 @@ class App(customtkinter.CTk):
             webhook.execute()
         except Exception:
             pass
-       
 
     @error_handler
     def salvar(self):
@@ -773,16 +873,7 @@ class App(customtkinter.CTk):
             self.comprimento = float(self.entry_comprimento.get())
             self.altura = float(self.entry_altura.get())
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
-                self.Warning_window(SelectedLanguage["Save  Measurements Error"], SelectedLanguage["Error Window Title"])
-                self.toast.show_toast(
-                "Optica",
-                SelectedLanguage["Save Measurements Error Notification"],
-                duration = 10,
-                icon_path = "icon.ico",
-                threaded = True,
-                )
-                return
-
+                CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel", justify="center")
             self.toast.show_toast(
             "Optica",
             "{}\n{}{}\n{}{}".format(SelectedLanguage["Save Measurements Success Tooltip"], SelectedLanguage["Length"], self.comprimento, SelectedLanguage["Height"], self.altura),
@@ -793,7 +884,7 @@ class App(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel", justify="center")
             
     @error_handler
     @run_in_thread
@@ -854,19 +945,20 @@ class App(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def get_object_size(self, image):
-
-        if self.comprimento is None or self.altura is None:
-            self.Warning_window(
-                SelectedLanguage["Started Without Measurements Error"],
-                SelectedLanguage["Error Window Title"],
-            )
+        try:
+            if self.comprimento is None or self.altura is None:
+                CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Started Without Measurements Error"], icon="cancel", justify="center")
+                return
+        except Exception as error:
+            error = str(error)
+            self.send_errors_discord(error)
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Started Without Measurements Error"], icon="cancel", justify="center")
             return
         if self.comprimento not in range(100, 250) or self.altura not in range(20, 100):
-            self.Warning_window(
-                SelectedLanguage["Get Object Size Error"],
-                SelectedLanguage["Error Window Title"],
-            )
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Get Object Size Error"], icon="cancel", justify="center")
             return
+        
+
         # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
         self.progressbar.place(relx=0.1, rely=0.9)
         self.progressbar.determinate_speed = 0.3
@@ -998,13 +1090,14 @@ class App(customtkinter.CTk):
             self.progressbar.stop()
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(
-                f"error: {error}",
-                SelectedLanguage["Error Window Title"],
-                self.MB_TOPMOST,
-            )
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message="Error", icon="cancel", justify="center")
 
-
-if __name__ == "__main__":
-    app = App()
+@error_handler
+def run():
     app.mainloop()
+ 
+if __name__ == '__main__':
+    app = GUI()
+    high_priority()
+    init()
+    run()
