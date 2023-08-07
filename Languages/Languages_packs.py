@@ -97,8 +97,12 @@ PT_pt = {
     ##/\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Imagem-com-oculos",
-    "Measurements Image": "Medidas"
+    "Measurements Image": "Medidas",
     ##/\ File Names /\##
+    ## IDK ##
+    "Yes": "Sim",
+    "No": "Não",
+    ##/\ IDK /\##
 }
 
 English = {
@@ -189,8 +193,12 @@ English = {
     ##/\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Image-with-Glasses",
-    "Measurements Image": "Measurements"
+    "Measurements Image": "Measurements",
     ##/\ File Names /\##
+    ## IDK ##
+    "Yes": "Yes",
+    "No": "No"
+    ##/\ IDK /\##
 }
 
 Spanish = {
@@ -281,8 +289,12 @@ Spanish = {
     ##/\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Imagen-con-Gafas",
-    "Measurements Image": "Medidas"
+    "Measurements Image": "Medidas",
     ##/\ File Names /\##
+    ## IDK ##
+    "Yes": "Si",
+    "No": "No"
+    ##/\ IDK /\##
 }
 
 French = {
@@ -373,8 +385,12 @@ French = {
     ##/\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Image-avec-Lunettes",
-    "Measurements Image": "Mesures"
+    "Measurements Image": "Mesures",
     ##/\ File Names /\##
+    ## IDK ##
+    "Yes": "Oui",
+    "No": "Non",
+    ##/\ IDK /\##
 }
 German = {
     "Blue": "Blau",
@@ -448,4 +464,8 @@ German = {
     "Right Height": "OC rechts: ",
     "Image With Glasses": "Bild-mit-Brille",
     "Measurements Image": "Maße",
+    ## IDK ##
+    "Yes": "Ja",
+    "No": "NEIN",
+    ##/\ IDK /\##
 }

@@ -389,25 +389,7 @@ class GUI(customtkinter.CTk):
     def closed_set_window(self):
         self.window.destroy()
         self.window = None
-    
-    @error_handler
-    @run_in_thread
-    def Warning_window(self, message, title, Options=False):
-        # Acquire the lock to check and update the window status
-        with window_lock:
-            if self.window_opened:
-                # Window is already open, so return immediately
-                return
-        self.window_opened = True
-        if not Options:
-            answer_queue.put(ctypes.windll.user32.MessageBoxW(0, message, title, self.MB_TOPMOST))
-        else:
-            answer_queue.put(ctypes.windll.user32.MessageBoxW(0, message, title, 1 | self.MB_TOPMOST))
-        with window_lock:
-            self.window_opened = False
-            thread_completed.set()
 
-        
     @error_handler
     def settings(self): 
         if self.window != None:
@@ -540,10 +522,16 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     def restart_program(self):
-        self.Warning_window(SelectedLanguage["Restart"], SelectedLanguage["Restart title"], True)
-        thread_completed.wait()
-        answer = answer_queue.get()
-        if answer == 1:
+        restart = CTkMessagebox(
+                                title=SelectedLanguage["Restart title"], 
+                                message=SelectedLanguage["Restart"], icon="question", 
+                                option_2=SelectedLanguage["Yes"], 
+                                option_1=SelectedLanguage["No"], 
+                                option_focus=SelectedLanguage["Yes"], 
+                                justify="center"
+                                )
+        answer = restart.get()
+        if answer == SelectedLanguage["Yes"]:
             python = sys.executable
             print(python)
             os.execl(python, python, *sys.argv)
@@ -559,10 +547,17 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def exit(self):
-        self.Warning_window(SelectedLanguage["Exit Window"], SelectedLanguage["Exit Window Title"], True)
-        thread_completed.wait()
-        answer = answer_queue.get()
-        if answer == 1:
+        exit_program = CTkMessagebox(
+                                     title=SelectedLanguage["Exit Window Title"], 
+                                     message=SelectedLanguage["Exit Window"], 
+                                     icon="question", 
+                                     option_2=SelectedLanguage["Yes"], 
+                                     option_1=SelectedLanguage["No"], 
+                                     option_focus=SelectedLanguage["Yes"], 
+                                     justify="center"
+                                     )
+        answer = exit_program.get()
+        if answer == SelectedLanguage["Yes"]:
             #self.destroy()
             self.quit()
             sys.exit()
@@ -584,7 +579,12 @@ class GUI(customtkinter.CTk):
         except Exception as error:
                 error = str(error)
                 self.send_errors_discord(error)
-                self.Warning_window(SelectedLanguage["Report Bug Error Window"], SelectedLanguage["Error Window Title"])
+                CTkMessagebox(
+                              title=SelectedLanguage["Error Window Title"], 
+                              message=SelectedLanguage["Report Bug Error Window"], 
+                              icon="cancel", 
+                              justify="center"
+                              )
 
     @error_handler
     def tooltip(self, bt, mensg):
@@ -601,29 +601,37 @@ class GUI(customtkinter.CTk):
     @error_handler
     def add_faces(self):
         try:
-            os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
-            self.toast.show_toast(
-                "Optica",
-                f'{SelectedLanguage["Add Faces Toast notification"]}',
-                duration = 15,
-                icon_path = "icon.ico",
-                threaded = True,
-            )
+            warning = CTkMessagebox(
+                                    title="Optica", 
+                                    message=SelectedLanguage["Add Faces Toast notification"], 
+                                    icon="warning", 
+                                    option_1="Continue", 
+                                    option_2="Cancel", 
+                                    justify="center", 
+                                    option_focus="Continue"
+                                    )
+            response = warning.get()
+            if response == "Continue":
+                os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
+            if response == "Cancel":
+                return
+            else:
+                return
         except Exception as error:
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Open Faces Folder Error"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Open Faces Folder Error"], icon="Cancel", justify="center")
 
     @error_handler
     def open_results(self):
         try:
             os.startfile("{}\\{}".format(PATH, L.Universal["Ready Images Folder"]))
         except Exception as error:
-            self.Warning_window(SelectedLanguage["Open Results Folder Error"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Open Results Folder Error"], icon="cancel", justify="center")
             self.send_errors_discord(error)
             
     @error_handler
     def betterAbout(self):
-        CTkMessagebox(message=SelectedLanguage["About Window Info"], title=SelectedLanguage["About Window Title"], fg_color=self._fg_color)
+        CTkMessagebox(message=SelectedLanguage["About Window Info"], title=SelectedLanguage["About Window Title"], justify="center")
 
     @error_handler
     def browse_Face(self):
@@ -708,7 +716,7 @@ class GUI(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Tutorial Open Error Window"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Tutorial Open Error Window"], icon="cancel", justify="center")
     
     @error_handler
     @run_in_thread
@@ -848,7 +856,7 @@ class GUI(customtkinter.CTk):
             self.comprimento = float(self.entry_comprimento.get())
             self.altura = float(self.entry_altura.get())
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
-                CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel")
+                CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel", justify="center")
             self.toast.show_toast(
             "Optica",
             "{}\n{}{}\n{}{}".format(SelectedLanguage["Save Measurements Success Tooltip"], SelectedLanguage["Length"], self.comprimento, SelectedLanguage["Height"], self.altura),
@@ -859,7 +867,7 @@ class GUI(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel")
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel", justify="center")
             
     @error_handler
     @run_in_thread
@@ -920,19 +928,20 @@ class GUI(customtkinter.CTk):
     @error_handler
     @run_in_thread
     def get_object_size(self, image):
-
-        if self.comprimento is None or self.altura is None:
-            self.Warning_window(
-                SelectedLanguage["Started Without Measurements Error"],
-                SelectedLanguage["Error Window Title"],
-            )
+        try:
+            if self.comprimento is None or self.altura is None:
+                CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Started Without Measurements Error"], icon="cancel", justify="center")
+                return
+        except Exception as error:
+            error = str(error)
+            self.send_errors_discord(error)
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Started Without Measurements Error"], icon="cancel", justify="center")
             return
         if self.comprimento not in range(100, 250) or self.altura not in range(20, 100):
-            self.Warning_window(
-                SelectedLanguage["Get Object Size Error"],
-                SelectedLanguage["Error Window Title"],
-            )
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Get Object Size Error"], icon="cancel", justify="center")
             return
+        
+
         # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
         self.progressbar.place(relx=0.1, rely=0.9)
         self.progressbar.determinate_speed = 0.3
@@ -1064,11 +1073,7 @@ class GUI(customtkinter.CTk):
             self.progressbar.stop()
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(
-                f"error: {error}",
-                SelectedLanguage["Error Window Title"],
-                self.MB_TOPMOST,
-            )
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message="Error", icon="cancel", justify="center")
 
 @error_handler
 def run():
