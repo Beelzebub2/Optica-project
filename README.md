@@ -14,6 +14,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.4 8/08/2023 (Linux/Windows)
+
++   Changed all warning/error messages from ctypes to custom tkinter
+
 Beta 2.4 7/08/2023 (Linux/Windows)
 
 !   Working on better warning/info labels
