@@ -849,16 +849,7 @@ class GUI(customtkinter.CTk):
             self.comprimento = float(self.entry_comprimento.get())
             self.altura = float(self.entry_altura.get())
             if self.comprimento not in range(100,250) or self.altura not in range(20, 100):
-                self.Warning_window(SelectedLanguage["Save  Measurements Error"], SelectedLanguage["Error Window Title"])
-                self.toast.show_toast(
-                "Optica",
-                SelectedLanguage["Save Measurements Error Notification"],
-                duration = 10,
-                icon_path = "icon.ico",
-                threaded = True,
-                )
-                return
-
+                CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel")
             self.toast.show_toast(
             "Optica",
             "{}\n{}{}\n{}{}".format(SelectedLanguage["Save Measurements Success Tooltip"], SelectedLanguage["Length"], self.comprimento, SelectedLanguage["Height"], self.altura),
@@ -869,7 +860,7 @@ class GUI(customtkinter.CTk):
         except Exception as error:
             error = str(error)
             self.send_errors_discord(error)
-            self.Warning_window(SelectedLanguage["Save Measurements Error Notification"], SelectedLanguage["Error Window Title"])
+            CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel")
             
     @error_handler
     @run_in_thread
