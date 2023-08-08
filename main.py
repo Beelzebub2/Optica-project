@@ -671,23 +671,26 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     def browse_Oculos(self):
-        if os.path.exists(L.Universal["Glasses Folder"]):
-            self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"],
-                                                                initialdir = L.Universal["Glasses Folder"], 
-                                                                filetypes=[(SelectedLanguage["Browse Window Hint"], 
-                                                                image_extensions)])
-            if not os.path.isfile(self.Oculos_path):
-                self.Oculos_path_saved = self.Oculos_path_saved
+        try:
+            if os.path.exists(L.Universal["Glasses Folder"]):
+                self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"],
+                                                                    initialdir = L.Universal["Glasses Folder"], 
+                                                                    filetypes=[(SelectedLanguage["Browse Window Hint"], 
+                                                                    image_extensions)])
+                if not os.path.isfile(self.Oculos_path):
+                    self.Oculos_path_saved = self.Oculos_path_saved
+                else:
+                    self.Oculos_path_saved = self.Oculos_path
             else:
-                self.Oculos_path_saved = self.Oculos_path
-        else:
-            self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"], 
-                                                                filetypes=[(SelectedLanguage["Browse Window Hint"], 
-                                                                image_extensions)])
-            if not os.path.isfile(self.Oculos_path):
-                self.Oculos_path_saved = self.Oculos_path_saved
-            else:
-                self.Oculos_path_saved = self.Oculos_path
+                self.Oculos_path = filedialog.askopenfilename(title=SelectedLanguage["Browse Glasses Window Title"], 
+                                                                    filetypes=[(SelectedLanguage["Browse Window Hint"], 
+                                                                    image_extensions)])
+                if not os.path.isfile(self.Oculos_path):
+                    self.Oculos_path_saved = self.Oculos_path_saved
+                else:
+                    self.Oculos_path_saved = self.Oculos_path
+        except Exception as error:
+            return
         #image
         if os.path.isfile(self.Oculos_path):
             self.Oculos_image = Image.open(self.Oculos_path)
