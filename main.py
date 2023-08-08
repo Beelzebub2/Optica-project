@@ -543,8 +543,6 @@ class GUI(customtkinter.CTk):
 
         # SETTINGS WINDOW #
 
-
-    @error_handler
     @run_in_thread
     def exit(self):
         exit_program = CTkMessagebox(
@@ -721,7 +719,6 @@ class GUI(customtkinter.CTk):
             self.send_errors_discord(error)
             CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Tutorial Open Error Window"], icon="cancel", justify="center")
     
-    @error_handler
     @run_in_thread
     def draw_on_img(self, img):
         cv2.circle(img, self.center_left, int(self.l_radius), (255,0,255), 2, cv2.LINE_AA)
@@ -850,7 +847,6 @@ class GUI(customtkinter.CTk):
                 threaded = True,
             )
 
-    @error_handler
     @run_in_thread
     def send_errors_discord(self, error):
         try:
@@ -887,7 +883,6 @@ class GUI(customtkinter.CTk):
             self.send_errors_discord(error)
             CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Save  Measurements Error"], icon="cancel", justify="center")
             
-    @error_handler
     @run_in_thread
     def get_points(self, x1, y1, x2, y2, num):
         self.y_points.append(y1)
@@ -916,7 +911,6 @@ class GUI(customtkinter.CTk):
 
         return int(closest_number)
     
-    @error_handler
     @run_in_thread
     def detect_aruco_marker(self, image):
         # Load the Aruco dictionary
@@ -943,7 +937,6 @@ class GUI(customtkinter.CTk):
 
         return None
 
-    @error_handler
     @run_in_thread
     def get_object_size(self, image):
         try:
