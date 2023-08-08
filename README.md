@@ -18,6 +18,7 @@ Beta 2.4 8/08/2023 (Linux/Windows)
 
 +   Changed all warning/error messages from ctypes to custom tkinter
 +   Fixed exception raised when closing the glasses folder without selecting any image
++   Fixed discrepancy on values shown on image and on screen
 
 Beta 2.4 7/08/2023 (Linux/Windows)
 
