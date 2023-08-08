@@ -952,7 +952,6 @@ class GUI(customtkinter.CTk):
             CTkMessagebox(title=SelectedLanguage["Error Window Title"], message=SelectedLanguage["Get Object Size Error"], icon="cancel", justify="center")
             return
         
-
         # para o caso de haver muitas imagens assim ficam todas com o nome na ordem que foram processadas
         self.progressbar.place(relx=0.1, rely=0.9)
         self.progressbar.determinate_speed = 0.3
