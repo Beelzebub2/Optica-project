@@ -737,7 +737,7 @@ class GUI(customtkinter.CTk):
         cv2.putText(img, SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm", (10, self.imy - 155), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
         cv2.putText(img, SelectedLanguage["Right eye"], (self.bmx, self.bmy), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
         cv2.putText(img, SelectedLanguage["Left eye"], (self.bmlx, self.bmly), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
-        self.medidas_label = customtkinter.CTkLabel(self, text=SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm\n" + SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.dnp_left, 2)} mm\n" + SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.dnp_right, 2)} mm\n" + SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm\n" + SelectedLanguage["Right Height"] + f"{round(self.right_iris_Oculos, 2)} mm\n" + SelectedLanguage["Left Height"] + f"{round(self.left_iris_Oculos, 2)} mm")
+        self.medidas_label = customtkinter.CTkLabel(self, text=SelectedLanguage["Pupillary Distance"] + f"{round(self.iris_to_iris_line_distance, 2)} mm\n" + SelectedLanguage["Left Nasopupillary distance"] + f"{round(self.dnp_left, 2)} mm\n" + SelectedLanguage["Right Nasopupillary distance"] + f"{round(self.dnp_right, 2)} mm\n" + SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm\n" + SelectedLanguage["Right Height"] + f"{round(self.r_iris_glasses, 2)} mm\n" + SelectedLanguage["Left Height"] + f"{round(self.l_iris_glasses, 2)} mm")
         self.medidas_label.configure(font=("Courier", 18, "bold"), anchor="w", justify=LEFT)
         self.medidas_label.place(relx= 0.2, rely=0.67)
 
@@ -816,13 +816,28 @@ class GUI(customtkinter.CTk):
             left_iris_x = self.x + x
             left_iris_y = self.y + y
         
-        r_iris_glasses = (sqrt((self.r_cx - right_iris_x)**2 + (self.r_cy - right_iris_y)**2)) / self.pixel_mm_ratio # measurement of the r ALT
-        l_iris_glasses = (sqrt((self.l_cx - left_iris_x)**2 + (self.l_cy - left_iris_y)**2)) / self.pixel_mm_ratio # l ALT
+        self.r_iris_glasses = (sqrt((self.r_cx - right_iris_x)**2 + (self.r_cy - right_iris_y)**2)) / self.pixel_mm_ratio # measurement of the r ALT
+        self.l_iris_glasses = (sqrt((self.l_cx - left_iris_x)**2 + (self.l_cy - left_iris_y)**2)) / self.pixel_mm_ratio # l ALT
         cv2.line(self.img, (right_iris_x, right_iris_y), (int(self.r_cx), int(self.r_cy)), (0,0,0), 1, cv2.LINE_AA)
         cv2.line(self.img, (left_iris_x, left_iris_y), (int(self.l_cx), int(self.l_cy)), (0,0,0), 1, cv2.LINE_AA)
-        cv2.putText(self.img, SelectedLanguage["Right Height"] + f"{round(r_iris_glasses, 2)} mm", (10, self.imy - 205), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(self.img, SelectedLanguage["Left Height"] + f"{round(l_iris_glasses, 2)} mm", (10, self.imy - 255), cv2.FONT_HERSHEY_DUPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+
+        cv2.putText(
+                    self.img, 
+                    SelectedLanguage["Right Height"] + f"{round(self.r_iris_glasses, 2)} mm", 
+                    (10, self.imy - 205), cv2.FONT_HERSHEY_DUPLEX, 2, 
+                    (255,255,255), 2, cv2.LINE_AA
+                    )
+        
+        cv2.putText(
+                    self.img, 
+                    SelectedLanguage["Left Height"] + f"{round(self.l_iris_glasses, 2)} mm", 
+                    (10, self.imy - 255), 
+                    cv2.FONT_HERSHEY_DUPLEX, 2, 
+                    (255,255,255), 2, cv2.LINE_AA
+                    )
+        
         cv2.imwrite("temp.png", self.img)
+
         Oculos_img = Image.new('RGBA', (width_pic,height_pic), (0, 0, 0, 0)) # creates a blank image same size as the original
         Oculos_img.paste(img, (0,0)) # pastes the original on the blank 
         Oculos_img.paste(mask_Oculos, (x, y), mask=mask_Oculos) # pastes the Oculos over the original over the blank
@@ -1060,12 +1075,11 @@ class GUI(customtkinter.CTk):
             self.dnp_left = sqrt((self.l_cx - self.closest_xL)**2 + (self.l_cy - self.closest_yL)**2) / self.pixel_mm_ratio
             self.dnp_right = sqrt((self.r_cx - self.closest_xR)**2 + (self.r_cy - self.closest_yR)**2) / self.pixel_mm_ratio
             # dnp calculation #
-            self.draw_on_img(self.img)
-                
             self.t_stamp = datetime.now().strftime("%I_%M_%S_%p--%d_%m_%Y")
             self.t_stamp = self.t_stamp
             cv2.imwrite("{}\\{}\\{}--{}.png".format(PATH, L.Universal["Ready Images Folder"], SelectedLanguage["Measurements Image"], self.t_stamp), self.img)
             self.put_glasses()
+            self.draw_on_img(self.img)
             imagee = Image.open("temp.png")
             self.put_glasses(ImageInput=imagee)
             self.progressbar.stop()
