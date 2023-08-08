@@ -1,5 +1,5 @@
 # To be changed 2.4
-![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.1-8ebff1?style=for-the-badge&logo=v)
+![Static Badge](https://img.shields.io/badge/Version-Beta%20v2.4-8ebff1?style=for-the-badge&logo=v)
 ![Static Badge](https://img.shields.io/badge/Language-python-3776ab?style=for-the-badge&logo=python)
 ![Static Badge](https://img.shields.io/badge/Made%20by-Ricardo%20Martins%20and%20Jo%C3%A3o%20Marcos-851ebc?style=for-the-badge)  
  
