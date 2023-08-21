@@ -5,7 +5,7 @@ dist/
 build/
 .vscode/
 Languages/__pycache__/
-
+Optica-project/.vscode/
 
 # Files
 "create\ app.bat"

@@ -69,7 +69,8 @@ def high_priority():
 @error_handler
 def run_in_thread(func):
     def wrapper(*args, **kwargs):
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)
+        thread = threading.Thread(
+            target=func, args=args, kwargs=kwargs, daemon=True)
         thread.start()
 
     return wrapper
@@ -255,8 +256,10 @@ class GUI(customtkinter.CTk):
         WIDTH = 1280
         HEIGHT = 720
         self.toast = ToastNotifier()
-        self.title("{} {}".format(L.Universal["Title"], L.Universal["Version"]))
-        self.wm_iconbitmap("{}\\icon.ico".format(L.Universal["Necessary Files Folder"]))
+        self.title("{} {}".format(
+            L.Universal["Title"], L.Universal["Version"]))
+        self.wm_iconbitmap("{}\\icon.ico".format(
+            L.Universal["Necessary Files Folder"]))
         self.attributes("-topmost", True)
         self.minsize(WIDTH, HEIGHT)
         self.maxsize(1920, 1080)
@@ -324,7 +327,8 @@ class GUI(customtkinter.CTk):
         ).resize((220, 100))
         self.about_img = ImageTk.PhotoImage(
             Image.open(
-                "{}/visuals11.png".format(L.Universal["Necessary Files Folder"])
+                "{}/visuals11.png".format(
+                    L.Universal["Necessary Files Folder"])
             ).resize((20, 20))
         )
 
@@ -337,15 +341,19 @@ class GUI(customtkinter.CTk):
 
         self.Frame2 = customtkinter.CTkFrame(self, width=250, height=725)
         self.Frame2.pack()
-        self.Frame2.place(anchor="w", relx=0.0, rely=0.5, relwidth=0.2, relheight=1.1)
+        self.Frame2.place(anchor="w", relx=0.0, rely=0.5,
+                          relwidth=0.2, relheight=1.1)
 
         self.Frame3 = customtkinter.CTkFrame(self, width=250, height=1)
         self.Frame3.pack(expand=True)
-        self.Frame3.place(anchor="ne", relx=1, rely=0, relwidth=0.18, relheight=0.12)
+        self.Frame3.place(anchor="ne", relx=1, rely=0,
+                          relwidth=0.18, relheight=0.12)
 
-        self.Frame4 = customtkinter.CTkFrame(self.Frame2, width=200, height=155)
+        self.Frame4 = customtkinter.CTkFrame(
+            self.Frame2, width=200, height=155)
         self.Frame4.pack(expand=True)
-        self.Frame4.place(anchor="n", relx=0.5, rely=0, relwidth=1, relheight=0.261)
+        self.Frame4.place(anchor="n", relx=0.5, rely=0,
+                          relwidth=1, relheight=0.261)
         self.attributes("-topmost", False)
         # FRAMES #
 
@@ -366,7 +374,8 @@ class GUI(customtkinter.CTk):
             command=self.settings,
         )
         self.settings_bt.place(relx=0.5, rely=0.47, anchor=CENTER)
-        self.tooltip(self.settings_bt, SelectedLanguage["Settings Button Tooltip"])
+        self.tooltip(self.settings_bt,
+                     SelectedLanguage["Settings Button Tooltip"])
         # SETTINGS BUTTON #
 
         # SELECT FACE BUTTON
@@ -403,7 +412,8 @@ class GUI(customtkinter.CTk):
             border_color=self._fg_color,
         )
         self.button_add_Face.place(relx=0.5, rely=0.6, anchor=CENTER)
-        self.tooltip(self.button_add_Face, SelectedLanguage["Add Faces Button Tooltip"])
+        self.tooltip(self.button_add_Face,
+                     SelectedLanguage["Add Faces Button Tooltip"])
         # ADD FACE BUTTON #
 
         # INPUT FRAME LENGTH
@@ -411,11 +421,13 @@ class GUI(customtkinter.CTk):
             self.Frame2, placeholder_text="mm"
         )
         self.entry_comprimento.place(relx=0.5, rely=0.72, anchor=CENTER)
-        self.tooltip(self.entry_comprimento, SelectedLanguage["Length Tooltip"])
+        self.tooltip(self.entry_comprimento,
+                     SelectedLanguage["Length Tooltip"])
         # INPUT FRAME LENGTH #
 
         # INPUT FRAME HEIGHT
-        self.entry_altura = customtkinter.CTkEntry(self.Frame2, placeholder_text="mm")
+        self.entry_altura = customtkinter.CTkEntry(
+            self.Frame2, placeholder_text="mm")
         self.entry_altura.place(relx=0.5, rely=0.82, anchor=CENTER)
         self.tooltip(self.entry_altura, SelectedLanguage["Height Tooltip"])
         # INPUT FRAME HEIGHT #
@@ -498,7 +510,8 @@ class GUI(customtkinter.CTk):
         Width = 420
         Height = 240
         self.window.title(SelectedLanguage["Settings Button"])
-        self.window.wm_iconbitmap(f"{L.Universal['Necessary Files Folder']}\\icon.ico")
+        self.window.wm_iconbitmap(
+            f"{L.Universal['Necessary Files Folder']}\\icon.ico")
         self.window.attributes("-topmost", True)
         self.window.attributes("-topmost", False)
         self.window.focus_set()
@@ -513,7 +526,8 @@ class GUI(customtkinter.CTk):
         screen_height = current_screen.height
         x_cord = int((screen_width / 2) - (Width / 2))
         y_cord = int((screen_height / 2) - (Height / 2))
-        self.window.geometry("{}x{}+{}+{}".format(Width, Height, x_cord, y_cord))
+        self.window.geometry(
+            "{}x{}+{}+{}".format(Width, Height, x_cord, y_cord))
 
         self.switch = customtkinter.CTkSwitch(
             master=self.window,
@@ -539,7 +553,8 @@ class GUI(customtkinter.CTk):
             compound=RIGHT,
         )
         self.report.place(relx=0.05, rely=0.3, anchor="w")
-        self.tooltip(self.report, SelectedLanguage["Report Bug Button Tooltip"])
+        self.tooltip(
+            self.report, SelectedLanguage["Report Bug Button Tooltip"])
 
         self.about_bt = customtkinter.CTkButton(
             self.window,
@@ -575,7 +590,8 @@ class GUI(customtkinter.CTk):
 
         self.Optionmenu = customtkinter.CTkOptionMenu(
             self.window,
-            values=["Português-pt", "English", "Español", "Français", "Allemand"],
+            values=["Português-pt", "English",
+                    "Español", "Français", "Allemand"],
             command=self.change_language,
             hover=True,
         )
@@ -597,7 +613,8 @@ class GUI(customtkinter.CTk):
         )
         self.OptionmenuTheme.place(relx=0.95, rely=0.45, anchor="e")
         self.OptionmenuTheme.set(Option_th_df)
-        self.tooltip(self.OptionmenuTheme, SelectedLanguage["Color Theme Tooltip"])
+        self.tooltip(self.OptionmenuTheme,
+                     SelectedLanguage["Color Theme Tooltip"])
 
     @error_handler
     def change_language(self, choice):
@@ -728,7 +745,8 @@ class GUI(customtkinter.CTk):
             )
             response = warning.get()
             if response == "Continue":
-                os.startfile("{}\\{}".format(PATH, L.Universal["Faces Folder"]))
+                os.startfile("{}\\{}".format(
+                    PATH, L.Universal["Faces Folder"]))
             if response == "Cancel":
                 return
             else:
@@ -745,7 +763,8 @@ class GUI(customtkinter.CTk):
     @error_handler
     def open_results(self):
         try:
-            os.startfile("{}\\{}".format(PATH, L.Universal["Ready Images Folder"]))
+            os.startfile("{}\\{}".format(
+                PATH, L.Universal["Ready Images Folder"]))
         except Exception as error:
             CTkMessagebox(
                 title=SelectedLanguage["Error Window Title"],
@@ -769,12 +788,14 @@ class GUI(customtkinter.CTk):
             self.Face_path = filedialog.askopenfilename(
                 title=SelectedLanguage["Browse Face Window Title"],
                 initialdir=L.Universal["Faces Folder"],
-                filetypes=[(SelectedLanguage["Browse Window Hint"], image_extensions)],
+                filetypes=[
+                    (SelectedLanguage["Browse Window Hint"], image_extensions)],
             )
         else:
             self.Face_path = filedialog.askopenfilename(
                 title=SelectedLanguage["Browse Face Window Title"],
-                filetypes=[(SelectedLanguage["Browse Window Hint"], image_extensions)],
+                filetypes=[
+                    (SelectedLanguage["Browse Window Hint"], image_extensions)],
             )
         # image
         if os.path.isfile(self.Face_path):
@@ -818,7 +839,8 @@ class GUI(customtkinter.CTk):
                     title=SelectedLanguage["Browse Glasses Window Title"],
                     initialdir=L.Universal["Glasses Folder"],
                     filetypes=[
-                        (SelectedLanguage["Browse Window Hint"], image_extensions)
+                        (SelectedLanguage["Browse Window Hint"],
+                         image_extensions)
                     ],
                 )
                 if not os.path.isfile(self.Oculos_path):
@@ -829,7 +851,8 @@ class GUI(customtkinter.CTk):
                 self.Oculos_path = filedialog.askopenfilename(
                     title=SelectedLanguage["Browse Glasses Window Title"],
                     filetypes=[
-                        (SelectedLanguage["Browse Window Hint"], image_extensions)
+                        (SelectedLanguage["Browse Window Hint"],
+                         image_extensions)
                     ],
                 )
                 if not os.path.isfile(self.Oculos_path):
@@ -863,13 +886,15 @@ class GUI(customtkinter.CTk):
                 compound=RIGHT,
             )
             self.button_Start.place(relx=0.5, rely=0.46, anchor=CENTER)
-            self.tooltip(self.button_Start, SelectedLanguage["Start Button Tooltip"])
+            self.tooltip(self.button_Start,
+                         SelectedLanguage["Start Button Tooltip"])
 
     @error_handler
     def tutorial(self):
         try:
             os.startfile(
-                "{}\\tutorial.mp4".format(L.Universal["Necessary Files Folder"])
+                "{}\\tutorial.mp4".format(
+                    L.Universal["Necessary Files Folder"])
             )
         except Exception as error:
             error = str(error)
@@ -884,10 +909,12 @@ class GUI(customtkinter.CTk):
     @run_in_thread
     def draw_on_img(self, img):
         cv2.circle(
-            img, self.center_left, int(self.l_radius), (255, 0, 255), 2, cv2.LINE_AA
+            img, self.center_left, int(
+                self.l_radius), (255, 0, 255), 2, cv2.LINE_AA
         )
         cv2.circle(
-            img, self.center_right, int(self.r_radius), (255, 0, 255), 2, cv2.LINE_AA
+            img, self.center_right, int(
+                self.r_radius), (255, 0, 255), 2, cv2.LINE_AA
         )
         cv2.line(
             img, (self.closest_xL, self.closest_yL), self.center_left, (0, 255, 0), 1
@@ -904,7 +931,8 @@ class GUI(customtkinter.CTk):
         )
         cv2.line(img, self.center_right, self.center_left, (0, 0, 255), 1)
         cv2.rectangle(
-            img, (10, self.imy - 265), (self.imx, self.imy), (0, 0, 0), 350, cv2.FILLED
+            img, (10, self.imy - 265), (self.imx,
+                                        self.imy), (0, 0, 0), 350, cv2.FILLED
         )
         cv2.putText(
             img,
@@ -941,7 +969,8 @@ class GUI(customtkinter.CTk):
         )
         cv2.putText(
             img,
-            SelectedLanguage["Face Length"] + f"{round(self.left_to_right_face, 2)} mm",
+            SelectedLanguage["Face Length"] +
+            f"{round(self.left_to_right_face, 2)} mm",
             (10, self.imy - 155),
             cv2.FONT_HERSHEY_DUPLEX,
             2,
@@ -997,8 +1026,10 @@ class GUI(customtkinter.CTk):
             x / width_original
         )  # its a ratio to get from the old x point (non rescaled image) to the new x point on the rescaled img
         y_transforming_ratio = y / height_original  # that but for the Y point
-        self.x = int(width_res * x_transforming_ratio)  # variable of the resized x
-        self.y = int(height_res * y_transforming_ratio)  # that but for the y point
+        # variable of the resized x
+        self.x = int(width_res * x_transforming_ratio)
+        # that but for the y point
+        self.y = int(height_res * y_transforming_ratio)
 
     @error_handler
     def put_glasses(self, ImageInput=None):  # function to put glasses on the face
@@ -1028,7 +1059,8 @@ class GUI(customtkinter.CTk):
         width_oculos_resized = int(
             mask_Oculos.size[0]
         )  # gets the resized size of the self.width
-        height_oculos_resized = int(mask_Oculos.size[1])  # same but self.height
+        height_oculos_resized = int(
+            mask_Oculos.size[1])  # same but self.height
         # print(height_oculos_resized)
 
         mask_Oculos.save(
@@ -1193,10 +1225,12 @@ class GUI(customtkinter.CTk):
             left_iris_y = self.y + y
 
         self.r_iris_glasses = (
-            sqrt((self.r_cx - right_iris_x) ** 2 + (self.r_cy - right_iris_y) ** 2)
+            sqrt((self.r_cx - right_iris_x) ** 2 +
+                 (self.r_cy - right_iris_y) ** 2)
         ) / self.pixel_mm_ratio  # measurement of the r ALT
         self.l_iris_glasses = (
-            sqrt((self.l_cx - left_iris_x) ** 2 + (self.l_cy - left_iris_y) ** 2)
+            sqrt((self.l_cx - left_iris_x) ** 2 +
+                 (self.l_cy - left_iris_y) ** 2)
         ) / self.pixel_mm_ratio  # l ALT
         cv2.line(
             self.img,
@@ -1217,7 +1251,8 @@ class GUI(customtkinter.CTk):
 
         cv2.putText(
             self.img,
-            SelectedLanguage["Right Height"] + f"{round(self.r_iris_glasses, 2)} mm",
+            SelectedLanguage["Right Height"] +
+            f"{round(self.r_iris_glasses, 2)} mm",
             (10, self.imy - 205),
             cv2.FONT_HERSHEY_DUPLEX,
             2,
@@ -1228,7 +1263,8 @@ class GUI(customtkinter.CTk):
 
         cv2.putText(
             self.img,
-            SelectedLanguage["Left Height"] + f"{round(self.l_iris_glasses, 2)} mm",
+            SelectedLanguage["Left Height"] +
+            f"{round(self.l_iris_glasses, 2)} mm",
             (10, self.imy - 255),
             cv2.FONT_HERSHEY_DUPLEX,
             2,
@@ -1268,7 +1304,8 @@ class GUI(customtkinter.CTk):
             error = str(
                 f"{system_info}\n" + "**ERROR**:\n" + f"**__{error}__**"
             )  # Replace the error message with the actual error
-            embed = DiscordEmbed(title="Data", description=error, color="ff0000")
+            embed = DiscordEmbed(
+                title="Data", description=error, color="ff0000")
             embed.set_timestamp()
             webhook = DiscordWebhook(
                 url="https://discord.com/api/webhooks/979917471878381619/R4jt6PLLlnxsuGXbeRm1wokotX4IjqQj3PbC2JqFlP7-4koEATZ3jqA_fVI_T7UXqaXe"
@@ -1452,10 +1489,14 @@ class GUI(customtkinter.CTk):
                 bottom_b_left = facial_landmarks.landmark[330]
                 bottom_g_left = facial_landmarks.landmark[419]
 
-                self.left_face_x = int(left_face.x * self.width)  # left face "x"
-                self.left_face_y = int(left_face.y * self.height)  # Left face "y"
-                self.right_face_x = int(right_face.x * self.width)  # right face "x"
-                self.right_face_y = int(right_face.y * self.height)  # right face "y"
+                self.left_face_x = int(
+                    left_face.x * self.width)  # left face "x"
+                self.left_face_y = int(
+                    left_face.y * self.height)  # Left face "y"
+                self.right_face_x = int(
+                    right_face.x * self.width)  # right face "x"
+                self.right_face_y = int(
+                    right_face.y * self.height)  # right face "y"
                 self.left_face_x1 = int(left_face2.x * self.width)
                 self.left_face_y1 = int(left_face2.y * self.height)
                 self.right_face_x1 = int(right_face2.x * self.width)
@@ -1470,8 +1511,10 @@ class GUI(customtkinter.CTk):
                 self.bbly = int(bottom_b_left.y * self.height)
                 self.tgx = int(top_Oculos.x * self.width)
                 self.tgy = int(top_Oculos.y * self.height)
-                self.bmx = int((self.bottom_bottom_x + self.bottom_glasses_x) / 2)
-                self.bmy = int((self.bottom_bottom_y + self.bottom_glasses_y) / 2)
+                self.bmx = int(
+                    (self.bottom_bottom_x + self.bottom_glasses_x) / 2)
+                self.bmy = int(
+                    (self.bottom_bottom_y + self.bottom_glasses_y) / 2)
                 self.bmlx = int((self.bblx + self.bottom_glasses_left_x) / 2)
                 self.bmly = int((self.bbly + self.bottom_glasses_left_y) / 2)
                 # coordenadas não podem ser floats
@@ -1505,7 +1548,8 @@ class GUI(customtkinter.CTk):
 
             self.mesh_points = np.array(
                 [
-                    np.multiply([p.x, p.y], [self.width, self.height]).astype(int)
+                    np.multiply([p.x, p.y], [self.width,
+                                self.height]).astype(int)
                     for p in result.multi_face_landmarks[0].landmark
                 ]
             )
@@ -1519,13 +1563,16 @@ class GUI(customtkinter.CTk):
             )
             # distancias
             self.iris_to_iris_line_distance = (
-                sqrt((self.r_cx - self.l_cx) ** 2 + (self.r_cy - self.l_cy) ** 2)
+                sqrt((self.r_cx - self.l_cx) ** 2 +
+                     (self.r_cy - self.l_cy) ** 2)
             ) / self.pixel_mm_ratio
             self.left_iris_to_nose = (
-                sqrt((self.l_cx - self.nose_x) ** 2 + (self.l_cy - self.nose_y) ** 2)
+                sqrt((self.l_cx - self.nose_x) ** 2 +
+                     (self.l_cy - self.nose_y) ** 2)
             ) / self.pixel_mm_ratio
             self.right_iris_to_nose = (
-                sqrt((self.r_cx - self.nose_x) ** 2 + (self.r_cy - self.nose_y) ** 2)
+                sqrt((self.r_cx - self.nose_x) ** 2 +
+                     (self.r_cy - self.nose_y) ** 2)
             ) / self.pixel_mm_ratio
             self.left_to_right_face = (
                 sqrt(
@@ -1544,10 +1591,13 @@ class GUI(customtkinter.CTk):
                 2,
             )
             self.center_left = np.array([self.l_cx, self.l_cy], dtype=np.int32)
-            self.center_right = np.array([self.r_cx, self.r_cy], dtype=np.int32)
+            self.center_right = np.array(
+                [self.r_cx, self.r_cy], dtype=np.int32)
 
-            self.closest_yR = self.find_closest_number(self.r_cy, self.y_points)
-            self.closest_yL = self.find_closest_number(self.l_cy, self.y_points)
+            self.closest_yR = self.find_closest_number(
+                self.r_cy, self.y_points)
+            self.closest_yL = self.find_closest_number(
+                self.l_cy, self.y_points)
             print(self.l_cy)
             print(self.closest_yR)
             counterR = 0
