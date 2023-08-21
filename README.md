@@ -14,20 +14,24 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
-Beta 2.4 8/08/2023 (Linux/Windows)
+Beta 2.4 21/08/2023 (Linux/Windows)
+
+!   Working on better style icons
+
+Beta 2.4 08/08/2023 (Linux/Windows)
 
 +   Changed all warning/error messages from ctypes to custom tkinter
 +   Fixed exception raised when closing the glasses folder without selecting any image
 +   Fixed discrepancy on values shown on image and on screen
 
-Beta 2.4 7/08/2023 (Linux/Windows)
+Beta 2.4 07/08/2023 (Linux/Windows)
 
 !   Working on better warning/info labels
 !   Working on discrepancy between values shown on image and on screen
 +   Updated to work on the latest version of custom tkinter
 +   Fixed crashing when opening the "about" tab
 
-Beta 2.3 7/08/2023 (Linux/Windows)
+Beta 2.3 07/08/2023 (Linux/Windows)
 
 !   Working on Multiprocessing
 +   Implemented new Aruco detection algorithm
