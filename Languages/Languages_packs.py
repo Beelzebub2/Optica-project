@@ -5,7 +5,7 @@ Universal = {
     "Glasses Folder": "Glasses",
     "Faces Folder": "Faces",
     "Title": "To be changed",
-    "Version": "Beta v2.2"
+    "Version": "Beta v2.4"
     ##/\ Folders /\##
 }
 
