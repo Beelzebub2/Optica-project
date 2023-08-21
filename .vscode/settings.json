@@ -43,7 +43,6 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
     },
-    "python.formatting.provider": "autopep8",
     "editor.formatOnPaste": true,
     "editor.formatOnType": false,
     "editor.defaultFormatter": "ms-python.autopep8",
