@@ -14,6 +14,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 ## Changes
 ```diff
 
+Beta 2.4 22/09/2023 (Windows)
+
++   Fixed settings window bug
+
 Beta 2.4 21/08/2023 (Windows)
 
 !   Working on better style icons

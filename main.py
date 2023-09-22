@@ -21,7 +21,6 @@ from colorama import Fore, Style, init
 from CTkMessagebox import CTkMessagebox
 from tkinter import filedialog, RIGHT, CENTER, LEFT
 from discord_webhook import DiscordWebhook, DiscordEmbed
-
 #
 # @All rights Reserved to Ricardo Martins and João Marcos
 #
@@ -409,7 +408,7 @@ class GUI(customtkinter.CTk):
             command=self.add_faces,
             image=self.add_face_img,
             compound=RIGHT,
-            border_color=self.fg_color,
+            border_color=self._fg_color,
         )
         self.button_add_Face.place(relx=0.5, rely=0.6, anchor=CENTER)
         self.tooltip(self.button_add_Face,
@@ -513,7 +512,7 @@ class GUI(customtkinter.CTk):
         self.window.wm_iconbitmap(
             f"{L.Universal['Necessary Files Folder']}\\icon.ico")
         self.window.attributes("-topmost", True)
-        self.window.attributes("-topmost", False)
+
         self.window.focus_set()
         self.window.minsize(420, 200)
         self.window.maxsize(420, 200)
@@ -522,6 +521,7 @@ class GUI(customtkinter.CTk):
         current_screen = get_monitor_from_coord(
             self.window.winfo_x(), self.window.winfo_y()
         )
+
         screen_width = current_screen.width
         screen_height = current_screen.height
         x_cord = int((screen_width / 2) - (Width / 2))
