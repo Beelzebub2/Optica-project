@@ -3,6 +3,7 @@ Output/
 Ready-images/
 dist/
 build/
+Languages/__pycache__/
 .vscode/
 Languages/__pycache__/
 Optica-project/.vscode/
@@ -18,3 +19,6 @@ Languages/__pycache__/Languages_packs.cpython-310.pyc
 Necessary\ files/config.ini
 error_log.txt
 Languages/__pycache__/Languages_packs.cpython-310.pyc
+/Languages
+/Languages/__pycache__
+Optica

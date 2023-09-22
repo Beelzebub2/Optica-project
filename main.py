@@ -409,7 +409,7 @@ class GUI(customtkinter.CTk):
             command=self.add_faces,
             image=self.add_face_img,
             compound=RIGHT,
-            border_color=self._fg_color,
+            border_color=self.fg_color,
         )
         self.button_add_Face.place(relx=0.5, rely=0.6, anchor=CENTER)
         self.tooltip(self.button_add_Face,
