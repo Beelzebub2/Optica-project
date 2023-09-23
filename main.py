@@ -272,64 +272,79 @@ class GUI(customtkinter.CTk):
         self.window = None
         self.MB_TOPMOST = 0x00040000
         self.window_opened = False
+        self.load_images()
 
         # WINDOW SETTINGS #
 
-        # VISUALS
-        self.settings_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals1.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.add_face_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals2.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.bug_report_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals3.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.tutorial_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals4.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.save_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals5.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.face_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals6.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.glasses_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals7.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((30, 15))
-        )
-        self.start_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals8.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.folder_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals9.png".format(L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
-        self.icon_img = Image.open(
-            "{}/visuals10.png".format(L.Universal["Necessary Files Folder"])
-        ).resize((220, 100))
-        self.about_img = ImageTk.PhotoImage(
-            Image.open(
-                "{}/visuals11.png".format(
-                    L.Universal["Necessary Files Folder"])
-            ).resize((20, 20))
-        )
+    # VISUALS
+
+    def load_images(self):
+        self.settings_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals1-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals1-light.png"),
+            size=(20, 20))
+        self.add_face_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals2-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals2-light.png"),
+            size=(20, 20))
+        self.bug_report_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals3-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals3-light.png"),
+            size=(20, 20))
+        self.tutorial_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals4-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals4-light.png"),
+            size=(20, 20))
+        self.save_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals5-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals5-light.png"),
+            size=(20, 20))
+        self.face_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals6-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals6-light.png"),
+            size=(20, 20))
+        self.glasses_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals7-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals7-light.png"),
+            size=(30, 15))
+        self.start_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals8-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals8-light.png"),
+            size=(20, 20))
+        self.folder_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals9-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals9-light.png"),
+            size=(20, 20))
+        self.icon_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals10-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals10-light.png"),
+            size=(220, 100))
+        self.about_img = customtkinter.CTkImage(
+            light_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals11-dark.png"),
+            dark_image=Image.open(
+                f"{L.Universal['Necessary Files Folder']}/visuals11-light.png"),
+            size=(20, 20))
 
         # VISUALS #
 
@@ -355,9 +370,7 @@ class GUI(customtkinter.CTk):
                           relwidth=1, relheight=0.261)
         self.attributes("-topmost", False)
         # FRAMES #
-
         # ICON
-        self.icon_img = ImageTk.PhotoImage(self.icon_img)
         self.panel_icon = customtkinter.CTkLabel(
             self.Frame4, image=self.icon_img, text=""
         )
@@ -510,7 +523,7 @@ class GUI(customtkinter.CTk):
         Height = 240
         self.window.title(SelectedLanguage["Settings Button"])
         self.window.wm_iconbitmap(
-            f"{L.Universal['Necessary Files Folder']}\\icon.ico")
+            f"{L.Universal['Necessary Files Folder']}//icon.ico")
         self.window.attributes("-topmost", True)
 
         self.window.focus_set()
@@ -695,6 +708,7 @@ class GUI(customtkinter.CTk):
     @error_handler
     def style_change(self):
         selected_style = "Light" if self.switch.get() == 0 else "Dark"
+        self.load_images()
         customtkinter.set_appearance_mode(selected_style)
         Config.set("DEFAULTS", "Style", selected_style)
         with open(Config_File, "w") as f:
@@ -1598,8 +1612,6 @@ class GUI(customtkinter.CTk):
                 self.r_cy, self.y_points)
             self.closest_yL = self.find_closest_number(
                 self.l_cy, self.y_points)
-            print(self.l_cy)
-            print(self.closest_yR)
             counterR = 0
             counterL = 0
 
