@@ -1,4 +1,3 @@
-# Folders
 Output/
 Ready-images/
 dist/
@@ -7,8 +6,6 @@ Languages/__pycache__/
 .vscode/
 Languages/__pycache__/
 Optica-project/.vscode/
-
-# Files
 "create\ app.bat"
 "requirements.txt"
 "test.py"

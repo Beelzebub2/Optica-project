@@ -508,7 +508,7 @@ class GUI(customtkinter.CTk):
 
     @error_handler
     def settings(self):
-        if self.window != None:
+        if self.window is not None:
             self.window.focus()
             self.toast.show_toast(
                 "Optica",
@@ -522,7 +522,7 @@ class GUI(customtkinter.CTk):
         Width = 420
         Height = 240
         self.window.title(SelectedLanguage["Settings Button"])
-        self.window.wm_iconbitmap(
+        self.window.iconbitmap(
             f"{L.Universal['Necessary Files Folder']}//icon.ico")
         self.window.attributes("-topmost", True)
 
