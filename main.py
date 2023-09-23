@@ -1,6 +1,8 @@
+
 import os
 import sys
 import cv2
+import json
 import queue
 import psutil
 import ctypes
@@ -75,27 +77,78 @@ def run_in_thread(func):
     return wrapper
 
 
+class ConfigHandler:
+    def __init__(self, config_file):
+        self.config_file = config_file
+        self.load_config()
+
+    def load_config(self):
+        try:
+            with open(self.config_file, 'r') as f:
+                self.config = json.load(f)
+        except FileNotFoundError:
+            self.config = {
+                "Settings": {
+                    "Theme": "Green",
+                    "Language": "Pt-pt",
+                    "Style": "Dark"
+                }
+            }
+            self.save_config()
+
+    @run_in_thread
+    def save_config(self):
+        with open(self.config_file, 'w') as f:
+            json.dump(self.config, f, indent=4)
+
+    def get_theme(self):
+        return self.config["Settings"]["Theme"]
+
+    def set_theme(self, theme):
+        self.config["Settings"]["Theme"] = theme
+        self.save_config()
+
+    def get_language(self):
+        return self.config["Settings"]["Language"]
+
+    def set_language(self, language):
+        self.config["Settings"]["Language"] = language
+        self.save_config()
+
+    def get_style(self):
+        return self.config["Settings"]["Style"]
+
+    def set_style(self, style):
+        self.config["Settings"]["Style"] = style
+        self.save_config()
+
+
+ch = ConfigHandler(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)
+                    ), L.Universal["Necessary Files Folder"], "config.json"
+))
+
+
 @error_handler
 def read_config():
     PATH = os.path.dirname(os.path.realpath(__file__))
-    Config_File = os.path.join(
-        PATH, L.Universal["Necessary Files Folder"], "config.ini"
-    )
-    Config = ConfigParser()
-    Config.read(Config_File)
-
-    Language = Config["DEFAULTS"]["Language"]
+    ch = ConfigHandler(os.path.join(
+        os.path.dirname(os.path.realpath(__file__)
+                        ), L.Universal["Necessary Files Folder"], "config.json"
+    ))
+    Language = ch.get_language()
     language_mapping = {
         "Pt-pt": (L.PT_pt, "Português-pt"),
         "English": (L.English, "English"),
-        "German": (L.German, "Allemand"),
+        "German": (L.German, "Deutch"),
         "FR": (L.French, "Français"),
         "ES": (L.Spanish, "Espanõl")
         # "Pt-Br": (L.PT_br, "Português-br"),
     }
     SelectedLanguage, Option_lg_df = language_mapping.get(Language)
 
-    Theme = Config["DEFAULTS"]["Theme"]
+    Theme = ch.get_theme()
+    print(type(Theme))
     match Theme:
         case "Green":
             Program_Theme = "green"
@@ -112,8 +165,11 @@ def read_config():
         case "Orange":
             Program_Theme = "Necessary files\\Orange-Theme.json"
             Option_th_df = SelectedLanguage["Orange"]
+        case "Cyan":
+            Program_Theme = "Necessary files\\Cyan-Theme.json"
+            Option_th_df = SelectedLanguage["Cyan"]
 
-    Style = Config["DEFAULTS"]["style"]
+    Style = ch.get_style()
     match Style:
         case "Dark":
             customtkinter.set_appearance_mode("dark")
@@ -122,8 +178,6 @@ def read_config():
 
     return (
         PATH,
-        Config,
-        Config_File,
         SelectedLanguage,
         Option_th_df,
         Option_lg_df,
@@ -162,16 +216,11 @@ def get_system_info():
 # Important variables
 (
     PATH,
-    Config,
-    Config_File,
     SelectedLanguage,
     Option_th_df,
     Option_lg_df,
     Program_Theme,
 ) = read_config()
-customtkinter.set_default_color_theme(
-    Program_Theme
-)  # Themes: blue (default), dark-blue, green
 image_extensions = r"*.jpg *.jpeg *.png"
 # needed for stopping ctypes window duplication
 thread_completed = threading.Event()
@@ -235,15 +284,9 @@ def get_monitor_from_coord(x, y):
 
 parameters = cv2.aruco.DetectorParameters_create()
 aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
-
-customtkinter.set_appearance_mode(
-    "System"
-)  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(
-    "blue"
-)  # Themes: "blue" (standard), "green", "dark-blue"
-
-
+    Program_Theme
+)
 @error_handler
 class GUI(customtkinter.CTk):
     def __init__(self):
@@ -548,7 +591,7 @@ class GUI(customtkinter.CTk):
             command=self.style_change,
         )
         self.switch.place(relx=0.12, rely=0.65)
-        if Config["DEFAULTS"]["style"] == "Dark":
+        if ch.get_style() == "Dark":
             self.switch.select()
         else:
             self.switch.deselect()
@@ -604,7 +647,7 @@ class GUI(customtkinter.CTk):
         self.Optionmenu = customtkinter.CTkOptionMenu(
             self.window,
             values=["Português-pt", "English",
-                    "Español", "Français", "Allemand"],
+                    "Español", "Français", "Deutch"],
             command=self.change_language,
             hover=True,
         )
@@ -620,6 +663,7 @@ class GUI(customtkinter.CTk):
                 SelectedLanguage["Dark-Blue"],
                 SelectedLanguage["Red"],
                 SelectedLanguage["Orange"],
+                SelectedLanguage["Cyan"],
             ],
             command=self.change_theme,
             hover=True,
@@ -637,13 +681,10 @@ class GUI(customtkinter.CTk):
             "English": "English",
             "Español": "ES",
             "Français": "FR",
-            "Allemand": "German"
+            "Deutch": "German"
             # Add other language mappings here
         }
-        language = language_mapping.get(choice)
-        Config.set("DEFAULTS", "Language", language)
-        with open(Config_File, "w") as f:
-            Config.write(f)
+        ch.set_language(language_mapping[choice])
         self.restart_program()
 
     @error_handler
@@ -656,11 +697,9 @@ class GUI(customtkinter.CTk):
             SelectedLanguage["Dark-Blue"]: "Dark-Blue",
             SelectedLanguage["Red"]: "Red",
             SelectedLanguage["Orange"]: "Orange",
+            SelectedLanguage["Cyan"]: "Cyan",
         }
-
-        Config.set("DEFAULTS", "Theme", theme_mapping[choice])
-        with open(Config_File, "w") as f:
-            Config.write(f)
+        ch.set_theme(theme_mapping[choice])
         self.restart_program()
 
     @error_handler
@@ -710,9 +749,7 @@ class GUI(customtkinter.CTk):
         selected_style = "Light" if self.switch.get() == 0 else "Dark"
         self.load_images()
         customtkinter.set_appearance_mode(selected_style)
-        Config.set("DEFAULTS", "Style", selected_style)
-        with open(Config_File, "w") as f:
-            Config.write(f)
+        ch.set_style(selected_style)
 
     @error_handler
     def report_command(self):

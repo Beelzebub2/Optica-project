@@ -6,7 +6,7 @@ Universal = {
     "Faces Folder": "Faces",
     "Title": "To be changed",
     "Version": "Beta v2.4"
-    ##/\ Folders /\##
+    ## /\ Folders /\##
 }
 
 PT_pt = {
@@ -16,7 +16,8 @@ PT_pt = {
     "Red": "Vermelho",
     "Green": "Verde",
     "Orange": "Laranja",
-    ##/\ Option menu /\##
+    "Cyan": "Ciano",
+    ## /\ Option menu /\##
     ## Buttons ##
     "Settings Button": "Definições",
     "Select Face Button": " Selecionar Rosto",
@@ -29,7 +30,7 @@ PT_pt = {
     "Theme Switch": "Tema escuro",
     "Report Bug Button": "Reportar um erro",
     "Start Button": "Começar",
-    ##/\ Buttons /\##
+    ## /\ Buttons /\##
     ## Tooltip ##
     "Add Faces Button Tooltip": "Para adicionar rostos clique no botão e depois arraste as fotos para dentro da pasta",
     "Select Face Button tooltip": "Após clicar no botão selecione o rosto que quer analisar",
@@ -46,11 +47,11 @@ PT_pt = {
     "Start Button Tooltip": "Inicia a análise",
     "Language Tooltip": "Mudar a linguagem do programa",
     "Color Theme Tooltip": "Mudar a cor do programa",
-    ##/\ Tooltips /\##
+    ## /\ Tooltips /\##
     ## Labels ##
     "Length Label": "Comprimento da armação:",
     "Height Label": "Altura da armação:",
-    ##/\ Labels /\##
+    ## /\ Labels /\##
     ## Window Titles ##
     "Exit Window Title": "Sair",
     "Error Window Title": "Erro",
@@ -59,7 +60,7 @@ PT_pt = {
     "About Window Title": "Sobre",
     "Browse Window Hint": "Imagens",
     "Restart title": "Reiniciar",
-    ##/\ Window Titles /\##
+    ## /\ Window Titles /\##
     ## Window text ##
     "Exit Window": "Têm a certeza que deseja sair?",
     "Report Bug Error Window": "Não foi possível abrir o link.",
@@ -75,7 +76,7 @@ PT_pt = {
     "Aruco Marker Not detected": "Aruco Marker não foi detetado",
     "Started Without Measurements Error": "É necessário inserir valores nas caixas de medidas\ne salvá-las.",
     "Restart": "É necessário reiniciar para aplicar alterações.\nDeseja reiniciar agora?",
-    ##/\ Window text /\##
+    ## /\ Window text /\##
     ## Notifications ##
     "Add Faces Toast notification": 'A imagem deve incluir:\nO rosto visível;\nUm aruco marker 5x5cm;\nNenhum dos dois pode estar "cortado".',
     "Done Toast Notification": "Análise concluída",
@@ -84,7 +85,7 @@ PT_pt = {
     "Length": "Comprimento: ",
     "Height": "Altura: ",
     "Duplicate Window": "Uma janela de definições já está aberta",
-    ##/\ Notifications /\##
+    ## /\ Notifications /\##
     ## Optica info ##
     "Pupillary Distance": "Distancia pupilar: ",
     "Left Nasopupillary distance": "DNP esquerda: ",
@@ -94,15 +95,15 @@ PT_pt = {
     "Right eye": "Olho direito",
     "Left Height": "ALT esquerda: ",
     "Right Height": "ALT direita: ",
-    ##/\ Optica info /\##
+    ## /\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Imagem-com-oculos",
     "Measurements Image": "Medidas",
-    ##/\ File Names /\##
+    ## /\ File Names /\##
     ## IDK ##
     "Yes": "Sim",
     "No": "Não",
-    ##/\ IDK /\##
+    ## /\ IDK /\##
 }
 
 English = {
@@ -112,7 +113,8 @@ English = {
     "Red": "Red",
     "Green": "Green",
     "Orange": "Orange",
-    ##/\ Option menu /\##
+    "Cyan": "Cyan",
+    ## /\ Option menu /\##
     ## Buttons ##
     "Settings Button": "Settings",
     "Select Face Button": " Select Face",
@@ -125,7 +127,7 @@ English = {
     "Theme Switch": "Dark theme",
     "Report Bug Button": "Report a bug",
     "Start Button": "Start",
-    ##/\ Buttons /\##
+    ## /\ Buttons /\##
     ## Tooltip ##
     "Add Faces Button Tooltip": "To add Faces click the button and then drag the photos into the folder",
     "Select Face Button tooltip": "After clicking the button select the face you want to analyze",
@@ -142,11 +144,11 @@ English = {
     "Start Button Tooltip": "Starts the analysis",
     "Language Tooltip": "Change Program language",
     "Color Theme Tooltip": "Change program color",
-    ##/\ Tooltips /\##
+    ## /\ Tooltips /\##
     ## Labels ##
     "Length Label": "Glasses length:",
     "Height Label": "Glasses height:",
-    ##/\ Labels /\##
+    ## /\ Labels /\##
     ## Window Titles ##
     "Exit Window Title": "Exit",
     "Error Window Title": "Error",
@@ -155,7 +157,7 @@ English = {
     "About Window Title": "About",
     "Browse Window Hint": "Images",
     "Restart title": "Restart",
-    ##/\ Window Titles /\##
+    ## /\ Window Titles /\##
     ## Window text ##
     "Exit Window": "Are you sure you want to leave?",
     "Report Bug Error Window": "It was not possible to open the link.",
@@ -171,7 +173,7 @@ English = {
     "Aruco Marker Not detected": "Aruco Marker wasn't not detected",
     "Started Without Measurements Error": "It is necessary to insert values in the measurements\nand save them",
     "Restart": "Restart required to apply changes.\nDo you wish to restart now?",
-    ##/\ Window text /\##
+    ## /\ Window text /\##
     ## Notifications ##
     "Add Faces Toast notification": 'The image should include:\nA visible face\nOne aruco marker 5x5cm\nNeither of them can be "cut".',
     "Done Toast Notification": "Completed analysis",
@@ -180,7 +182,7 @@ English = {
     "Length": "Length: ",
     "Height": "Height: ",
     "Duplicate Window": "A window of settings is already open",
-    ##/\ Notifications /\##
+    ## /\ Notifications /\##
     ## Optica info ##
     "Pupillary Distance": "Pupillary Distance: ",
     "Left Nasopupillary distance": "NPD left: ",
@@ -190,15 +192,15 @@ English = {
     "Right eye": "Right Eye",
     "Left Height": "OC left: ",
     "Right Height": "OC right: ",
-    ##/\ Optica info /\##
+    ## /\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Image-with-Glasses",
     "Measurements Image": "Measurements",
-    ##/\ File Names /\##
+    ## /\ File Names /\##
     ## IDK ##
     "Yes": "Yes",
     "No": "No"
-    ##/\ IDK /\##
+    ## /\ IDK /\##
 }
 
 Spanish = {
@@ -208,7 +210,8 @@ Spanish = {
     "Red": "Rojo",
     "Green": "Verde",
     "Orange": "Naranja",
-    ##/\ Option menu /\##
+    "Cyan": "Cian",
+    ## /\ Option menu /\##
     ## Buttons ##
     "Settings Button": "Configuración",
     "Select Face Button": "Seleccionar Rostro",
@@ -221,7 +224,7 @@ Spanish = {
     "Theme Switch": "Tema oscuro",
     "Report Bug Button": "Reportar un error",
     "Start Button": "Iniciar",
-    ##/\ Buttons /\##
+    ## /\ Buttons /\##
     ## Tooltip ##
     "Add Faces Button Tooltip": "Para agregar rostros, haz clic en el botón y luego arrastra las fotos a la carpeta",
     "Select Face Button tooltip": "Después de hacer clic en el botón, selecciona el rostro que deseas analizar",
@@ -238,11 +241,11 @@ Spanish = {
     "Start Button Tooltip": "Inicia el análisis",
     "Language Tooltip": "Cambiar el idioma del programa",
     "Color Theme Tooltip": "Cambiar el color del programa",
-    ##/\ Tooltips /\##
+    ## /\ Tooltips /\##
     ## Labels ##
     "Length Label": "Largo de las gafas:",
     "Height Label": "Alto de las gafas:",
-    ##/\ Labels /\##
+    ## /\ Labels /\##
     ## Window Titles ##
     "Exit Window Title": "Salir",
     "Error Window Title": "Error",
@@ -251,7 +254,7 @@ Spanish = {
     "About Window Title": "Acerca de",
     "Browse Window Hint": "Imágenes",
     "Restart title": "Reiniciar",
-    ##/\ Window Titles /\##
+    ## /\ Window Titles /\##
     ## Window text ##
     "Exit Window": "¿Estás seguro de que deseas salir?",
     "Report Bug Error Window": "No se pudo abrir el enlace.",
@@ -267,7 +270,7 @@ Spanish = {
     "Aruco Marker Not detected": "No se detectó el marcador Aruco",
     "Started Without Measurements Error": "Es necesario insertar valores en las medidas y guardarlas",
     "Restart": "Se requiere reiniciar para aplicar los cambios. ¿Deseas reiniciar ahora?",
-    ##/\ Window text /\##
+    ## /\ Window text /\##
     ## Notifications ##
     "Add Faces Toast notification": 'La imagen debe incluir:\nUn rostro visible\nUn marcador Aruco de 5x5 cm\nNinguno de ellos puede estar "cortado".',
     "Done Toast Notification": "Análisis completado",
@@ -276,7 +279,7 @@ Spanish = {
     "Length": "Largo: ",
     "Height": "Alto: ",
     "Duplicate Window": "Ya hay una ventana de configuración abierta",
-    ##/\ Notifications /\##
+    ## /\ Notifications /\##
     ## Optica info ##
     "Pupillary Distance": "Distancia Pupilar: ",
     "Left Nasopupillary distance": "NPD izquierda: ",
@@ -286,15 +289,15 @@ Spanish = {
     "Right eye": "Ojo derecho",
     "Left Height": "OC izquierda: ",
     "Right Height": "OC derecha: ",
-    ##/\ Optica info /\##
+    ## /\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Imagen-con-Gafas",
     "Measurements Image": "Medidas",
-    ##/\ File Names /\##
+    ## /\ File Names /\##
     ## IDK ##
     "Yes": "Si",
     "No": "No"
-    ##/\ IDK /\##
+    ## /\ IDK /\##
 }
 
 French = {
@@ -304,7 +307,8 @@ French = {
     "Red": "Rouge",
     "Green": "Vert",
     "Orange": "Orange",
-    ##/\ Option menu /\##
+    "Cyan": "Cyan",
+    ## /\ Option menu /\##
     ## Buttons ##
     "Settings Button": "Paramètres",
     "Select Face Button": "Sélectionner Visage",
@@ -317,7 +321,7 @@ French = {
     "Theme Switch": "Thème sombre",
     "Report Bug Button": "Signaler un bug",
     "Start Button": "Démarrer",
-    ##/\ Buttons /\##
+    ## /\ Buttons /\##
     ## Tooltip ##
     "Add Faces Button Tooltip": "Pour ajouter des visages, cliquez sur le bouton puis faites glisser les photos dans le dossier",
     "Select Face Button tooltip": "Après avoir cliqué sur le bouton, sélectionnez le visage que vous souhaitez analyser",
@@ -334,11 +338,11 @@ French = {
     "Start Button Tooltip": "Lance l'analyse",
     "Language Tooltip": "Changer la langue du programme",
     "Color Theme Tooltip": "Changer la couleur du programme",
-    ##/\ Tooltips /\##
+    ## /\ Tooltips /\##
     ## Labels ##
     "Length Label": "Longueur des lunettes :",
     "Height Label": "Hauteur des lunettes :",
-    ##/\ Labels /\##
+    ## /\ Labels /\##
     ## Window Titles ##
     "Exit Window Title": "Quitter",
     "Error Window Title": "Erreur",
@@ -347,7 +351,7 @@ French = {
     "About Window Title": "À propos",
     "Browse Window Hint": "Images",
     "Restart title": "Redémarrer",
-    ##/\ Window Titles /\##
+    ## /\ Window Titles /\##
     ## Window text ##
     "Exit Window": "Êtes-vous sûr de vouloir quitter ?",
     "Report Bug Error Window": "Impossible d'ouvrir le lien.",
@@ -363,7 +367,7 @@ French = {
     "Aruco Marker Not detected": "Le marqueur Aruco n'a pas été détecté",
     "Started Without Measurements Error": "Il est nécessaire d'insérer des valeurs dans les mesures\net de les sauvegarder",
     "Restart": "Redémarrage requis pour appliquer les modifications.\nSouhaitez-vous redémarrer maintenant ?",
-    ##/\ Window text /\##
+    ## /\ Window text /\##
     ## Notifications ##
     "Add Faces Toast notification": 'L\'image doit inclure :\nUn visage visible\nUn marqueur aruco de 5x5 cm\nAucun des deux ne peut être "coupé".',
     "Done Toast Notification": "Analyse terminée",
@@ -372,7 +376,7 @@ French = {
     "Length": "Longueur : ",
     "Height": "Hauteur : ",
     "Duplicate Window": "Une fenêtre de paramètres est déjà ouverte",
-    ##/\ Notifications /\##
+    ## /\ Notifications /\##
     ## Optica info ##
     "Pupillary Distance": "Distance Pupillaire : ",
     "Left Nasopupillary distance": "Distance Nasopupillaire gauche : ",
@@ -382,15 +386,15 @@ French = {
     "Right eye": "Œil droit",
     "Left Height": "OC gauche : ",
     "Right Height": "OC droit : ",
-    ##/\ Optica info /\##
+    ## /\ Optica info /\##
     ## File Names ##
     "Image With Glasses": "Image-avec-Lunettes",
     "Measurements Image": "Mesures",
-    ##/\ File Names /\##
+    ## /\ File Names /\##
     ## IDK ##
     "Yes": "Oui",
     "No": "Non",
-    ##/\ IDK /\##
+    ## /\ IDK /\##
 }
 German = {
     "Blue": "Blau",
@@ -398,6 +402,7 @@ German = {
     "Red": "Rot",
     "Green": "Grün",
     "Orange": "Orange",
+    "Cyan": "Cyan",
     "Settings Button": "Einstellungen",
     "Select Face Button": "Gesicht auswählen",
     "Add Faces Button": "Gesichter hinzufügen",
@@ -467,5 +472,5 @@ German = {
     ## IDK ##
     "Yes": "Ja",
     "No": "NEIN",
-    ##/\ IDK /\##
+    ## /\ IDK /\##
 }

@@ -16,6 +16,10 @@ Program made in python with the purpose of detecting face dimensions and predict
 
 Beta 2.4 23/09/2023 (Windows)
 
+!   Working on making languages different json files
++   Changed config to json format
++   Fixed Theme bugs
++   Added Cyan theme
 +   Added better style icons
 
 Beta 2.4 22/09/2023 (Windows)
