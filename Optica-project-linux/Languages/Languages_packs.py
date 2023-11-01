@@ -4,7 +4,7 @@ Universal = {
     "Ready Images Folder": "Ready-images",
     "Glasses Folder": "Glasses",
     "Faces Folder": "Faces",
-    "Title": "To be changed",
+    "Title": "OptiPy",
     "Version": "Beta v2.2"
     ##/\ Folders /\##
 }
